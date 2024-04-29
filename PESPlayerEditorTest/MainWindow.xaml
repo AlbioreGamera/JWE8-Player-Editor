@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="351" Margin="10,0,0,0" VerticalAlignment="Center" Width="183">
+        <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="299" Margin="10,50,0,0" VerticalAlignment="Top" Width="183">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -19,14 +19,17 @@
         <Button Content="Load param_we8.bin_000" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="183" Click="Button_Click"/>
         <Label x:Name="nameLabel" Content="Label" HorizontalAlignment="Left" Margin="209,7,0,0" VerticalAlignment="Top" Width="191"/>
         <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Margin="209,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="shirtNameTextBox" HorizontalAlignment="Left" Margin="209,129,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="countryTextBox" HorizontalAlignment="Left" Margin="209,152,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="positionTextBox" HorizontalAlignment="Left" Margin="209,175,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="countryComboBox" HorizontalAlignment="Left" Margin="209,0,0,0" VerticalAlignment="Center" Width="120" RenderTransformOrigin="0.094,0.431"/>
+        <TextBox x:Name="playerIdTextBox" HorizontalAlignment="Left" Margin="209,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Margin="209,73,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.512,-2.204"/>
+        <TextBox x:Name="shirtNameTextBox" HorizontalAlignment="Left" Margin="209,96,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="countryComboBox" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType=Window}}"
+          DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
+          SelectedItem="{Binding Path=Country, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,119,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType=Window}}"
           DisplayMemberPath="PositionName" SelectedValuePath="PositionId"
-          SelectedItem="{Binding Path=Position, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,233,0,0" VerticalAlignment="Top" Width="120"/>
+          SelectedItem="{Binding Path=Position, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,146,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="614,367,0,0" VerticalAlignment="Top" Width="92" Height="27" Click="Button_Click_1"/>
+        <Button x:Name="saveChanges" Content="Save Changes" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top" Height="26" Width="183" Click="saveChanges_Click"/>
 
     </Grid>
 </Window>
