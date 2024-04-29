@@ -1,0 +1,32 @@
+﻿<Window x:Class="PESPlayerEditorTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PESPlayerEditorTest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="351" Margin="10,0,0,0" VerticalAlignment="Center" Width="183">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Load param_we8.bin_000" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="183" Click="Button_Click"/>
+        <Label x:Name="nameLabel" Content="Label" HorizontalAlignment="Left" Margin="209,7,0,0" VerticalAlignment="Top" Width="191"/>
+        <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Margin="209,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="shirtNameTextBox" HorizontalAlignment="Left" Margin="209,129,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="countryTextBox" HorizontalAlignment="Left" Margin="209,152,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="positionTextBox" HorizontalAlignment="Left" Margin="209,175,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="countryComboBox" HorizontalAlignment="Left" Margin="209,0,0,0" VerticalAlignment="Center" Width="120" RenderTransformOrigin="0.094,0.431"/>
+        <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType=Window}}"
+          DisplayMemberPath="PositionName" SelectedValuePath="PositionId"
+          SelectedItem="{Binding Path=Position, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,233,0,0" VerticalAlignment="Top" Width="120"/>
+
+    </Grid>
+</Window>
