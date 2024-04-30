@@ -27,7 +27,7 @@
           SelectedItem="{Binding Path=Country, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,119,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType=Window}}"
           DisplayMemberPath="PositionName" SelectedValuePath="PositionId"
-          SelectedItem="{Binding Path=Position, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,146,0,0" VerticalAlignment="Top" Width="120"/>
+          SelectedItem="{Binding Path=Position, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,146,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
         <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="614,367,0,0" VerticalAlignment="Top" Width="92" Height="27" Click="Button_Click_1"/>
         <Button x:Name="saveChanges" Content="Save Changes" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top" Height="26" Width="183" Click="saveChanges_Click"/>
 

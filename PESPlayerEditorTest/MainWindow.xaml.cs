@@ -263,17 +263,23 @@ namespace PESPlayerEditorTest
 
                     using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
                     {
-                        // Moverse al desplazamiento correcto en el archivo
                         fileStream.Seek(bitOffset / 8, SeekOrigin.Begin);
-                        byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name.PadRight(32, '\0'));
+                        byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name.PadRight(12, '\0'));
                         writer.Write(nameBytes);
 
                         fileStream.Seek((bitOffset + 32 * 8) / 8, SeekOrigin.Begin);
-                        byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0'));
+                        byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0').Substring(0, 16));
                         writer.Write(shirtNameBytes);
 
-                        fileStream.Seek((bitOffset + 52 * 8) / 8, SeekOrigin.Begin);
-                        writer.Write((byte)(player.Position & 0x0F));
+                        //fileStream.Seek((bitOffset + 52 * 8) / 8, SeekOrigin.Begin);
+                        //byte existingPosition = (byte)(fileStream.ReadByte() & 0x0F);
+
+                        // Escribir solo si el valor existente no es cero
+                        //if (existingPosition != 0)
+                        //{
+                        //    fileStream.Seek(-1, SeekOrigin.Current); // Retroceder un byte para sobrescribir el valor existente
+                        //    writer.Write(existingPosition); // Escribir el valor existente
+                        //}
 
                         fileStream.Seek((int)(bitOffset + 110 * 8) / 8, SeekOrigin.Begin);
                         writer.Write(player.Country);
