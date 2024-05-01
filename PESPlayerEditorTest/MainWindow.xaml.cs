@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -239,19 +240,19 @@ namespace PESPlayerEditorTest
                     string ageHexValue = buffer[109].ToString("X2");
                     Age age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
 
+                    byte[] commentaryHex = new byte[2]; Array.Copy(buffer, 48, commentaryHex, 0, 2);
+
                     Player person = new Player
                     {
                         PlayerIndex = playerIndex++,
                         Name = Encoding.Unicode.GetString(buffer, 0, 32).Trim(),
                         ShirtName = Encoding.ASCII.GetString(buffer, 32, 16).Trim(),
-                        unparsedData1 = BitConverter.ToString(buffer, 42, 10),
+                        Commentary = BitConverter.ToInt16(commentaryHex, 0),
                         Position = buffer[52] & 0x0F,
-                        unparsedData2 = BitConverter.ToString(buffer, 53, 57),
                         Height = buffer[88] - 44,
                         Weight = buffer[89] - 44,
                         Age = age?.AgeIndex ?? 0,
                         Country = BitConverter.ToInt32(buffer, 110),
-                        unparsedData3 = BitConverter.ToString(buffer, 111, 13).Replace("-", " "),
                     };
                     People.Add(person);
                 }
@@ -268,6 +269,7 @@ namespace PESPlayerEditorTest
                 playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
                 nameTextBox.Text = selectedPerson.Name;
                 shirtNameTextBox.Text = selectedPerson.ShirtName;
+                callnameTextBox.Text = selectedPerson.Commentary.ToString();
                 countryComboBox.SelectedIndex = selectedPerson.Country - 121;
                 ageComboBox.SelectedIndex = selectedPerson.Age;
                 heightTextBox.Text = selectedPerson.Height.ToString();
@@ -283,6 +285,7 @@ namespace PESPlayerEditorTest
                 Player selectedPlayer = (Player)personListBox.SelectedItem;
                 selectedPlayer.Name = nameTextBox.Text;
                 selectedPlayer.ShirtName = shirtNameTextBox.Text;
+                selectedPlayer.Commentary = int.Parse(callnameTextBox.Text);
                 selectedPlayer.Country = countryComboBox.SelectedIndex + 121;
                 selectedPlayer.Age = ageComboBox.SelectedIndex;
                 selectedPlayer.Height = int.Parse(heightTextBox.Text);

@@ -71,7 +71,7 @@
                     <TextBox x:Name="shirtNameTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="21" Width="120"/>
 
                     <Label Grid.Row="3" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="2" Height="21" Width="120"/>
+                    <TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="21" Width="120"/>
 
                     <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
                     <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
