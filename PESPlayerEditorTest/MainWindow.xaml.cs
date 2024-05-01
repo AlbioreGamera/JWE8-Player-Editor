@@ -109,7 +109,7 @@ namespace PESPlayerEditorTest
                 new Country { CountryIndex = 67, CountryId = 188, CountryName = "Morocco" },
                 new Country { CountryIndex = 68, CountryId = 189, CountryName = "Mozambique" },
                 new Country { CountryIndex = 69, CountryId = 190, CountryName = "Namibia" },
-                new Country { CountryIndex = 70, CountryId = 191, CountryName = "Nigieria" },
+                new Country { CountryIndex = 70, CountryId = 191, CountryName = "Nigeria" },
                 new Country { CountryIndex = 71, CountryId = 192, CountryName = "Rwanda" },
                 new Country { CountryIndex = 72, CountryId = 193, CountryName = "Senegal" },
                 new Country { CountryIndex = 73, CountryId = 194, CountryName = "Sierra Leone" },
@@ -159,6 +159,42 @@ namespace PESPlayerEditorTest
                 new Country { CountryIndex = 117, CountryId = 238, CountryName = "Tahiti" },
             };
 
+        public static List<Age> Ages { get; } = new List<Age>
+        {
+            new Age { AgeIndex = 0, AgeValue = ["02","05","04"], AgeName = 15 },
+            new Age { AgeIndex = 1, AgeValue = ["0A","0B","0C"], AgeName = 16 },
+            new Age { AgeIndex = 2, AgeValue = ["12","13","14"], AgeName = 17 },
+            new Age { AgeIndex = 3, AgeValue = ["1A","1B","1C"], AgeName = 18 },
+            new Age { AgeIndex = 4, AgeValue = ["22","23","24"], AgeName = 19 },
+            new Age { AgeIndex = 5, AgeValue = ["2A","2B","2C"], AgeName = 20 },
+            new Age { AgeIndex = 6, AgeValue = ["32","33","34"], AgeName = 21 },
+            new Age { AgeIndex = 7, AgeValue = ["3A","3B","3C"], AgeName = 22 },
+            new Age { AgeIndex = 8, AgeValue = ["42","43","44"], AgeName = 23 },
+            new Age { AgeIndex = 9, AgeValue = ["4A","4B","4C"], AgeName = 24 },
+            new Age { AgeIndex = 10,AgeValue = ["52","53","54"], AgeName = 25 },
+            new Age { AgeIndex = 11,AgeValue = ["5A","5B","5C"], AgeName = 26 },
+            new Age { AgeIndex = 12,AgeValue = ["62","63","64"], AgeName = 27 },
+            new Age { AgeIndex = 13,AgeValue = ["6A","6B","6C"], AgeName = 28 },
+            new Age { AgeIndex = 14,AgeValue = ["72","73","74"], AgeName = 29 },
+            new Age { AgeIndex = 15,AgeValue = ["7A","7B","7C"], AgeName = 30 },
+            new Age { AgeIndex = 16,AgeValue = ["82","83","84"], AgeName = 31 },
+            new Age { AgeIndex = 17,AgeValue = ["8A","8B","8C"], AgeName = 32 },
+            new Age { AgeIndex = 18,AgeValue = ["92","93","94"], AgeName = 33 },
+            new Age { AgeIndex = 19,AgeValue = ["9A","9B","9C"], AgeName = 34 },
+            new Age { AgeIndex = 20,AgeValue = ["A2","A3","A4"], AgeName = 35 },
+            new Age { AgeIndex = 21,AgeValue = ["AA","AB","AC"], AgeName = 36 },
+            new Age { AgeIndex = 22,AgeValue = ["B2","B3","B4"], AgeName = 37 },
+            new Age { AgeIndex = 23,AgeValue = ["BA","BB","BC"], AgeName = 38 },
+            new Age { AgeIndex = 24,AgeValue = ["C2","C3","C4"], AgeName = 39 },
+            new Age { AgeIndex = 25,AgeValue = ["CA","CB","CC"], AgeName = 40 },
+            new Age { AgeIndex = 26,AgeValue = ["D2","D3","D4"], AgeName = 41 },
+            new Age { AgeIndex = 27,AgeValue = ["DA","DB","DC"], AgeName = 42 },
+            new Age { AgeIndex = 28,AgeValue = ["E2","E3","E4"], AgeName = 43 },
+            new Age { AgeIndex = 29,AgeValue = ["EA","EB","EC"], AgeName = 44 },
+            new Age { AgeIndex = 30,AgeValue = ["F2","F3","F4"], AgeName = 45 },
+            new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC"], AgeName = 46 }
+        };
+
         List<Player> players = new List<Player>();
 
         OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -200,15 +236,21 @@ namespace PESPlayerEditorTest
                 int playerIndex = 1;
                 while (fileStream.Read(buffer, 0, buffer.Length) == buffer.Length)
                 {
+                    string ageHexValue = buffer[109].ToString("X2");
+                    Age age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
+
                     Player person = new Player
                     {
                         PlayerIndex = playerIndex++,
                         Name = Encoding.Unicode.GetString(buffer, 0, 32).Trim(),
                         ShirtName = Encoding.ASCII.GetString(buffer, 32, 16).Trim(),
                         unparsedData1 = BitConverter.ToString(buffer, 42, 10),
-                        Country = BitConverter.ToInt32(buffer, 110),
-                        unparsedData2 = BitConverter.ToString(buffer, 53, 58),
                         Position = buffer[52] & 0x0F,
+                        unparsedData2 = BitConverter.ToString(buffer, 53, 57),
+                        Height = buffer[88] - 44,
+                        Weight = buffer[89] - 44,
+                        Age = age?.AgeIndex ?? 0,
+                        Country = BitConverter.ToInt32(buffer, 110),
                         unparsedData3 = BitConverter.ToString(buffer, 111, 13).Replace("-", " "),
                     };
                     People.Add(person);
@@ -223,11 +265,13 @@ namespace PESPlayerEditorTest
             {
                 Player selectedPerson = (Player)personListBox.SelectedItem;
 
-                nameLabel.Content = selectedPerson.Name;
                 playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
                 nameTextBox.Text = selectedPerson.Name;
                 shirtNameTextBox.Text = selectedPerson.ShirtName;
                 countryComboBox.SelectedIndex = selectedPerson.Country - 121;
+                ageComboBox.SelectedIndex = selectedPerson.Age;
+                heightTextBox.Text = selectedPerson.Height.ToString();
+                weightTextBox.Text = selectedPerson.Weight.ToString(); ;
                 positionComboBox.SelectedIndex = selectedPerson.Position;
             }
         }
@@ -240,8 +284,10 @@ namespace PESPlayerEditorTest
                 selectedPlayer.Name = nameTextBox.Text;
                 selectedPlayer.ShirtName = shirtNameTextBox.Text;
                 selectedPlayer.Country = countryComboBox.SelectedIndex + 121;
-                positionComboBox.SelectedIndex = positionComboBox.SelectedIndex;
-                // Optionally, you can update the ListBox to reflect the changes
+                selectedPlayer.Age = ageComboBox.SelectedIndex;
+                selectedPlayer.Height = int.Parse(heightTextBox.Text);
+                selectedPlayer.Weight = int.Parse(weightTextBox.Text);
+                selectedPlayer.Position = positionComboBox.SelectedIndex;
                 personListBox.Items.Refresh();
             }
         }
@@ -271,15 +317,23 @@ namespace PESPlayerEditorTest
                         byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0').Substring(0, 16));
                         writer.Write(shirtNameBytes);
 
-                        //fileStream.Seek((bitOffset + 52 * 8) / 8, SeekOrigin.Begin);
-                        //byte existingPosition = (byte)(fileStream.ReadByte() & 0x0F);
+                        // Calculate the byte position based on the bit offset
+                        int position = (int)(bitOffset + 52 * 8) / 8;
 
-                        // Escribir solo si el valor existente no es cero
-                        //if (existingPosition != 0)
-                        //{
-                        //    fileStream.Seek(-1, SeekOrigin.Current); // Retroceder un byte para sobrescribir el valor existente
-                        //    writer.Write(existingPosition); // Escribir el valor existente
-                        //}
+                        // Read the byte at the position
+                        fileStream.Seek(position, SeekOrigin.Begin);
+                        byte b = (byte)(fileStream.ReadByte() & 0xF0);  // Clear the lower nibble
+
+
+                        fileStream.Seek(position, SeekOrigin.Begin);
+                        byte[] positionBytes = BitConverter.GetBytes(player.Position);
+                        byte buffer52 = (byte)((positionBytes[0]) & 0x0F);
+
+                        b |= buffer52;
+
+                        fileStream.Seek(position, SeekOrigin.Begin);
+                        fileStream.WriteByte(b);
+
 
                         fileStream.Seek((int)(bitOffset + 110 * 8) / 8, SeekOrigin.Begin);
                         writer.Write(player.Country);

@@ -5,31 +5,169 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="299" Margin="10,50,0,0" VerticalAlignment="Top" Width="183">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button Content="Load param_we8.bin_000" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="183" Click="Button_Click"/>
-        <Label x:Name="nameLabel" Content="Label" HorizontalAlignment="Left" Margin="209,7,0,0" VerticalAlignment="Top" Width="191"/>
-        <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="playerIdTextBox" HorizontalAlignment="Left" Margin="209,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-        <TextBox x:Name="nameTextBox" HorizontalAlignment="Left" Margin="209,73,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.512,-2.204"/>
-        <TextBox x:Name="shirtNameTextBox" HorizontalAlignment="Left" Margin="209,96,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="countryComboBox" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType=Window}}"
-          DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
-          SelectedItem="{Binding Path=Country, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,119,0,0" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType=Window}}"
-          DisplayMemberPath="PositionName" SelectedValuePath="PositionId"
-          SelectedItem="{Binding Path=Position, Mode=TwoWay}" HorizontalAlignment="Left" Margin="209,146,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-        <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="614,367,0,0" VerticalAlignment="Top" Width="92" Height="27" Click="Button_Click_1"/>
-        <Button x:Name="saveChanges" Content="Save Changes" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top" Height="26" Width="183" Click="saveChanges_Click"/>
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="J-League Winning Eleven 8 Player Editor beta 0.1" Height="800" Width="900">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Row for the menu -->
+            <RowDefinition Height="*"/>
+            <!-- Remaining space for the rest of the content -->
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Menu>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open param_we8.bin_000" Click="Button_Click"/>
+                    <MenuItem Header="_Save" Click="saveChanges_Click"/>
+                    <MenuItem Header="_Save As" Click="saveChanges_Click"/>
+                    <Separator/>
+                    <MenuItem Header="_Exit" Click="saveChanges_Click"/>
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <Grid Grid.Row="1"  Background="#FF212121" Width="900" Height="766" VerticalAlignment="Center">
+            <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="556" Margin="10,27,0,0" VerticalAlignment="Top" Width="175">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
+
+            <GroupBox x:Name="Player_Information" Header="Position" Margin="199,15,501,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" Width="200" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top">
+                <Grid Height="277">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="58.516"/>
+                        <ColumnDefinition Width="8.444"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="265*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Player ID" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                    <TextBox x:Name="playerIdTextBox" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="2" Margin="0,0,60,0" Height="21" Width="60"/>
+
+                    <Label Grid.Row="1" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                    <TextBox x:Name="nameTextBox" Grid.Column="2" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="1" Height="21" Width="120"/>
+
+                    <Label Grid.Row="2" Content="Shirt Name" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                    <TextBox x:Name="shirtNameTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="21" Width="120"/>
+
+                    <Label Grid.Row="3" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="2" Height="21" Width="120"/>
+
+                    <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                    <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
+                    SelectedItem="{Binding Country, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                    <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" RenderTransformOrigin="1.113,-0.593" Height="21" Grid.ColumnSpan="2" ItemsSource="{Binding Ages, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    DisplayMemberPath="AgeName" SelectedValuePath="AgeValue"
+                    SelectedItem="{Binding Age, Mode=TwoWay}" Margin="0,0,60,0" Width="60"/>
+
+                    <Label Grid.Row="6" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="heightTextBox" Grid.Row="6" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,0,60,0" Height="21" Width="60" IsEnabled="False"/>
+
+                    <Label Grid.Row="7" Content="Weight (kg)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="weightTextBox" Grid.Row="7" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" RenderTransformOrigin="0.438,2.093" Grid.ColumnSpan="2" Margin="0,0,60,0" Height="21" Width="60" IsEnabled="False"/>
+
+                    <Label Grid.Row="8" Content="Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="footComboBox" Grid.Row="8" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Height="21" Width="60" Margin="0,0,60,0" Grid.ColumnSpan="2"/>
+
+                    <Label Grid.Row="9" Content="Side" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="sideComboBox" Grid.Row="9" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Height="21" Width="60" Margin="0,0,60,0" Grid.ColumnSpan="2"/>
+
+                    <Label Grid.Row="10" Content="Injury Res." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="injuryComboBox" Grid.Row="10" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Height="21" Width="60" Margin="0,0,60,0" Grid.ColumnSpan="2"/>
+
+
+                </Grid>
+            </GroupBox>
+
+
+            <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="768,488,0,0" VerticalAlignment="Top" Width="92" Height="27" Click="Button_Click_1"/>
+            <GroupBox x:Name="Position" Header="Position" Margin="199,325,501,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" Width="200" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top">
+                <Grid Height="225">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="17*"/>
+                        <ColumnDefinition Width="145*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                        <RowDefinition Height="18"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Reg. Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="5" Width="68"/>
+                    <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    DisplayMemberPath="PositionName" SelectedValuePath="PositionId"  SelectedItem="{Binding Position, Mode=TwoWay}"
+                    Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="21" Margin="25,0,0,0"/>
+
+                    <CheckBox x:Name="gkCheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="Goal Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="liCheckBox"  VerticalAlignment="Center" Grid.Row="2" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="2" Grid.Column="2" Content="Libero" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="swCheckBox"  VerticalAlignment="Center" Grid.Row="3" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="3" Grid.Column="2" Content="Sweeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="cbCheckBox"  VerticalAlignment="Center" Grid.Row="4" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="4" Grid.Column="2" Content="Central Back Stopper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="sbCheckBox"  VerticalAlignment="Center" Grid.Row="5" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="5" Grid.Column="2" Content="Side Back" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="dmfCheckBox"  VerticalAlignment="Center" Grid.Row="6" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="6" Grid.Column="2" Content="Defensive Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="cmfCheckBox"  VerticalAlignment="Center" Grid.Row="7" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="7" Grid.Column="2" Content="Centre Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="smfCheckBox"  VerticalAlignment="Center" Grid.Row="8" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="8" Grid.Column="2" Content="Side Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="amfCheckBox"  VerticalAlignment="Center" Grid.Row="9" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="9" Grid.Column="2" Content="Offensive Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="cfCheckBox"  VerticalAlignment="Center" Grid.Row="10" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="10" Grid.Column="2" Content="Centre Forward" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                    <CheckBox x:Name="wgCheckBox"  VerticalAlignment="Center" Grid.Row="11" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
+                    <Label Grid.Row="11" Grid.Column="2" Content="Wing Forward" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                </Grid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Window>
