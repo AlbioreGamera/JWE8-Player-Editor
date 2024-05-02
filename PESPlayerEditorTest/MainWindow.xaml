@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="760" Width="847">
+        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="760" Width="865" ResizeMode="CanMinimize">
 
     <Grid>
         <Grid.RowDefinitions>
