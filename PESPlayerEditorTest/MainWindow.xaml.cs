@@ -5,6 +5,7 @@ using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -198,10 +199,12 @@ namespace PESPlayerEditorTest
 
         List<Player> players = new List<Player>();
 
+        List<PlayerAssignment> playerAssignment = new List<PlayerAssignment>();
+
         OpenFileDialog openFileDialog = new OpenFileDialog();
 
         public ObservableCollection<Player> People { get; set; } = new ObservableCollection<Player>();
-
+        public ObservableCollection<PlayerAssignment> PeopleA { get; set; } = new ObservableCollection<PlayerAssignment>();
 
         public MainWindow()
         {
@@ -210,13 +213,19 @@ namespace PESPlayerEditorTest
 
         }
 
+        private void OpenFileSelectionWindow_Click(object sender, RoutedEventArgs e)
+        {
+            FileSelectionWindow fileSelectionWindow = new FileSelectionWindow(this);
+            fileSelectionWindow.ShowDialog();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             openFileDialog.Filter = "para_we8.bin player files (*.bin_000)|*.bin_000|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
-                ParseBinaryFile(openFileDialog.FileName);
-                foreach (Player person in ParseBinaryFile(openFileDialog.FileName))
+                ParsePlayers(openFileDialog.FileName);
+                foreach (Player person in ParsePlayers(openFileDialog.FileName))
                 {
                     People.Add(person);
                 }
@@ -225,7 +234,17 @@ namespace PESPlayerEditorTest
 
         }
 
-        private List<Player> ParseBinaryFile(string filePath)
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to close the application?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                // Close the application
+                Application.Current.Shutdown();
+            }
+        }
+
+        public List<Player> ParsePlayers(string filePath)
         {
 
             using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
@@ -258,6 +277,36 @@ namespace PESPlayerEditorTest
                 }
             }
             return players;
+        }
+
+        public List<PlayerAssignment> ParsePlayerAssignment(string filePath)
+        {
+            using (FileStream fsPlayerAssignment = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                fsPlayerAssignment.Seek(0, SeekOrigin.Begin);
+                byte[] buffer = new byte[0x40];
+                List<PlayerAssignment> playerAssignments = new List<PlayerAssignment>();
+                int teamIndex = 1;
+                int playerIndexWithinTeam = 1;
+
+                while (fsPlayerAssignment.Read(buffer, 0, buffer.Length) > 0)
+                {
+                    for (int i = 0; i < buffer.Length; i += 2)
+                    {
+                        byte[] playerBytes = new byte[] { buffer[i], buffer[i + 1] };
+                        int player = BitConverter.ToUInt16(playerBytes, 0);
+                        playerAssignments.Add(new PlayerAssignment { Player = player, PlayerIndex = playerIndexWithinTeam, Team = teamIndex });
+                        playerIndexWithinTeam++;
+                        if (playerIndexWithinTeam > 32)
+                        {
+                            teamIndex++;
+                            playerIndexWithinTeam = 1;
+                        }
+                    }
+                }
+
+                return playerAssignments;
+            }
         }
 
         private void PersonListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -349,7 +398,7 @@ namespace PESPlayerEditorTest
         {
              SaveChangesToFile(openFileDialog.FileName);
              People.Clear();
-             ParseBinaryFile(openFileDialog.FileName);
+             ParsePlayers(openFileDialog.FileName);
         }
     }
 }

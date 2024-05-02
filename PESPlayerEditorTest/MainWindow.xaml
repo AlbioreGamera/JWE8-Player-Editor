@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="760" Width="865" ResizeMode="CanMinimize">
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,10 +19,11 @@
             <Menu>
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open param_we8.bin_000" Click="Button_Click"/>
+                    <MenuItem Header="_Open bin_000 and bin_002" Click="OpenFileSelectionWindow_Click"/>
                     <MenuItem Header="_Save" Click="saveChanges_Click"/>
                     <MenuItem Header="_Save As" Click="saveChanges_Click"/>
                     <Separator/>
-                    <MenuItem Header="_Exit" Click="saveChanges_Click"/>
+                    <MenuItem Header="_Exit" Click="CloseButton_Click"/>
                 </MenuItem>
             </Menu>
         </Grid>
