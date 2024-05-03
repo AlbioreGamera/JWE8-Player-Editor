@@ -18,6 +18,8 @@ namespace PESPlayerEditorTest
     /// <summary>
     /// Interaction logic for PlayerWindow.xaml
     /// </summary>
+    /// 
+
     public partial class PlayerWindow : Window
     {
         public Player SelectedPlayer { get; set; }
@@ -195,9 +197,12 @@ namespace PESPlayerEditorTest
             new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC"], AgeName = 46 }
         };
 
-        public PlayerWindow(Player selectedPlayer)
+        private MainWindow mainWindow;
+
+        public PlayerWindow(Player selectedPlayer, MainWindow mainWindow)
         {
             InitializeComponent();
+            this.mainWindow = mainWindow;
             SelectedPlayer = selectedPlayer;
 
             // Set the DataContext of the window to itself, so bindings work
@@ -226,7 +231,13 @@ namespace PESPlayerEditorTest
             SelectedPlayer.Height = int.Parse(heightTextBox.Text);
             SelectedPlayer.Weight = int.Parse(weightTextBox.Text);
             SelectedPlayer.Position = positionComboBox.SelectedIndex;
+            mainWindow.personListBox.Items.Refresh();
+            mainWindow.team1DataGrid.Items.Refresh();
+            mainWindow.team1DataGrid.Items.Refresh();
+            this.Close();
         }
+
+
 
         private void ClosePlayerWindow(object sender, RoutedEventArgs e)
         {

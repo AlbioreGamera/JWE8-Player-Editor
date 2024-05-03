@@ -24,7 +24,6 @@ namespace PESPlayerEditorTest
 
         private readonly MainWindow _mainWindow;
 
-
         public FileSelectionWindow(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -151,6 +150,7 @@ namespace PESPlayerEditorTest
             {
                 _mainWindow.People.Add(person);
             }
+            _mainWindow.personListBox.IsEnabled = true;
             _mainWindow.personListBox.SelectedIndex = 0;
 
             _mainWindow.ParsePlayerAssignment(selectedFilePath_002, selectedFilePath_004);
@@ -167,7 +167,7 @@ namespace PESPlayerEditorTest
             };
 
             SaveFilePaths(filePathInfos);
-
+            _mainWindow.PopulateTeamsComboBox();
             this.Close();
         }
     }

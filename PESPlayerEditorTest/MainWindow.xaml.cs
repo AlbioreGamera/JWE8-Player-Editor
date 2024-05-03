@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using Microsoft.Win32;
@@ -27,17 +30,17 @@ namespace PESPlayerEditorTest
         public FileStream fileStream;
         public static List<Position> Positions { get; } = new List<Position>
             {
-                new Position { PositionId = 0, PositionName = "Goal Keeper" },
-                new Position { PositionId = 1, PositionName = "Libero" },
-                new Position { PositionId = 2, PositionName = "Sweeper" },
-                new Position { PositionId = 3, PositionName = "Central Back Stopper" },
-                new Position { PositionId = 4, PositionName = "Side Back" },
-                new Position { PositionId = 5, PositionName = "Defensive Midfielder" },
-                new Position { PositionId = 6, PositionName = "Centre Midfielder" },
-                new Position { PositionId = 7, PositionName = "Side Midfielder" },
-                new Position { PositionId = 8, PositionName = "Offensive Midfielder" },
-                new Position { PositionId = 9, PositionName = "Centre Forward" },
-                new Position { PositionId = 10, PositionName = "Wing Forward" },
+                new Position { PositionId = 0, PositionCode = "GK", PositionName = "Goal Keeper" },
+                new Position { PositionId = 1, PositionCode = "LI", PositionName = "Libero" },
+                new Position { PositionId = 2, PositionCode = "SW", PositionName = "Sweeper" },
+                new Position { PositionId = 3, PositionCode = "CB", PositionName = "Central Back Stopper" },
+                new Position { PositionId = 4, PositionCode = "SB", PositionName = "Side Back" },
+                new Position { PositionId = 5, PositionCode = "DMF", PositionName = "Defensive Midfielder" },
+                new Position { PositionId = 6, PositionCode = "CMF", PositionName = "Centre Midfielder" },
+                new Position { PositionId = 7, PositionCode = "SMF", PositionName = "Side Midfielder" },
+                new Position { PositionId = 8, PositionCode = "OMF", PositionName = "Offensive Midfielder" },
+                new Position { PositionId = 9, PositionCode = "CF", PositionName = "Centre Forward" },
+                new Position { PositionId = 10, PositionCode = "WF", PositionName = "Wing Forward" },
         };
 
         public static List<Country> Countries { get; } = new List<Country>
@@ -214,7 +217,37 @@ namespace PESPlayerEditorTest
         {
             InitializeComponent();
             DataContext = this;
+        }
 
+        public void PopulateTeamsComboBox()
+        {
+            try
+            {
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "team.cfg");
+                List<string> teamNames = new List<string>();
+
+                foreach (string line in File.ReadLines(filePath))
+                {
+                    if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
+                    {
+                        string[] parts = line.Split(';');
+                        if (parts.Length >= 3)
+                        {
+                            teamNames.Add(parts[2].ToUpper());
+                        }
+                    }
+                }
+                team1ComboBox.IsEnabled = true;
+                team2ComboBox.IsEnabled = true;
+                team1ComboBox.ItemsSource = teamNames;
+                team2ComboBox.ItemsSource = teamNames;
+                team1ComboBox.SelectedIndex = 0;
+                team2ComboBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading teams: {ex.Message}");
+            }
         }
 
         private void OpenFileSelectionWindow_Click(object sender, RoutedEventArgs e)
@@ -254,9 +287,9 @@ namespace PESPlayerEditorTest
 
             using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
-                fileStream.Seek(124, SeekOrigin.Begin); // Start reading from the 7C byte
+                fileStream.Seek(124, SeekOrigin.Begin);
 
-                byte[] buffer = new byte[0x7C]; // Each Player
+                byte[] buffer = new byte[0x7C];
 
                 int playerIndex = 1;
                 while (fileStream.Read(buffer, 0, buffer.Length) == buffer.Length)
@@ -302,11 +335,13 @@ namespace PESPlayerEditorTest
                         byte[] playerBytes = new byte[] { buffer[i], buffer[i + 1] };
                         int player = BitConverter.ToUInt16(playerBytes, 0);
 
-                        // Read the player's number from the numbers file (assuming each number is 1 bit)
-                        fsNumbers.Seek(playerIndexWithinTeam - 1, SeekOrigin.Begin); // Assuming playerIndexWithinTeam is 1-based
-                        int number = fsNumbers.ReadByte() + 1;
+                        // Read the player's number from the numbers file
+                        int number = ReadNumber(fsNumbers, teamIndex, playerIndexWithinTeam);
 
-                        playerAssignments.Add(new PlayerAssignment { Player = player, PlayerIndex = playerIndexWithinTeam, Team = teamIndex, Number = number });
+                        // Retrieve the player object from the People collection based on the player index
+                        Player playerObj = People.FirstOrDefault(p => p.PlayerIndex == player);
+
+                        playerAssignments.Add(new PlayerAssignment { Player = playerObj, PlayerIndex = playerIndexWithinTeam, Team = teamIndex, Number = number });
                         playerIndexWithinTeam++;
                         if (playerIndexWithinTeam > 32)
                         {
@@ -320,47 +355,53 @@ namespace PESPlayerEditorTest
             }
         }
 
+        private int ReadNumber(FileStream fsNumbers, int teamIndex, int playerIndexWithinTeam)
+        {
+            // Assuming each team has 32 players and each player's number is 1 byte
+            int totalPlayerIndex = (teamIndex - 1) * 32 + playerIndexWithinTeam;
+            fsNumbers.Seek(totalPlayerIndex - 1, SeekOrigin.Begin); // Assuming playerIndexWithinTeam is 1-based
+            return fsNumbers.ReadByte() + 1;
+        }
+
         public void PersonListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (personListBox.SelectedItem != null)
             {
                 Player selectedPerson = (Player)personListBox.SelectedItem;
-
-                playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
                 nameTextBox.Text = selectedPerson.Name;
                 shirtNameTextBox.Text = selectedPerson.ShirtName;
                 callnameTextBox.Text = selectedPerson.Commentary.ToString();
                 countryComboBox.SelectedIndex = selectedPerson.Country - 121;
-                ageComboBox.SelectedIndex = selectedPerson.Age;
-                heightTextBox.Text = selectedPerson.Height.ToString();
-                weightTextBox.Text = selectedPerson.Weight.ToString(); ;
-                positionComboBox.SelectedIndex = selectedPerson.Position;
+                nameTextBox.IsEnabled = true;
+                shirtNameTextBox.IsEnabled = true;
+                callnameTextBox.IsEnabled = true;
+                countryComboBox.IsEnabled = true;
             }
         }
 
-        private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
-        {
-            if (personListBox.SelectedItem != null)
-            {
-                Player selectedPlayer = (Player)personListBox.SelectedItem;
-                selectedPlayer.Name = nameTextBox.Text;
-                selectedPlayer.ShirtName = shirtNameTextBox.Text;
-                selectedPlayer.Commentary = int.Parse(callnameTextBox.Text);
-                selectedPlayer.Country = countryComboBox.SelectedIndex + 121;
-                selectedPlayer.Age = ageComboBox.SelectedIndex;
-                selectedPlayer.Height = int.Parse(heightTextBox.Text);
-                selectedPlayer.Weight = int.Parse(weightTextBox.Text);
-                selectedPlayer.Position = positionComboBox.SelectedIndex;
-                personListBox.Items.Refresh();
-            }
-        }
+        //private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
+        //{
+        //    if (personListBox.SelectedItem != null)
+        //    {
+        //        Player selectedPlayer = (Player)personListBox.SelectedItem;
+        //        selectedPlayer.Name = nameTextBox.Text;
+        //        selectedPlayer.ShirtName = shirtNameTextBox.Text;
+        //        selectedPlayer.Commentary = int.Parse(callnameTextBox.Text);
+        //        selectedPlayer.Country = countryComboBox.SelectedIndex + 121;
+        //        selectedPlayer.Age = ageComboBox.SelectedIndex;
+        //        selectedPlayer.Height = int.Parse(heightTextBox.Text);
+        //        selectedPlayer.Weight = int.Parse(weightTextBox.Text);
+        //        selectedPlayer.Position = positionComboBox.SelectedIndex;
+        //        personListBox.Items.Refresh();
+        //    }
+        //}
 
         private void OpenPlayer(object sender, MouseButtonEventArgs e)
         {
             if (personListBox.SelectedItem != null)
             {
                 Player selectedPerson = (Player)personListBox.SelectedItem;
-                PlayerWindow playerWindow = new PlayerWindow(selectedPerson);
+                PlayerWindow playerWindow = new PlayerWindow(selectedPerson, this);
 
                 // Assuming your PlayerWindow.xaml has text boxes with the same names as below
                 playerWindow.playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
@@ -376,7 +417,6 @@ namespace PESPlayerEditorTest
                 playerWindow.Show();
             }
         }
-
 
         private void SaveChangesToFile(string filePath)
         {
@@ -430,9 +470,95 @@ namespace PESPlayerEditorTest
 
         private void saveChanges_Click(object sender, RoutedEventArgs e)
         {
-             SaveChangesToFile(openFileDialog.FileName);
+             SaveChangesToFile(FilePath1);
+             SaveChangesToFile(FilePath2);
+             SaveChangesToFile(FilePath3);
              People.Clear();
-             ParsePlayers(openFileDialog.FileName);
+             PeopleA.Clear();
+             ParsePlayers(FilePath1);
+             ParsePlayerAssignment(FilePath2, FilePath3);
+        }
+
+
+        private void ClearFilter()
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(PeopleA);
+            view.Filter = null;
+        }
+
+        private void team1ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterPeopleAByTeamId(team1ComboBox, team1DataGrid);
+            team1DataGrid.IsEnabled = true;
+        }
+
+        private void team2ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterPeopleAByTeamId(team2ComboBox, team2DataGrid);
+            team2DataGrid.IsEnabled = true;
+        }
+
+        private void FilterPeopleAByTeamId(ComboBox teamCombobox, DataGrid dataGrid)
+        {
+            int selectedTeamId = teamCombobox.SelectedIndex + 1;
+            var filteredPeopleA = PeopleA.Where(player => player.Team == selectedTeamId).ToList();
+            dataGrid.ItemsSource = filteredPeopleA;
+        }
+        private void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        public void OpenPlayerFromDataGrid(object sender)
+        {
+            // Get the selected row
+            if (sender is DataGrid dataGrid && dataGrid.SelectedItems.Count == 1)
+            {
+                if (dataGrid.SelectedItem != null)
+                {
+                    PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
+
+                    PlayerWindow playerWindow = new PlayerWindow(selectedPlayerAssignment.Player, this);
+                    playerWindow.ShowDialog();
+                }
+            }
+        }
+
+        public void Team1DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenPlayerFromDataGrid(sender);
+        }
+
+        public void Team2DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenPlayerFromDataGrid(sender);
+        }
+
+        private void team1DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            dataGridSelectedPlayer(sender);
+        }
+
+        private void team2DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            dataGridSelectedPlayer(sender);
+        }
+
+        public void dataGridSelectedPlayer(object sender)
+        {
+            if (sender is DataGrid dataGrid && dataGrid.SelectedItems.Count == 1)
+            {
+                PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
+
+                if(selectedPlayerAssignment.Player != null)
+                {
+                    nameTextBox.Text = selectedPlayerAssignment.Player.Name;
+                    shirtNameTextBox.Text = selectedPlayerAssignment.Player.ShirtName;
+                    callnameTextBox.Text = selectedPlayerAssignment.Player.Commentary.ToString();
+                    countryComboBox.SelectedIndex = selectedPlayerAssignment.Player.Country - 121;
+                }
+
+            }
         }
     }
 }

@@ -405,7 +405,7 @@
 
                 </Grid>
             </GroupBox>
-            <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="436,652,0,0" VerticalAlignment="Top" Width="212" Height="43" Click="ApplyPlayerChanges" RenderTransformOrigin="-0.236,0.52"/>
+            <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="436,652,0,0" VerticalAlignment="Top" Width="212" Height="43" Click="ClosePlayerWindow" RenderTransformOrigin="-0.236,0.52"/>
         </Grid>
     </Grid>
 </Window>
