@@ -11,5 +11,6 @@ namespace PlayerLibrary
         public int Team {  get; set; }
         public int PlayerIndex { get; set; }
         public int Player {  get; set; }
+        public int Number {  get; set; }
     }
 }

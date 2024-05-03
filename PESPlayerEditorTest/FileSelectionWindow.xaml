@@ -5,23 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
-        Title="File Selection" Height="300" Width="300">
-    <Grid>
+        Title="File Selection" Height="166" Width="363" ResizeMode="NoResize" >
+    <Grid Background="#FF212121">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="200" MaxWidth="200"/>
+        </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="0" Content="Open para_we8_bin_000" HorizontalAlignment="Left" VerticalAlignment="Top" Click="SelectFile1_Click"/>
-        <TextBox x:Name="para_we8_bin_000" Grid.Row="0" Text="{Binding FilePath1}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="100,0,0,0"/>
+        <Button Grid.Row="0" Content="Open para_we8_bin_000" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile1_Click"/>
+        <TextBox x:Name="para_we8_bin_000" Grid.Column="1" Text="{Binding FilePath1, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="1" Content="Open para_we8_bin_002" HorizontalAlignment="Left" VerticalAlignment="Top" Click="SelectFile2_Click"/>
-        <TextBox x:Name="para_we8_bin_002" Grid.Row="1" Text="{Binding FilePath2}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="100,0,0,0"/>
+        <Button Grid.Row="1" Content="Open para_we8_bin_002" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile2_Click"/>
+        <TextBox x:Name="para_we8_bin_002" Grid.Column="1" Grid.Row="1" Text="{Binding FilePath2, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="4" Content="OK" HorizontalAlignment="Center" Click="Ok_Click" Grid.RowSpan="2" Height="20" VerticalAlignment="Top" Width="46"/>
+        <Button Grid.Row="2" Content="Open para_we8_bin_004" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile3_Click"/>
+        <TextBox x:Name="para_we8_bin_004" Grid.Column="1" Grid.Row="2" Text="{Binding FilePath3, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
+
+        <Button Grid.Row="4" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
     </Grid>
 </Window>

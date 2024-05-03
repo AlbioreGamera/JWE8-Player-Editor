@@ -1,13 +1,11 @@
-﻿<Window x:Class="PESPlayerEditorTest.MainWindow"
+﻿<Window x:Class="PESPlayerEditorTest.PlayerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="760" Width="865" ResizeMode="CanMinimize">
-    
+        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="740" Width="865" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,31 +13,10 @@
             <RowDefinition Height="*"/>
             <!-- Remaining space for the rest of the content -->
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Menu>
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Open param_we8.bin_000" Click="Button_Click"/>
-                    <MenuItem Header="_Open bin_000 and bin_002" Click="OpenFileSelectionWindow_Click"/>
-                    <MenuItem Header="_Save" Click="saveChanges_Click"/>
-                    <MenuItem Header="_Save As" Click="saveChanges_Click"/>
-                    <Separator/>
-                    <MenuItem Header="_Exit" Click="CloseButton_Click"/>
-                </MenuItem>
-            </Menu>
-        </Grid>
-        <Grid Grid.Row="1"  Background="#FF212121" Width="900" Height="726" VerticalAlignment="Center">
-            <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="668" Margin="10,27,0,0" VerticalAlignment="Top" Width="175" MouseDoubleClick="OpenPlayer">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+        <Grid  Background="#FF212121" Width="900" Height="726" VerticalAlignment="Center" Margin="0,0,-35,0">
             <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
 
-            <GroupBox x:Name="Player_Information" Header="General" Margin="199,15,489,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="386">
+            <GroupBox x:Name="Player_Information" Header="General" Margin="14,15,674,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="386">
                 <Grid Height="383">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="58.516"/>
@@ -79,12 +56,12 @@
                     <TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    <ComboBox x:Uid="countryComboBox" Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
                     SelectedItem="{Binding Country, Mode=TwoWay}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    <ComboBox x:Uid="ageComboBox" x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     DisplayMemberPath="AgeName" SelectedValuePath="AgeValue"
                     SelectedItem="{Binding Age, Mode=TwoWay}" Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
@@ -118,8 +95,8 @@
             </GroupBox>
 
 
-            <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="621,599,0,0" VerticalAlignment="Top" Width="212" Height="96" Click="ApplyPlayerChanges"/>
-            <GroupBox x:Name="Position" Header="Position" Margin="199,406,489,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="289">
+            <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="436,599,0,0" VerticalAlignment="Top" Width="212" Height="48" Click="ApplyPlayerChanges" RenderTransformOrigin="-0.236,0.52"/>
+            <GroupBox x:Name="Position" Header="Position" Margin="14,406,674,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="289">
                 <Grid Height="257">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="22"/>
@@ -144,8 +121,8 @@
                     </Grid.RowDefinitions>
 
                     <Label Content="Reg. Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="5" Width="68"/>
-                    <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    DisplayMemberPath="PositionName" SelectedValuePath="PositionId"  SelectedItem="{Binding Position, Mode=TwoWay}"
+                    <ComboBox x:Uid="positionComboBox" x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    DisplayMemberPath="PositionName" SelectedValuePath="PositionId" SelectedItem="{Binding Position, Mode=TwoWay}"
                     Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="21" Margin="25,0,0,0"/>
 
                     <CheckBox x:Name="gkCheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
@@ -183,7 +160,7 @@
 
                 </Grid>
             </GroupBox>
-            <GroupBox x:Name="Player_Abilities" Header="Abilities" Margin="416,15,284,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" Width="200" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="680">
+            <GroupBox x:Name="Player_Abilities" Header="Abilities" Margin="231,15,469,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" Width="200" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="680">
                 <Grid Height="649">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="86.516"/>
@@ -302,7 +279,7 @@
                     <TextBox x:Name="statTeamWorkTextBox" Grid.Row="25" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
                 </Grid>
             </GroupBox>
-            <GroupBox x:Name="Player_Information_Copy" Header="Team" Margin="621,15,67,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.15,0.15,0.15,0.15" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="49">
+            <GroupBox x:Name="Player_Information_Copy" Header="Team" Margin="436,15,252,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.15,0.15,0.15,0.15" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="49">
                 <Grid Height="28">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="58.516"/>
@@ -320,7 +297,7 @@
 
                 </Grid>
             </GroupBox>
-            <GroupBox x:Name="Position_Copy" Header="Skills" Margin="621,69,67,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="525">
+            <GroupBox x:Name="Position_Copy" Header="Skills" Margin="436,69,252,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="525">
                 <Grid Height="482">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="22"/>
@@ -428,6 +405,7 @@
 
                 </Grid>
             </GroupBox>
+            <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="436,652,0,0" VerticalAlignment="Top" Width="212" Height="43" Click="ApplyPlayerChanges" RenderTransformOrigin="-0.236,0.52"/>
         </Grid>
     </Grid>
 </Window>

@@ -1,30 +1,27 @@
-﻿using System;
+﻿using PlayerLibrary;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Navigation;
-using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
-using PlayerLibrary;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace PESPlayerEditorTest
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PlayerWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PlayerWindow : Window
     {
-        public SafeFileHandle filePath;
+        public Player SelectedPlayer { get; set; }
 
-        public FileStream fileStream;
         public static List<Position> Positions { get; } = new List<Position>
             {
                 new Position { PositionId = 0, PositionName = "Goal Keeper" },
@@ -198,241 +195,42 @@ namespace PESPlayerEditorTest
             new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC"], AgeName = 46 }
         };
 
-        List<Player> players = new List<Player>();
-
-        List<PlayerAssignment> playerAssignment = new List<PlayerAssignment>();
-
-        OpenFileDialog openFileDialog = new OpenFileDialog();
-
-        public ObservableCollection<Player> People { get; set; } = new ObservableCollection<Player>();
-        public ObservableCollection<PlayerAssignment> PeopleA { get; set; } = new ObservableCollection<PlayerAssignment>();
-        public string FilePath1 { get; internal set; }
-        public string FilePath2 { get; internal set; }
-        public string FilePath3 { get; internal set; }
-
-        public MainWindow()
+        public PlayerWindow(Player selectedPlayer)
         {
             InitializeComponent();
-            DataContext = this;
+            SelectedPlayer = selectedPlayer;
 
-        }
+            // Set the DataContext of the window to itself, so bindings work
+            DataContext = selectedPlayer;
 
-        private void OpenFileSelectionWindow_Click(object sender, RoutedEventArgs e)
-        {
-            FileSelectionWindow fileSelectionWindow = new FileSelectionWindow(this);
-            fileSelectionWindow.CheckExistingFiles(); 
-            fileSelectionWindow.ShowDialog();  
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            openFileDialog.Filter = "para_we8.bin player files (*.bin_000)|*.bin_000|All files (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                ParsePlayers(openFileDialog.FileName);
-                foreach (Player person in ParsePlayers(openFileDialog.FileName))
-                {
-                    People.Add(person);
-                }
-                personListBox.SelectedIndex = 0;
-            }
-
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to close the application?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
-            {
-                // Close the application
-                Application.Current.Shutdown();
-            }
-        }
-
-        public List<Player> ParsePlayers(string filePath)
-        {
-
-            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                fileStream.Seek(124, SeekOrigin.Begin); // Start reading from the 7C byte
-
-                byte[] buffer = new byte[0x7C]; // Each Player
-
-                int playerIndex = 1;
-                while (fileStream.Read(buffer, 0, buffer.Length) == buffer.Length)
-                {
-                    string ageHexValue = buffer[109].ToString("X2");
-                    Age age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
-
-                    byte[] commentaryHex = new byte[2]; Array.Copy(buffer, 48, commentaryHex, 0, 2);
-
-                    Player person = new Player
-                    {
-                        PlayerIndex = playerIndex++,
-                        Name = Encoding.Unicode.GetString(buffer, 0, 32).Trim(),
-                        ShirtName = Encoding.ASCII.GetString(buffer, 32, 16).Trim(),
-                        Commentary = BitConverter.ToInt16(commentaryHex, 0),
-                        Position = buffer[52] & 0x0F,
-                        Height = buffer[88] - 44,
-                        Weight = buffer[89] - 44,
-                        Age = age?.AgeIndex ?? 0,
-                        Country = BitConverter.ToInt32(buffer, 110),
-                    };
-                    People.Add(person);
-                }
-            }
-            return players;
-        }
-
-        public List<PlayerAssignment> ParsePlayerAssignment(string filePath, string numberFilePath)
-        {
-            using (FileStream fsPlayerAssignment = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            using (FileStream fsNumbers = new FileStream(numberFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                fsPlayerAssignment.Seek(0, SeekOrigin.Begin);
-                byte[] buffer = new byte[0x40];
-                List<PlayerAssignment> playerAssignments = new List<PlayerAssignment>();
-                int teamIndex = 1;
-                int playerIndexWithinTeam = 1;
-
-                while (fsPlayerAssignment.Read(buffer, 0, buffer.Length) > 0)
-                {
-                    for (int i = 0; i < buffer.Length; i += 2)
-                    {
-                        byte[] playerBytes = new byte[] { buffer[i], buffer[i + 1] };
-                        int player = BitConverter.ToUInt16(playerBytes, 0);
-
-                        // Read the player's number from the numbers file (assuming each number is 1 bit)
-                        fsNumbers.Seek(playerIndexWithinTeam - 1, SeekOrigin.Begin); // Assuming playerIndexWithinTeam is 1-based
-                        int number = fsNumbers.ReadByte() + 1;
-
-                        playerAssignments.Add(new PlayerAssignment { Player = player, PlayerIndex = playerIndexWithinTeam, Team = teamIndex, Number = number });
-                        playerIndexWithinTeam++;
-                        if (playerIndexWithinTeam > 32)
-                        {
-                            teamIndex++;
-                            playerIndexWithinTeam = 1;
-                        }
-                    }
-                }
-
-                return playerAssignments;
-            }
-        }
-
-        public void PersonListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (personListBox.SelectedItem != null)
-            {
-                Player selectedPerson = (Player)personListBox.SelectedItem;
-
-                playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
-                nameTextBox.Text = selectedPerson.Name;
-                shirtNameTextBox.Text = selectedPerson.ShirtName;
-                callnameTextBox.Text = selectedPerson.Commentary.ToString();
-                countryComboBox.SelectedIndex = selectedPerson.Country - 121;
-                ageComboBox.SelectedIndex = selectedPerson.Age;
-                heightTextBox.Text = selectedPerson.Height.ToString();
-                weightTextBox.Text = selectedPerson.Weight.ToString(); ;
-                positionComboBox.SelectedIndex = selectedPerson.Position;
-            }
+            playerIdTextBox.Text = SelectedPlayer.PlayerIndex.ToString();
+            nameTextBox.Text = SelectedPlayer.Name;
+            shirtNameTextBox.Text = SelectedPlayer.ShirtName;
+            callnameTextBox.Text = SelectedPlayer.Commentary.ToString();
+            countryComboBox.SelectedIndex = SelectedPlayer.Country - 121;
+            ageComboBox.SelectedIndex = SelectedPlayer.Age;
+            heightTextBox.Text = SelectedPlayer.Height.ToString();
+            weightTextBox.Text = SelectedPlayer.Weight.ToString();
+            positionComboBox.SelectedIndex = SelectedPlayer.Position;
         }
 
         private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
         {
-            if (personListBox.SelectedItem != null)
-            {
-                Player selectedPlayer = (Player)personListBox.SelectedItem;
-                selectedPlayer.Name = nameTextBox.Text;
-                selectedPlayer.ShirtName = shirtNameTextBox.Text;
-                selectedPlayer.Commentary = int.Parse(callnameTextBox.Text);
-                selectedPlayer.Country = countryComboBox.SelectedIndex + 121;
-                selectedPlayer.Age = ageComboBox.SelectedIndex;
-                selectedPlayer.Height = int.Parse(heightTextBox.Text);
-                selectedPlayer.Weight = int.Parse(weightTextBox.Text);
-                selectedPlayer.Position = positionComboBox.SelectedIndex;
-                personListBox.Items.Refresh();
-            }
+            // Update the selected player's data with the new values from the window
+            SelectedPlayer.PlayerIndex = int.Parse(playerIdTextBox.Text);
+            SelectedPlayer.Name = nameTextBox.Text;
+            SelectedPlayer.ShirtName = shirtNameTextBox.Text;
+            SelectedPlayer.Commentary = int.Parse(callnameTextBox.Text);
+            SelectedPlayer.Country = countryComboBox.SelectedIndex + 121;
+            SelectedPlayer.Age = ageComboBox.SelectedIndex;
+            SelectedPlayer.Height = int.Parse(heightTextBox.Text);
+            SelectedPlayer.Weight = int.Parse(weightTextBox.Text);
+            SelectedPlayer.Position = positionComboBox.SelectedIndex;
         }
 
-        private void OpenPlayer(object sender, MouseButtonEventArgs e)
+        private void ClosePlayerWindow(object sender, RoutedEventArgs e)
         {
-            if (personListBox.SelectedItem != null)
-            {
-                Player selectedPerson = (Player)personListBox.SelectedItem;
-                PlayerWindow playerWindow = new PlayerWindow(selectedPerson);
-
-                // Assuming your PlayerWindow.xaml has text boxes with the same names as below
-                playerWindow.playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
-                playerWindow.nameTextBox.Text = selectedPerson.Name;
-                playerWindow.shirtNameTextBox.Text = selectedPerson.ShirtName;
-                playerWindow.callnameTextBox.Text = selectedPerson.Commentary.ToString();
-                playerWindow.countryComboBox.SelectedIndex = selectedPerson.Country - 121;
-                playerWindow.ageComboBox.SelectedIndex = selectedPerson.Age;
-                playerWindow.heightTextBox.Text = selectedPerson.Height.ToString();
-                playerWindow.weightTextBox.Text = selectedPerson.Weight.ToString();
-                playerWindow.positionComboBox.SelectedIndex = selectedPerson.Position;
-
-                playerWindow.Show();
-            }
-        }
-
-
-        private void SaveChangesToFile(string filePath)
-        {
-            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                foreach (var player in People)
-                {
-                    // Calcular el desplazamiento en el archivo basado en el índice del jugador
-                    long byteOffset = player.PlayerIndex * 0x7C; // 0x7C es el tamaño de cada jugador
-
-                    // Convertir el desplazamiento de bytes a desplazamiento de bits y sumar 124 (15 bytes * 8 bits por byte) para el desplazamiento inicial
-                    long bitOffset = byteOffset * 8; // Comenzar a escribir en el bit 124
-
-                    // Volver al inicio del archivo para escribir los cambios
-                    fileStream.Seek(0, SeekOrigin.Begin);
-
-                    using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
-                    {
-                        fileStream.Seek(bitOffset / 8, SeekOrigin.Begin);
-                        byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name.PadRight(12, '\0'));
-                        writer.Write(nameBytes);
-
-                        fileStream.Seek((bitOffset + 32 * 8) / 8, SeekOrigin.Begin);
-                        byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0').Substring(0, 16));
-                        writer.Write(shirtNameBytes);
-
-                        // Calculate the byte position based on the bit offset
-                        int position = (int)(bitOffset + 52 * 8) / 8;
-
-                        // Read the byte at the position
-                        fileStream.Seek(position, SeekOrigin.Begin);
-                        byte b = (byte)(fileStream.ReadByte() & 0xF0);  // Clear the lower nibble
-
-
-                        fileStream.Seek(position, SeekOrigin.Begin);
-                        byte[] positionBytes = BitConverter.GetBytes(player.Position);
-                        byte buffer52 = (byte)((positionBytes[0]) & 0x0F);
-
-                        b |= buffer52;
-
-                        fileStream.Seek(position, SeekOrigin.Begin);
-                        fileStream.WriteByte(b);
-
-
-                        fileStream.Seek((int)(bitOffset + 110 * 8) / 8, SeekOrigin.Begin);
-                        writer.Write(player.Country);
-                    }
-                }
-            }
-        }
-
-        private void saveChanges_Click(object sender, RoutedEventArgs e)
-        {
-             SaveChangesToFile(openFileDialog.FileName);
-             People.Clear();
-             ParsePlayers(openFileDialog.FileName);
+            this.Close();
         }
     }
 }
