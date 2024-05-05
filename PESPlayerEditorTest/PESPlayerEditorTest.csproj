@@ -13,6 +13,124 @@
     <None Remove="config\filepaths.cfg" />
     <None Remove="config\league.cfg" />
     <None Remove="config\team.cfg" />
+    <None Remove="resources\country\121.bmp" />
+    <None Remove="resources\country\122.bmp" />
+    <None Remove="resources\country\123.bmp" />
+    <None Remove="resources\country\124.bmp" />
+    <None Remove="resources\country\125.bmp" />
+    <None Remove="resources\country\126.bmp" />
+    <None Remove="resources\country\127.bmp" />
+    <None Remove="resources\country\128.bmp" />
+    <None Remove="resources\country\129.bmp" />
+    <None Remove="resources\country\130.bmp" />
+    <None Remove="resources\country\131.bmp" />
+    <None Remove="resources\country\132.bmp" />
+    <None Remove="resources\country\133.bmp" />
+    <None Remove="resources\country\134.bmp" />
+    <None Remove="resources\country\135.bmp" />
+    <None Remove="resources\country\136.bmp" />
+    <None Remove="resources\country\137.bmp" />
+    <None Remove="resources\country\138.bmp" />
+    <None Remove="resources\country\139.bmp" />
+    <None Remove="resources\country\140.bmp" />
+    <None Remove="resources\country\141.bmp" />
+    <None Remove="resources\country\142.bmp" />
+    <None Remove="resources\country\143.bmp" />
+    <None Remove="resources\country\144.bmp" />
+    <None Remove="resources\country\145.bmp" />
+    <None Remove="resources\country\146.bmp" />
+    <None Remove="resources\country\147.bmp" />
+    <None Remove="resources\country\148.bmp" />
+    <None Remove="resources\country\149.bmp" />
+    <None Remove="resources\country\150.bmp" />
+    <None Remove="resources\country\151.bmp" />
+    <None Remove="resources\country\152.bmp" />
+    <None Remove="resources\country\153.bmp" />
+    <None Remove="resources\country\154.bmp" />
+    <None Remove="resources\country\155.bmp" />
+    <None Remove="resources\country\156.bmp" />
+    <None Remove="resources\country\157.bmp" />
+    <None Remove="resources\country\158.bmp" />
+    <None Remove="resources\country\159.bmp" />
+    <None Remove="resources\country\160.bmp" />
+    <None Remove="resources\country\161.bmp" />
+    <None Remove="resources\country\162.bmp" />
+    <None Remove="resources\country\163.bmp" />
+    <None Remove="resources\country\164.bmp" />
+    <None Remove="resources\country\165.bmp" />
+    <None Remove="resources\country\166.bmp" />
+    <None Remove="resources\country\167.bmp" />
+    <None Remove="resources\country\168.bmp" />
+    <None Remove="resources\country\169.bmp" />
+    <None Remove="resources\country\170.bmp" />
+    <None Remove="resources\country\171.bmp" />
+    <None Remove="resources\country\172.bmp" />
+    <None Remove="resources\country\173.bmp" />
+    <None Remove="resources\country\174.bmp" />
+    <None Remove="resources\country\175.bmp" />
+    <None Remove="resources\country\176.bmp" />
+    <None Remove="resources\country\177.bmp" />
+    <None Remove="resources\country\178.bmp" />
+    <None Remove="resources\country\179.bmp" />
+    <None Remove="resources\country\180.bmp" />
+    <None Remove="resources\country\181.bmp" />
+    <None Remove="resources\country\182.bmp" />
+    <None Remove="resources\country\183.bmp" />
+    <None Remove="resources\country\184.bmp" />
+    <None Remove="resources\country\185.bmp" />
+    <None Remove="resources\country\186.bmp" />
+    <None Remove="resources\country\187.bmp" />
+    <None Remove="resources\country\188.bmp" />
+    <None Remove="resources\country\189.bmp" />
+    <None Remove="resources\country\190.bmp" />
+    <None Remove="resources\country\191.bmp" />
+    <None Remove="resources\country\192.bmp" />
+    <None Remove="resources\country\193.bmp" />
+    <None Remove="resources\country\194.bmp" />
+    <None Remove="resources\country\195.bmp" />
+    <None Remove="resources\country\196.bmp" />
+    <None Remove="resources\country\197.bmp" />
+    <None Remove="resources\country\198.bmp" />
+    <None Remove="resources\country\199.bmp" />
+    <None Remove="resources\country\200.bmp" />
+    <None Remove="resources\country\201.bmp" />
+    <None Remove="resources\country\202.bmp" />
+    <None Remove="resources\country\203.bmp" />
+    <None Remove="resources\country\204.bmp" />
+    <None Remove="resources\country\205.bmp" />
+    <None Remove="resources\country\206.bmp" />
+    <None Remove="resources\country\207.bmp" />
+    <None Remove="resources\country\208.bmp" />
+    <None Remove="resources\country\209.bmp" />
+    <None Remove="resources\country\210.bmp" />
+    <None Remove="resources\country\211.bmp" />
+    <None Remove="resources\country\212.bmp" />
+    <None Remove="resources\country\213.bmp" />
+    <None Remove="resources\country\214.bmp" />
+    <None Remove="resources\country\215.bmp" />
+    <None Remove="resources\country\216.bmp" />
+    <None Remove="resources\country\217.bmp" />
+    <None Remove="resources\country\218.bmp" />
+    <None Remove="resources\country\219.bmp" />
+    <None Remove="resources\country\220.bmp" />
+    <None Remove="resources\country\222.bmp" />
+    <None Remove="resources\country\223.bmp" />
+    <None Remove="resources\country\224.bmp" />
+    <None Remove="resources\country\225.bmp" />
+    <None Remove="resources\country\226.bmp" />
+    <None Remove="resources\country\227.bmp" />
+    <None Remove="resources\country\228.bmp" />
+    <None Remove="resources\country\229.bmp" />
+    <None Remove="resources\country\230.bmp" />
+    <None Remove="resources\country\231.bmp" />
+    <None Remove="resources\country\232.bmp" />
+    <None Remove="resources\country\233.bmp" />
+    <None Remove="resources\country\234.bmp" />
+    <None Remove="resources\country\235.bmp" />
+    <None Remove="resources\country\236.bmp" />
+    <None Remove="resources\country\237.bmp" />
+    <None Remove="resources\country\238.bmp" />
+    <None Remove="resources\country\249.bmp" />
     <None Remove="resources\jwe8.ico" />
     <None Remove="resources\jwe8ico.ico" />
     <None Remove="resources\jwe8ico.png" />
@@ -38,6 +156,360 @@
     <Resource Include="config\filepaths.cfg" />
     <Resource Include="config\league.cfg" />
     <Resource Include="config\team.cfg" />
+    <Resource Include="resources\country\121.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\122.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\123.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\124.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\125.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\126.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\127.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\128.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\129.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\130.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\131.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\132.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\133.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\134.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\135.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\136.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\137.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\138.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\139.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\140.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\141.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\142.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\143.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\144.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\145.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\146.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\147.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\148.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\149.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\150.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\151.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\152.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\153.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\154.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\155.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\156.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\157.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\158.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\159.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\160.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\161.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\162.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\163.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\164.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\165.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\166.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\167.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\168.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\169.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\170.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\171.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\172.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\173.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\174.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\175.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\176.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\177.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\178.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\179.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\180.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\181.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\182.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\183.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\184.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\185.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\186.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\187.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\188.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\189.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\190.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\191.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\192.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\193.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\194.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\195.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\196.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\197.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\198.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\199.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\200.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\201.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\202.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\203.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\204.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\205.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\206.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\207.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\208.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\209.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\210.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\211.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\212.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\213.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\214.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\215.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\216.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\217.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\218.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\219.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\220.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\249.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\222.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\223.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\224.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\225.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\226.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\227.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\228.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\229.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\230.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\231.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\232.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\233.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\234.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\235.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\236.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\237.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\238.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="resources\jwe8.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

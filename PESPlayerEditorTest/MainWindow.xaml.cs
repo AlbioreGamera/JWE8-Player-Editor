@@ -6,6 +6,7 @@ using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Text;
@@ -28,6 +29,13 @@ namespace PESPlayerEditorTest
         public SafeFileHandle filePath;
 
         public FileStream fileStream;
+
+        public FileStream fsPlayerAssignment;
+
+        public FileStream fsNumbers;
+
+        public Player SelectedPlayer { get; set; }
+
         public static List<Position> Positions { get; } = new List<Position>
             {
                 new Position { PositionId = 0, PositionCode = "GK", PositionName = "Goal Keeper" },
@@ -45,7 +53,7 @@ namespace PESPlayerEditorTest
 
         public static List<Country> Countries { get; } = new List<Country>
             {
-                new Country { CountryIndex = 0, CountryId = 121, CountryName = "Free" },
+                new Country { CountryIndex = 0, CountryId = 249, CountryName = "Free Nationality" },
                 new Country { CountryIndex = 1, CountryId = 122, CountryName = "Albania" },
                 new Country { CountryIndex = 2, CountryId = 123, CountryName = "Austria" },
                 new Country { CountryIndex = 3, CountryId = 124, CountryName = "Belarus" },
@@ -167,38 +175,38 @@ namespace PESPlayerEditorTest
 
         public static List<Age> Ages { get; } = new List<Age>
         {
-            new Age { AgeIndex = 0, AgeValue = ["02","05","04"], AgeName = 15 },
-            new Age { AgeIndex = 1, AgeValue = ["0A","0B","0C"], AgeName = 16 },
-            new Age { AgeIndex = 2, AgeValue = ["12","13","14"], AgeName = 17 },
-            new Age { AgeIndex = 3, AgeValue = ["1A","1B","1C"], AgeName = 18 },
-            new Age { AgeIndex = 4, AgeValue = ["22","23","24"], AgeName = 19 },
-            new Age { AgeIndex = 5, AgeValue = ["2A","2B","2C"], AgeName = 20 },
-            new Age { AgeIndex = 6, AgeValue = ["32","33","34"], AgeName = 21 },
-            new Age { AgeIndex = 7, AgeValue = ["3A","3B","3C"], AgeName = 22 },
-            new Age { AgeIndex = 8, AgeValue = ["42","43","44"], AgeName = 23 },
-            new Age { AgeIndex = 9, AgeValue = ["4A","4B","4C"], AgeName = 24 },
-            new Age { AgeIndex = 10,AgeValue = ["52","53","54"], AgeName = 25 },
-            new Age { AgeIndex = 11,AgeValue = ["5A","5B","5C"], AgeName = 26 },
-            new Age { AgeIndex = 12,AgeValue = ["62","63","64"], AgeName = 27 },
-            new Age { AgeIndex = 13,AgeValue = ["6A","6B","6C"], AgeName = 28 },
-            new Age { AgeIndex = 14,AgeValue = ["72","73","74"], AgeName = 29 },
-            new Age { AgeIndex = 15,AgeValue = ["7A","7B","7C"], AgeName = 30 },
-            new Age { AgeIndex = 16,AgeValue = ["82","83","84"], AgeName = 31 },
-            new Age { AgeIndex = 17,AgeValue = ["8A","8B","8C"], AgeName = 32 },
-            new Age { AgeIndex = 18,AgeValue = ["92","93","94"], AgeName = 33 },
-            new Age { AgeIndex = 19,AgeValue = ["9A","9B","9C"], AgeName = 34 },
-            new Age { AgeIndex = 20,AgeValue = ["A2","A3","A4"], AgeName = 35 },
-            new Age { AgeIndex = 21,AgeValue = ["AA","AB","AC"], AgeName = 36 },
-            new Age { AgeIndex = 22,AgeValue = ["B2","B3","B4"], AgeName = 37 },
-            new Age { AgeIndex = 23,AgeValue = ["BA","BB","BC"], AgeName = 38 },
-            new Age { AgeIndex = 24,AgeValue = ["C2","C3","C4"], AgeName = 39 },
-            new Age { AgeIndex = 25,AgeValue = ["CA","CB","CC"], AgeName = 40 },
-            new Age { AgeIndex = 26,AgeValue = ["D2","D3","D4"], AgeName = 41 },
-            new Age { AgeIndex = 27,AgeValue = ["DA","DB","DC"], AgeName = 42 },
-            new Age { AgeIndex = 28,AgeValue = ["E2","E3","E4"], AgeName = 43 },
-            new Age { AgeIndex = 29,AgeValue = ["EA","EB","EC"], AgeName = 44 },
-            new Age { AgeIndex = 30,AgeValue = ["F2","F3","F4"], AgeName = 45 },
-            new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC"], AgeName = 46 }
+            new Age { AgeIndex = 0, AgeValue = ["02","05","04","05","06","07"], AgeName = 15 },
+            new Age { AgeIndex = 1, AgeValue = ["0A","0B","0C","0D","0E","0F"], AgeName = 16 },
+            new Age { AgeIndex = 2, AgeValue = ["12","13","14","15","16","17"], AgeName = 17 },
+            new Age { AgeIndex = 3, AgeValue = ["1A","1B","1C","1D","1E","1F"], AgeName = 18 },
+            new Age { AgeIndex = 4, AgeValue = ["22","23","24","25","26","27"], AgeName = 19 },
+            new Age { AgeIndex = 5, AgeValue = ["2A","2B","2C","2D","2E","2F"], AgeName = 20 },
+            new Age { AgeIndex = 6, AgeValue = ["32","33","34","35","36","37"], AgeName = 21 },
+            new Age { AgeIndex = 7, AgeValue = ["3A","3B","3C","3D","4E","3F"], AgeName = 22 },
+            new Age { AgeIndex = 8, AgeValue = ["42","43","44","45","46","47"], AgeName = 23 },
+            new Age { AgeIndex = 9, AgeValue = ["4A","4B","4C","4D","4E","4F"], AgeName = 24 },
+            new Age { AgeIndex = 10,AgeValue = ["52","53","54","55","56","57"], AgeName = 25 },
+            new Age { AgeIndex = 11,AgeValue = ["5A","5B","5C","5D","5E","5F"], AgeName = 26 },
+            new Age { AgeIndex = 12,AgeValue = ["62","63","64","65","66","67"], AgeName = 27 },
+            new Age { AgeIndex = 13,AgeValue = ["6A","6B","6C","6D","6E","6F"], AgeName = 28 },
+            new Age { AgeIndex = 14,AgeValue = ["72","73","74","75","76","77"], AgeName = 29 },
+            new Age { AgeIndex = 15,AgeValue = ["7A","7B","7C","7D","7E","7F"], AgeName = 30 },
+            new Age { AgeIndex = 16,AgeValue = ["82","83","84","85","86","87"], AgeName = 31 },
+            new Age { AgeIndex = 17,AgeValue = ["8A","8B","8C","8D","8E","8F"], AgeName = 32 },
+            new Age { AgeIndex = 18,AgeValue = ["92","93","94","95","95","97"], AgeName = 33 },
+            new Age { AgeIndex = 19,AgeValue = ["9A","9B","9C","9D","9E","9F"], AgeName = 34 },
+            new Age { AgeIndex = 20,AgeValue = ["A2","A3","A4","A5","A6","A7"], AgeName = 35 },
+            new Age { AgeIndex = 21,AgeValue = ["AA","AB","AC","AD","AE","AF"], AgeName = 36 },
+            new Age { AgeIndex = 22,AgeValue = ["B2","B3","B4","B5","B6","B7"], AgeName = 37 },
+            new Age { AgeIndex = 23,AgeValue = ["BA","BB","BC","BD","BE","BF"], AgeName = 38 },
+            new Age { AgeIndex = 24,AgeValue = ["C2","C3","C4","C4","C5","C6"], AgeName = 39 },
+            new Age { AgeIndex = 25,AgeValue = ["CA","CB","CC","CD","CE","CF"], AgeName = 40 },
+            new Age { AgeIndex = 26,AgeValue = ["D2","D3","D4","D4","D5","D6"], AgeName = 41 },
+            new Age { AgeIndex = 27,AgeValue = ["DA","DB","DC","DD","DE","DF"], AgeName = 42 },
+            new Age { AgeIndex = 28,AgeValue = ["E2","E3","E4","E5","E6","E7"], AgeName = 43 },
+            new Age { AgeIndex = 29,AgeValue = ["EA","EB","EC","ED","EE","EF"], AgeName = 44 },
+            new Age { AgeIndex = 30,AgeValue = ["F2","F3","F4","F5","F6","F7"], AgeName = 45 },
+            new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC","FD","FE","FF"], AgeName = 46 }
         };
 
         List<Player> players = new List<Player>();
@@ -367,15 +375,15 @@ namespace PESPlayerEditorTest
         {
             if (personListBox.SelectedItem != null)
             {
-                Player selectedPerson = (Player)personListBox.SelectedItem;
-                nameTextBox.Text = selectedPerson.Name;
-                shirtNameTextBox.Text = selectedPerson.ShirtName;
-                callnameTextBox.Text = selectedPerson.Commentary.ToString();
-                countryComboBox.SelectedIndex = selectedPerson.Country - 121;
-                nameTextBox.IsEnabled = true;
-                shirtNameTextBox.IsEnabled = true;
-                callnameTextBox.IsEnabled = true;
-                countryComboBox.IsEnabled = true;
+                PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)personListBox.SelectedItem;
+
+                if (selectedPlayerAssignment.Player != null)
+                {
+                    nameTextBox.Text = selectedPlayerAssignment.Player.Name;
+                    shirtNameTextBox.Text = selectedPlayerAssignment.Player.ShirtName;
+                    callnameTextBox.Text = selectedPlayerAssignment.Player.Commentary.ToString();
+                    countryComboBox.SelectedIndex = selectedPlayerAssignment.Player.Country - 121;
+                }
             }
         }
 
@@ -396,89 +404,98 @@ namespace PESPlayerEditorTest
         //    }
         //}
 
-        private void OpenPlayer(object sender, MouseButtonEventArgs e)
-        {
-            if (personListBox.SelectedItem != null)
-            {
-                Player selectedPerson = (Player)personListBox.SelectedItem;
-                PlayerWindow playerWindow = new PlayerWindow(selectedPerson, this);
-
-                // Assuming your PlayerWindow.xaml has text boxes with the same names as below
-                playerWindow.playerIdTextBox.Text = selectedPerson.PlayerIndex.ToString();
-                playerWindow.nameTextBox.Text = selectedPerson.Name;
-                playerWindow.shirtNameTextBox.Text = selectedPerson.ShirtName;
-                playerWindow.callnameTextBox.Text = selectedPerson.Commentary.ToString();
-                playerWindow.countryComboBox.SelectedIndex = selectedPerson.Country - 121;
-                playerWindow.ageComboBox.SelectedIndex = selectedPerson.Age;
-                playerWindow.heightTextBox.Text = selectedPerson.Height.ToString();
-                playerWindow.weightTextBox.Text = selectedPerson.Weight.ToString();
-                playerWindow.positionComboBox.SelectedIndex = selectedPerson.Position;
-
-                playerWindow.Show();
-            }
-        }
-
-        private void SaveChangesToFile(string filePath)
+        private void SavePlayerData(string filePath)
         {
             using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
-                foreach (var player in People)
+                foreach (var playerAssignment in PeopleA)
                 {
-                    // Calcular el desplazamiento en el archivo basado en el índice del jugador
-                    long byteOffset = player.PlayerIndex * 0x7C; // 0x7C es el tamaño de cada jugador
+                    // Get the Player object from the PlayerAssignment
+                    Player player = playerAssignment.Player;
 
-                    // Convertir el desplazamiento de bytes a desplazamiento de bits y sumar 124 (15 bytes * 8 bits por byte) para el desplazamiento inicial
-                    long bitOffset = byteOffset * 8; // Comenzar a escribir en el bit 124
-
-                    // Volver al inicio del archivo para escribir los cambios
-                    fileStream.Seek(0, SeekOrigin.Begin);
-
-                    using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
+                    if (player != null)
                     {
-                        fileStream.Seek(bitOffset / 8, SeekOrigin.Begin);
-                        byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name.PadRight(12, '\0'));
-                        writer.Write(nameBytes);
+                        // Calculate the byte offset in the file based on the player's index
+                        long byteOffset = player.PlayerIndex * 0x7C; // 0x7C is the size of each player record
 
-                        fileStream.Seek((bitOffset + 32 * 8) / 8, SeekOrigin.Begin);
-                        byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0').Substring(0, 16));
-                        writer.Write(shirtNameBytes);
+                        // Convert the byte offset to a bit offset and add 124 (15 bytes * 8 bits per byte) for the initial offset
+                        long bitOffset = byteOffset * 8; // Start writing at bit 124
 
-                        // Calculate the byte position based on the bit offset
-                        int position = (int)(bitOffset + 52 * 8) / 8;
+                        // Return to the beginning of the file to write the changes
+                        fileStream.Seek(0, SeekOrigin.Begin);
 
-                        // Read the byte at the position
-                        fileStream.Seek(position, SeekOrigin.Begin);
-                        byte b = (byte)(fileStream.ReadByte() & 0xF0);  // Clear the lower nibble
+                        using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
+                        {
+                            // Set the file stream position to the bit offset divided by 8 to write at the correct byte position
+                            fileStream.Seek(bitOffset / 8, SeekOrigin.Begin);
+                            byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name.PadRight(12, '\0'));
+                            writer.Write(nameBytes);
 
+                            fileStream.Seek((bitOffset + 32 * 8) / 8, SeekOrigin.Begin);
+                            byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0').Substring(0, 16));
+                            writer.Write(shirtNameBytes);
 
-                        fileStream.Seek(position, SeekOrigin.Begin);
-                        byte[] positionBytes = BitConverter.GetBytes(player.Position);
-                        byte buffer52 = (byte)((positionBytes[0]) & 0x0F);
+                            // Calculate the byte position based on the bit offset
+                            int position = (int)(bitOffset + 52 * 8) / 8;
 
-                        b |= buffer52;
+                            // Read the byte at the position
+                            fileStream.Seek(position, SeekOrigin.Begin);
+                            byte b = (byte)(fileStream.ReadByte() & 0xF0);  // Clear the lower nibble
 
-                        fileStream.Seek(position, SeekOrigin.Begin);
-                        fileStream.WriteByte(b);
+                            // Set the position bytes
+                            byte[] positionBytes = BitConverter.GetBytes((int)player.Position);
+                            byte buffer52 = (byte)((positionBytes[0]) & 0x0F);
 
+                            b |= buffer52;
 
-                        fileStream.Seek((int)(bitOffset + 110 * 8) / 8, SeekOrigin.Begin);
-                        writer.Write(player.Country);
+                            // Write the updated position byte
+                            fileStream.Seek(position, SeekOrigin.Begin);
+                            fileStream.WriteByte(b);
+
+                            fileStream.Seek((int)(bitOffset + 110 * 8) / 8, SeekOrigin.Begin);
+                            writer.Write(player.Country);
+                        }
                     }
                 }
             }
         }
 
-        private void saveChanges_Click(object sender, RoutedEventArgs e)
+
+        public void SavePlayerAssignmentData(string filePath)
         {
-             SaveChangesToFile(FilePath1);
-             SaveChangesToFile(FilePath2);
-             SaveChangesToFile(FilePath3);
-             People.Clear();
-             PeopleA.Clear();
-             ParsePlayers(FilePath1);
-             ParsePlayerAssignment(FilePath2, FilePath3);
+            using(FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                foreach (var playerAssignment in PeopleA)
+                {
+                    using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
+                    {
+                        fileStream.Seek(0, SeekOrigin.Begin);
+                        byte[] playersAssignment = BitConverter.GetBytes(playerAssignment.Player.PlayerIndex);
+                        writer.Write(playersAssignment);
+                    }
+
+                }
+            }
         }
 
+        public void SaveNumberData(string filePath)
+        {
+            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+
+            }
+        }
+
+        private void saveChanges_Click(object sender, RoutedEventArgs e)
+        {
+             SavePlayerData(FilePath1);
+             //SavePlayerAssignmentData(FilePath2);
+             //SaveNumberData(FilePath3);
+             People.Clear();
+             //PeopleA.Clear();
+             ParsePlayers(FilePath1);
+             //ParsePlayerAssignment(FilePath2, FilePath3);
+        }
 
         private void ClearFilter()
         {
@@ -509,29 +526,43 @@ namespace PESPlayerEditorTest
 
         }
 
-        public void OpenPlayerFromDataGrid(object sender)
+        private void OpenPlayer(object sender, MouseButtonEventArgs e)
         {
-            // Get the selected row
-            if (sender is DataGrid dataGrid && dataGrid.SelectedItems.Count == 1)
+            if (sender is ListBox personListBox && personListBox.SelectedItem != null)
             {
-                if (dataGrid.SelectedItem != null)
-                {
-                    PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
-
-                    PlayerWindow playerWindow = new PlayerWindow(selectedPlayerAssignment.Player, this);
-                    playerWindow.ShowDialog();
-                }
+                PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)personListBox.SelectedItem;
+                PlayerWindow playerWindow = new PlayerWindow(selectedPlayerAssignment.Player, this);
+                playerWindow.Show();
             }
+        }
+
+        public void OpenPlayerFromDataGrid(DataGrid dataGrid)
+        {
+            PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
+            PlayerWindow playerWindow = new PlayerWindow(selectedPlayerAssignment.Player, this);
+            playerWindow.ShowDialog();
         }
 
         public void Team1DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            OpenPlayerFromDataGrid(sender);
+            if (sender is DataGrid dataGrid && dataGrid.SelectedItems.Count == 1)
+            {
+                if (dataGrid.SelectedItem != null)
+                {
+                    OpenPlayerFromDataGrid(dataGrid);
+                }
+            }
         }
 
         public void Team2DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            OpenPlayerFromDataGrid(sender);
+            if (sender is DataGrid dataGrid && dataGrid.SelectedItems.Count == 1)
+            {
+                if (dataGrid.SelectedItem != null)
+                {
+                    OpenPlayerFromDataGrid(dataGrid);
+                }
+            }
         }
 
         private void team1DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

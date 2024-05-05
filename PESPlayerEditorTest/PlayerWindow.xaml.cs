@@ -24,6 +24,7 @@ namespace PESPlayerEditorTest
     {
         public Player SelectedPlayer { get; set; }
 
+        public PlayerAssignment SelectedPlayerAssignment {get; set;}
         public static List<Position> Positions { get; } = new List<Position>
             {
                 new Position { PositionId = 0, PositionName = "Goal Keeper" },
@@ -204,19 +205,26 @@ namespace PESPlayerEditorTest
             InitializeComponent();
             this.mainWindow = mainWindow;
             SelectedPlayer = selectedPlayer;
+            DataContext = this;
 
-            // Set the DataContext of the window to itself, so bindings work
-            DataContext = selectedPlayer;
+            positionComboBox.ItemsSource = Positions;
+            positionComboBox.SelectedItem = Positions.FirstOrDefault(p => p.PositionId == selectedPlayer.Position);
 
-            playerIdTextBox.Text = SelectedPlayer.PlayerIndex.ToString();
-            nameTextBox.Text = SelectedPlayer.Name;
-            shirtNameTextBox.Text = SelectedPlayer.ShirtName;
-            callnameTextBox.Text = SelectedPlayer.Commentary.ToString();
-            countryComboBox.SelectedIndex = SelectedPlayer.Country - 121;
-            ageComboBox.SelectedIndex = SelectedPlayer.Age;
-            heightTextBox.Text = SelectedPlayer.Height.ToString();
-            weightTextBox.Text = SelectedPlayer.Weight.ToString();
-            positionComboBox.SelectedIndex = SelectedPlayer.Position;
+            countryComboBox.ItemsSource = Countries;
+            countryComboBox.SelectedItem = Countries.FirstOrDefault(c => c.CountryIndex == selectedPlayer.Country);
+
+            ageComboBox.ItemsSource = Ages;
+            ageComboBox.SelectedItem = Ages.FirstOrDefault(a => a.AgeIndex == selectedPlayer.Age);
+
+            playerIdTextBox.Text = selectedPlayer.PlayerIndex.ToString();
+            nameTextBox.Text = selectedPlayer.Name;
+            shirtNameTextBox.Text = selectedPlayer.ShirtName;
+            callnameTextBox.Text = selectedPlayer.Commentary.ToString();
+            countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
+            ageComboBox.SelectedIndex = selectedPlayer.Age;
+            heightTextBox.Text = selectedPlayer.Height.ToString();
+            weightTextBox.Text = selectedPlayer.Weight.ToString();
+            positionComboBox.SelectedIndex = selectedPlayer.Position;
         }
 
         private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
@@ -231,13 +239,11 @@ namespace PESPlayerEditorTest
             SelectedPlayer.Height = int.Parse(heightTextBox.Text);
             SelectedPlayer.Weight = int.Parse(weightTextBox.Text);
             SelectedPlayer.Position = positionComboBox.SelectedIndex;
+            mainWindow.team1DataGrid.Items.Refresh();
+            mainWindow.team1DataGrid.Items.Refresh();
             mainWindow.personListBox.Items.Refresh();
-            mainWindow.team1DataGrid.Items.Refresh();
-            mainWindow.team1DataGrid.Items.Refresh();
             this.Close();
         }
-
-
 
         private void ClosePlayerWindow(object sender, RoutedEventArgs e)
         {

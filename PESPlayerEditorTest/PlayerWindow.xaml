@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
-        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="740" Width="865" ResizeMode="CanMinimize">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="{Binding SelectedPlayerAssignment.Player.Name}" Height="740" Width="865" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,7 +16,6 @@
         </Grid.RowDefinitions>
         <Grid  Background="#FF212121" Width="900" Height="726" VerticalAlignment="Center" Margin="0,0,-35,0">
             <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
-
             <GroupBox x:Name="Player_Information" Header="General" Margin="14,15,674,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="386">
                 <Grid Height="383">
                     <Grid.ColumnDefinitions>
@@ -56,14 +56,14 @@
                     <TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Uid="countryComboBox" Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedPlayer.Country, Mode=TwoWay}" 
                     DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
-                    SelectedItem="{Binding Country, Mode=TwoWay}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                    HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Uid="ageComboBox" x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    DisplayMemberPath="AgeName" SelectedValuePath="AgeValue"
-                    SelectedItem="{Binding Age, Mode=TwoWay}" Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                    <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedItem="{Binding SelectedPlayer.Age}" 
+                    DisplayMemberPath="AgeName" SelectedValuePath="AgeIndex"
+                    Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="6" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="heightTextBox" Grid.Row="6" Grid.Column="3" TextWrapping="Wrap" Margin="4,0,0,0" Height="21" Width="58" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
@@ -93,8 +93,6 @@
 
                 </Grid>
             </GroupBox>
-
-
             <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="436,599,0,0" VerticalAlignment="Top" Width="212" Height="48" Click="ApplyPlayerChanges" RenderTransformOrigin="-0.236,0.52"/>
             <GroupBox x:Name="Position" Header="Position" Margin="14,406,674,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="289">
                 <Grid Height="257">
@@ -121,8 +119,7 @@
                     </Grid.RowDefinitions>
 
                     <Label Content="Reg. Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="5" Width="68"/>
-                    <ComboBox x:Uid="positionComboBox" x:Name="positionComboBox" ItemsSource="{Binding Positions, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    DisplayMemberPath="PositionName" SelectedValuePath="PositionId" SelectedItem="{Binding Position, Mode=TwoWay}"
+                    <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions}" SelectedValue="{Binding SelectedPlayer.Position}" DisplayMemberPath="PositionName" SelectedValuePath="PositionId" 
                     Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="21" Margin="25,0,0,0"/>
 
                     <CheckBox x:Name="gkCheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
