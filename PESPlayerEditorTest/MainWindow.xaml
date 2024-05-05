@@ -33,15 +33,15 @@
             </Menu>
         </Grid>
         <Grid Grid.Row="1"  Background="#FF212121" Width="900" Height="726" VerticalAlignment="Center">
-            <ListBox x:Name="personListBox" ItemsSource="{Binding PeopleA}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="668" Margin="10,27,0,0" VerticalAlignment="Top" Width="189" MouseDoubleClick="OpenPlayer" IsEnabled="False">
+            <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="668" Margin="10,27,0,0" VerticalAlignment="Top" Width="189" MouseDoubleClick="OpenPlayer" IsEnabled="False">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding Player.Name}" FontWeight="DemiBold"/>
+                            <TextBlock Text="{Binding Name}" FontWeight="DemiBold"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-                <ListBox.ItemContainerStyle>
+                <!--<ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Visibility" Value="Visible" />
                         <Style.Triggers>
@@ -50,7 +50,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </ListBox.ItemContainerStyle>
+                </ListBox.ItemContainerStyle>-->
             </ListBox>
             <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
 

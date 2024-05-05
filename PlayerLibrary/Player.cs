@@ -11,10 +11,5 @@
         public int Age { get; set; }
         public int Height { get; set; }
         public int Weight { get; set; }
-        public string? unparsedData1 { get; set; }
-        public string? unparsedData2 { get; set; }
-        public string? unparsedData3 { get; set; }
     }
-
-
 }

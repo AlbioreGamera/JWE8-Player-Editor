@@ -239,6 +239,11 @@ namespace PESPlayerEditorTest
             SelectedPlayer.Height = int.Parse(heightTextBox.Text);
             SelectedPlayer.Weight = int.Parse(weightTextBox.Text);
             SelectedPlayer.Position = positionComboBox.SelectedIndex;
+            mainWindow.nameTextBox.Text = SelectedPlayer.Name;
+            mainWindow.shirtNameTextBox.Text = SelectedPlayer.ShirtName;
+            mainWindow.callnameTextBox.Text = SelectedPlayer.Commentary.ToString();
+            mainWindow.countryComboBox.SelectedIndex = SelectedPlayer.Country - 121;
+            mainWindow.updatePeopleList();
             mainWindow.team1DataGrid.Items.Refresh();
             mainWindow.team1DataGrid.Items.Refresh();
             mainWindow.personListBox.Items.Refresh();

@@ -10,7 +10,7 @@ namespace PlayerLibrary
     {
         public int Team {  get; set; }
         public int PlayerIndex { get; set; }
-        public Player Player { get; set; } 
+        public Player? Player { get; set; } 
         public int Number {  get; set; }
     }
 }
