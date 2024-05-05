@@ -14,7 +14,7 @@ namespace PESPlayerEditorTest
         {
             if (value is int position)
             {
-                return $"pack://application:,,,/PESPlayerEditorTest;component/resources/position/{position}.png";
+                return $"pack://application:,,,/JWE8Editor;component/resources/position/{position}.png";
             }
             return null;
         }

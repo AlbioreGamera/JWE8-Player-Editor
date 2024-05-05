@@ -14,7 +14,7 @@ namespace PESPlayerEditorTest
         {
             if (value is int country)
             {
-                return $"pack://application:,,,/PESPlayerEditorTest;component/resources/country/{country}.bmp";
+                return $"pack://application:,,,/JWE8Editor;component/resources/country/{country}.bmp";
             }
             return null;
         }
