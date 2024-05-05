@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Globalization;
@@ -18,6 +19,7 @@ using System.Windows.Navigation;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 using PlayerLibrary;
+
 
 namespace PESPlayerEditorTest
 {
@@ -265,21 +267,6 @@ namespace PESPlayerEditorTest
             fileSelectionWindow.ShowDialog();  
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            openFileDialog.Filter = "para_we8.bin player files (*.bin_000)|*.bin_000|All files (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                ParsePlayers(openFileDialog.FileName);
-                foreach (Player person in ParsePlayers(openFileDialog.FileName))
-                {
-                    People.Add(person);
-                }
-                personListBox.SelectedIndex = 0;
-            }
-
-        }
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Are you sure you want to close the application?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -375,44 +362,24 @@ namespace PESPlayerEditorTest
         {
             if (personListBox.SelectedItem != null)
             {
-                PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)personListBox.SelectedItem;
+                Player selectedPlayer = (Player)personListBox.SelectedItem;
 
-                if (selectedPlayerAssignment.Player != null)
+                if (selectedPlayer != null)
                 {
-                    nameTextBox.Text = selectedPlayerAssignment.Player.Name;
-                    shirtNameTextBox.Text = selectedPlayerAssignment.Player.ShirtName;
-                    callnameTextBox.Text = selectedPlayerAssignment.Player.Commentary.ToString();
-                    countryComboBox.SelectedIndex = selectedPlayerAssignment.Player.Country - 121;
+                    nameTextBox.Text = selectedPlayer.Name;
+                    shirtNameTextBox.Text = selectedPlayer.ShirtName;
+                    callnameTextBox.Text = selectedPlayer.Commentary.ToString();
+                    countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
                 }
             }
         }
-
-        //private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
-        //{
-        //    if (personListBox.SelectedItem != null)
-        //    {
-        //        Player selectedPlayer = (Player)personListBox.SelectedItem;
-        //        selectedPlayer.Name = nameTextBox.Text;
-        //        selectedPlayer.ShirtName = shirtNameTextBox.Text;
-        //        selectedPlayer.Commentary = int.Parse(callnameTextBox.Text);
-        //        selectedPlayer.Country = countryComboBox.SelectedIndex + 121;
-        //        selectedPlayer.Age = ageComboBox.SelectedIndex;
-        //        selectedPlayer.Height = int.Parse(heightTextBox.Text);
-        //        selectedPlayer.Weight = int.Parse(weightTextBox.Text);
-        //        selectedPlayer.Position = positionComboBox.SelectedIndex;
-        //        personListBox.Items.Refresh();
-        //    }
-        //}
 
         private void SavePlayerData(string filePath)
         {
             using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
-                foreach (var playerAssignment in PeopleA)
+                foreach (var player in People)
                 {
-                    // Get the Player object from the PlayerAssignment
-                    Player player = playerAssignment.Player;
-
                     if (player != null)
                     {
                         // Calculate the byte offset in the file based on the player's index
@@ -458,8 +425,9 @@ namespace PESPlayerEditorTest
                     }
                 }
             }
-        }
 
+            MessageBoxResult result = MessageBox.Show("Data saved successfully.", "Save Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         public void SavePlayerAssignmentData(string filePath)
         {
@@ -530,8 +498,9 @@ namespace PESPlayerEditorTest
         {
             if (sender is ListBox personListBox && personListBox.SelectedItem != null)
             {
-                PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)personListBox.SelectedItem;
-                PlayerWindow playerWindow = new PlayerWindow(selectedPlayerAssignment.Player, this);
+
+                Player selectedPlayer = (Player)personListBox.SelectedItem;
+                PlayerWindow playerWindow = new PlayerWindow(selectedPlayer, this);
                 playerWindow.Show();
             }
         }
@@ -539,7 +508,8 @@ namespace PESPlayerEditorTest
         public void OpenPlayerFromDataGrid(DataGrid dataGrid)
         {
             PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
-            PlayerWindow playerWindow = new PlayerWindow(selectedPlayerAssignment.Player, this);
+            Player selectedPlayer = selectedPlayerAssignment.Player;
+            PlayerWindow playerWindow = new PlayerWindow(selectedPlayer, this);
             playerWindow.ShowDialog();
         }
 
@@ -581,14 +551,107 @@ namespace PESPlayerEditorTest
             {
                 PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
 
-                if(selectedPlayerAssignment.Player != null)
+                if (selectedPlayerAssignment.Player != null)
                 {
-                    nameTextBox.Text = selectedPlayerAssignment.Player.Name;
-                    shirtNameTextBox.Text = selectedPlayerAssignment.Player.ShirtName;
-                    callnameTextBox.Text = selectedPlayerAssignment.Player.Commentary.ToString();
-                    countryComboBox.SelectedIndex = selectedPlayerAssignment.Player.Country - 121;
+                    Player selectedPlayer = selectedPlayerAssignment.Player;
+                    nameTextBox.Text = selectedPlayer.Name;
+                    shirtNameTextBox.Text = selectedPlayer.ShirtName;
+                    callnameTextBox.Text = selectedPlayer.Commentary.ToString();
+                    countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
                 }
 
+            }
+        }
+
+        public void updatePeopleList()
+        {
+            People.CollectionChanged += People_CollectionChanged;
+            PeopleA.CollectionChanged += PeopleA_CollectionChanged;
+        }
+
+        private void People_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Player player in e.NewItems)
+                {
+                    // Check if the player exists in PeopleA
+                    PlayerAssignment assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
+                    if (assignment != null)
+                    {
+                        assignment.Player = player;
+                        // Update other properties of assignment if needed
+                    }
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Player player in e.OldItems)
+                {
+                    // Remove the player from PeopleA
+                    PlayerAssignment assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
+                    if (assignment != null)
+                    {
+                        assignment.Player = null;
+                        // Update other properties of assignment if needed
+                    }
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (Player player in e.NewItems)
+                {
+                    // Update the player in PeopleA
+                    PlayerAssignment assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
+                    if (assignment != null)
+                    {
+                        assignment.Player = player;
+                        // Update other properties of assignment if needed
+                    }
+                }
+            }
+        }
+
+        private void PeopleA_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (PlayerAssignment assignment in e.NewItems)
+                {
+                    // Check if the assignment's player exists in People
+                    Player player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
+                    if (player != null)
+                    {
+                        player = assignment.Player;
+                        // Update other properties of player if needed
+                    }
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (PlayerAssignment assignment in e.OldItems)
+                {
+                    // Remove the player from People
+                    Player player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
+                    if (player != null)
+                    {
+                        player = null;
+                        // Update other properties of player if needed
+                    }
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (PlayerAssignment assignment in e.NewItems)
+                {
+                    // Update the player in People
+                    Player player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
+                    if (player != null)
+                    {
+                        player = assignment.Player;
+                        // Update other properties of player if needed
+                    }
+                }
             }
         }
     }

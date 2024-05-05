@@ -146,10 +146,6 @@ namespace PESPlayerEditorTest
             }
 
             _mainWindow.ParsePlayers(selectedFilePath_000);
-            foreach (Player person in _mainWindow.ParsePlayers(selectedFilePath_000))
-            {
-                _mainWindow.People.Add(person);
-            }
             _mainWindow.personListBox.IsEnabled = true;
             _mainWindow.personListBox.SelectedIndex = 0;
 
