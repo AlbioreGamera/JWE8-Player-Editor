@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
+        Icon="{StaticResource AppIcon}"
+        UseLayoutRounding="True"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="760" Width="899" ResizeMode="CanMinimize">
     <Window.Resources>
@@ -23,8 +25,8 @@
             <Menu>
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open" Click="OpenFileSelectionWindow_Click"/>
-                    <MenuItem Header="_Save" Click="saveChanges_Click"/>
-                    <MenuItem Header="_Save As" Click="saveChanges_Click"/>
+                    <MenuItem x:Name="saveHeader" Header="_Save" Click="saveChanges_Click" IsEnabled="False"/>
+                    <MenuItem x:Name="saveAsHeader" Header="_Save As" Click="saveChanges_Click" IsEnabled="False"/>
                     <Separator/>
                     <MenuItem Header="_Exit" Click="CloseButton_Click"/>
                 </MenuItem>

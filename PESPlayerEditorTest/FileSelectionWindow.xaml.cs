@@ -167,6 +167,8 @@ namespace PESPlayerEditorTest
             };
 
             SaveFilePaths(filePathInfos);
+            _mainWindow.saveHeader.IsEnabled = true;
+            _mainWindow.saveAsHeader.IsEnabled = true;
             _mainWindow.PopulateTeamsComboBox();
             this.Close();
         }

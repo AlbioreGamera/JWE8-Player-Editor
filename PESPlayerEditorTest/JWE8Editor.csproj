@@ -510,9 +510,6 @@
     <Resource Include="resources\country\238.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="resources\jwe8.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="resources\jwe8ico.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

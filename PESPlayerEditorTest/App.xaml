@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:PESPlayerEditorTest"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-
+        <BitmapImage x:Key="AppIcon" UriSource="/resources/jwe8ico.ico"/>
     </Application.Resources>
 </Application>
