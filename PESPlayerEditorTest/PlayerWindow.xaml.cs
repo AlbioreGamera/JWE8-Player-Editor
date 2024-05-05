@@ -42,7 +42,7 @@ namespace PESPlayerEditorTest
 
         public static List<Country> Countries { get; } = new List<Country>
             {
-                new Country { CountryIndex = 0, CountryId = 121, CountryName = "Free" },
+                new Country { CountryIndex = 0, CountryId = 249, CountryName = "Free Nationality" },
                 new Country { CountryIndex = 1, CountryId = 122, CountryName = "Albania" },
                 new Country { CountryIndex = 2, CountryId = 123, CountryName = "Austria" },
                 new Country { CountryIndex = 3, CountryId = 124, CountryName = "Belarus" },
