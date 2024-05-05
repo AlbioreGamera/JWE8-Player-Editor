@@ -245,7 +245,7 @@ namespace PESPlayerEditorTest
             mainWindow.countryComboBox.SelectedIndex = SelectedPlayer.Country - 121;
             mainWindow.updatePeopleList();
             mainWindow.team1DataGrid.Items.Refresh();
-            mainWindow.team1DataGrid.Items.Refresh();
+            mainWindow.team2DataGrid.Items.Refresh();
             mainWindow.personListBox.Items.Refresh();
             this.Close();
         }
