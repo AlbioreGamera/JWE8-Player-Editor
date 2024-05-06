@@ -150,10 +150,7 @@ namespace PESPlayerEditorTest
             _mainWindow.personListBox.SelectedIndex = 0;
 
             _mainWindow.ParsePlayerAssignment(selectedFilePath_002, selectedFilePath_004);
-            foreach (PlayerAssignment personA in _mainWindow.ParsePlayerAssignment(selectedFilePath_002, selectedFilePath_004))
-            {
-                _mainWindow.PeopleA.Add(personA);
-            }
+            _mainWindow.ParseAssignment(selectedFilePath_002, selectedFilePath_004);
 
             List<FilePathInfo> filePathInfos = new List<FilePathInfo>
             {

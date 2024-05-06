@@ -350,6 +350,14 @@ namespace PESPlayerEditorTest
             }
         }
 
+        public void ParseAssignment (string filePath, string numberFilePath)
+        {
+            foreach (PlayerAssignment personA in ParsePlayerAssignment(filePath, numberFilePath))
+            {
+                PeopleA.Add(personA);
+            }
+        }
+
         private int ReadNumber(FileStream fsNumbers, int teamIndex, int playerIndexWithinTeam)
         {
             // Assuming each team has 32 players and each player's number is 1 byte
@@ -457,13 +465,18 @@ namespace PESPlayerEditorTest
 
         private void saveChanges_Click(object sender, RoutedEventArgs e)
         {
-             SavePlayerData(FilePath1);
-             //SavePlayerAssignmentData(FilePath2);
-             //SaveNumberData(FilePath3);
-             People.Clear();
-             //PeopleA.Clear();
-             ParsePlayers(FilePath1);
-             //ParsePlayerAssignment(FilePath2, FilePath3);
+            SavePlayerData(FilePath1);
+            //SavePlayerAssignmentData(FilePath2);
+            //SaveNumberData(FilePath3);
+            //People.Clear();
+            //PeopleA.Clear();
+            //ParsePlayers(FilePath1);
+            //ParsePlayerAssignment(FilePath2, FilePath3);
+            //ParseAssignment(FilePath2, FilePath3);
+            //updatePeopleList();
+            //team1DataGrid.Items.Refresh();
+            //team2DataGrid.Items.Refresh();
+            //personListBox.Items.Refresh();
         }
 
         private void ClearFilter()
