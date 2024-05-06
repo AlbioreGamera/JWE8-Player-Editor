@@ -424,9 +424,10 @@ namespace PESPlayerEditorTest
                         }
                     }
                 }
+                fileStream.Flush();
+                fileStream.Close();
+                MessageBoxResult result = MessageBox.Show("Data saved successfully.", "Save Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
-            MessageBoxResult result = MessageBox.Show("Data saved successfully.", "Save Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public void SavePlayerAssignmentData(string filePath)
