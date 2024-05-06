@@ -5,6 +5,7 @@ using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,7 @@ namespace PESPlayerEditorTest
         public FileSelectionWindow(MainWindow mainWindow)
         {
             InitializeComponent();
+            LoadFilePaths();
             _mainWindow = mainWindow;
         }
 
@@ -76,8 +78,6 @@ namespace PESPlayerEditorTest
         {
             List<FilePathInfo> filePathInfos = new List<FilePathInfo>();
             string cfgFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config\\filepaths.cfg");
-
-
 
             System.IO.Directory.GetCurrentDirectory();
 

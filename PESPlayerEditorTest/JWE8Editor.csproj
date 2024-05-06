@@ -113,6 +113,7 @@
     <None Remove="resources\country\218.bmp" />
     <None Remove="resources\country\219.bmp" />
     <None Remove="resources\country\220.bmp" />
+    <None Remove="resources\country\221.bmp" />
     <None Remove="resources\country\222.bmp" />
     <None Remove="resources\country\223.bmp" />
     <None Remove="resources\country\224.bmp" />
@@ -463,6 +464,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="resources\country\220.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\country\221.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="resources\country\249.bmp">

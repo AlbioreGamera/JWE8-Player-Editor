@@ -1,6 +1,7 @@
 ﻿using PlayerLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -225,8 +226,37 @@ namespace PESPlayerEditorTest
             heightTextBox.Text = selectedPlayer.Height.ToString();
             weightTextBox.Text = selectedPlayer.Weight.ToString();
             positionComboBox.SelectedIndex = selectedPlayer.Position;
+            PopulateCommentaryComboBox();
+            commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
         }
 
+        public void PopulateCommentaryComboBox()
+        {
+            try
+            {
+                string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "commentary.cfg");
+                List<string> callNames = new List<string>();
+
+                foreach (string line in File.ReadLines(filePath))
+                {
+                    if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
+                    {
+                        string[] parts = line.Split(';');
+                        if (parts.Length >= 3)
+                        {
+                            callNames.Add(parts[1].ToUpper() + " - " + parts[2]);
+                        }
+                    }
+                }
+                commentaryComboBox.IsEnabled = true;
+                commentaryComboBox.ItemsSource = callNames;
+                commentaryComboBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading callnames: {ex.Message}");
+            }
+        }
         private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
         {
             // Update the selected player's data with the new values from the window
