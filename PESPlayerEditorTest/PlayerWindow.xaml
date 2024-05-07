@@ -53,15 +53,21 @@
                     <TextBox x:Name="shirtNameTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="3" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
-
+                    <!--<TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>-->
+                    <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="3"  VerticalAlignment="Center" HorizontalContentAlignment="Left" Width="120" ItemsSource="{Binding CommentariesLoader.Commentaries}" SelectedItem="{Binding SelectedPlayer.Commentary, Mode=TwoWay}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="False" Margin="-2,0,0,0">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
                     <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedPlayer.Country, Mode=TwoWay}" 
-                    DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
+                    <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries}" SelectedItem="{Binding SelectedPlayer.Country, Mode=TwoWay}" ScrollViewer.CanContentScroll="False"
+                    DisplayMemberPath="CountryName" SelectedValuePath="CountryId" IsEditable="False"
                     HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                     <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedItem="{Binding SelectedPlayer.Age}" 
+                    <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedItem="{Binding SelectedPlayer.Age}" ScrollViewer.CanContentScroll="False"
                     DisplayMemberPath="AgeName" SelectedValuePath="AgeIndex"
                     Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
@@ -119,7 +125,7 @@
                     </Grid.RowDefinitions>
 
                     <Label Content="Reg. Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="5" Width="68"/>
-                    <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions}" SelectedValue="{Binding SelectedPlayer.Position}" DisplayMemberPath="PositionName" SelectedValuePath="PositionId" 
+                    <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions}" SelectedValue="{Binding SelectedPlayer.Position}" DisplayMemberPath="PositionName" SelectedValuePath="PositionId" ScrollViewer.CanContentScroll="False"
                     Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="21" Margin="25,0,0,0"/>
 
                     <CheckBox x:Name="gkCheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
@@ -276,25 +282,7 @@
                     <TextBox x:Name="statTeamWorkTextBox" Grid.Row="25" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
                 </Grid>
             </GroupBox>
-            <GroupBox x:Name="Player_Information_Copy" Header="Team" Margin="436,15,252,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.15,0.15,0.15,0.15" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="49">
-                <Grid Height="28">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="58.516"/>
-                        <ColumnDefinition Width="8.444"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="265*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Content="" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="28" />
-                    <ComboBox x:Name="commentaryComboBox" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120"/>
-
-
-                </Grid>
-            </GroupBox>
-            <GroupBox x:Name="Position_Copy" Header="Skills" Margin="436,69,252,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="525">
+            <GroupBox x:Name="Position_Copy" Header="Skills" Margin="436,15,252,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="524">
                 <Grid Height="482">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="22"/>
