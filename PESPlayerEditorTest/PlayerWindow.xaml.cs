@@ -93,22 +93,18 @@ namespace PESPlayerEditorTest
             positionComboBox.ItemsSource = Positions;
             positionComboBox.SelectedItem = Positions.FirstOrDefault(p => p.PositionId == selectedPlayer.Position);
 
-            //countryComboBox.ItemsSource = CountriesLoader.Countries;
-            //countryComboBox.SelectedItem = CountriesLoader.Countries.FirstOrDefault(c => c.CountryIndex == selectedPlayer.Country);
-
             ageComboBox.ItemsSource = Ages;
             ageComboBox.SelectedItem = Ages.FirstOrDefault(a => a.AgeIndex == selectedPlayer.Age);
 
             playerIdTextBox.Text = selectedPlayer.PlayerIndex.ToString();
             nameTextBox.Text = selectedPlayer.Name;
             shirtNameTextBox.Text = selectedPlayer.ShirtName;
-            commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
             countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
             ageComboBox.SelectedIndex = selectedPlayer.Age;
             heightTextBox.Text = selectedPlayer.Height.ToString();
             weightTextBox.Text = selectedPlayer.Weight.ToString();
             positionComboBox.SelectedIndex = selectedPlayer.Position;
-            commentaryComboBox.IsEnabled = true;
+            //commentaryComboBox.IsEnabled = true;
             commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
         }
 

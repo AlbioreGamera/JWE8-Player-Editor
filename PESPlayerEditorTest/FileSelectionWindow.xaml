@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
-        Title="File Selection" Height="166" Width="363" ResizeMode="NoResize" >
+        Title="File Selection" Height="200" Width="363" ResizeMode="NoResize" >
     <Grid Background="#FF212121">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -29,6 +29,13 @@
         <Button Grid.Row="2" Content="Open para_we8_bin_004" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile3_Click"/>
         <TextBox x:Name="para_we8_bin_004" Grid.Column="1" Grid.Row="2" Text="{Binding FilePath3, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="4" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
+        <Button Grid.Row="3" Content="Open defaultdataset" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile4_Click" Width="128"/>
+        <TextBox x:Name="defaultdataset" Grid.Column="1" Grid.Row="3" Text="{Binding FilePath4, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
+
+        <Button Grid.Row="4" Content="Open edit.ovl" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile5_Click" Width="128"/>
+        <TextBox x:Name="edit_ovl" Grid.Column="1" Grid.Row="4" Text="{Binding FilePath5, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
+
+
+        <Button Grid.Row="5" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
     </Grid>
 </Window>

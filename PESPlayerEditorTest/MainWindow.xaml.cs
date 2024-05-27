@@ -37,6 +37,10 @@ namespace PESPlayerEditorTest
 
         public FileStream fsNumbers;
 
+        public FileStream fsEditOvl;
+
+        public FileStream fsDataset;
+
         public Player SelectedPlayer { get; set; }
 
         public static List<Position> Positions { get; } = new List<Position>
@@ -102,10 +106,13 @@ namespace PESPlayerEditorTest
 
         public ObservableCollection<Player> People { get; set; } = new ObservableCollection<Player>();
         public ObservableCollection<PlayerAssignment> PeopleA { get; set; } = new ObservableCollection<PlayerAssignment>();
+        public ObservableCollection<Callname> CallnameCollection { get; set; } = new ObservableCollection<Callname>();
+        public ObservableCollection<Stadium> StadiumCollection { get; set; } = new ObservableCollection<Stadium>();
         public string FilePath1 { get; internal set; }
         public string FilePath2 { get; internal set; }
         public string FilePath3 { get; internal set; }
-
+        public string FilePath4 { get; internal set; }
+        public string FilePath5 { get; internal set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -238,6 +245,84 @@ namespace PESPlayerEditorTest
             foreach (PlayerAssignment personA in ParsePlayerAssignment(filePath, numberFilePath))
             {
                 PeopleA.Add(personA);
+            }
+        }
+
+        public List<Callname> ParseCallnames(string editfilePath)
+        {
+            using (FileStream fsEditOvl = new FileStream(editfilePath, FileMode.Open, FileAccess.Read))
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                fsEditOvl.Seek(0x103758, SeekOrigin.Begin); // Start reading from byte 103758
+                List<Callname> callnames = new List<Callname>();
+                long endPosition = 0x10CA50; // 1101392 in decimal
+                Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+
+                while (fsEditOvl.Position < endPosition)
+                {
+                    List<byte> bytes = new List<byte>();
+                    int b;
+                    while ((b = fsEditOvl.ReadByte()) != -1 && b != 0x00)
+                    {
+                        bytes.Add((byte)b);
+                    }
+
+                    if (bytes.Count > 0)
+                    {
+                        // Convert the bytes to Shift-JIS string
+                        string callnameStr = shiftJis.GetString(bytes.ToArray()).Trim();
+
+                        // Debug output
+                        Console.WriteLine("Raw Bytes: " + BitConverter.ToString(bytes.ToArray()));
+                        Console.WriteLine("Converted: " + callnameStr);
+
+                        // Add to the collection
+                        Callname callname = new Callname
+                        {
+                            CommentaryIndex = callnames.Count + 1,
+                            CommentaryName = callnameStr,
+                            CommentaryCode = "NODATA",
+                        };
+                        CallnameCollection.Add(callname);
+                    }
+                }
+
+                return callnames;
+            }
+        }
+
+
+
+
+
+
+
+
+        public List<Stadium> ParseStadiums(string datasetFilePath)
+        {
+            using (FileStream fsDataset = new FileStream(datasetFilePath, FileMode.Open, FileAccess.Read))
+            {
+                fsDataset.Seek(0x84030, SeekOrigin.Begin);
+                byte[] buffer = new byte[0x3D]; // 64 bytes
+                List<Stadium> stadiums = new List<Stadium>();
+                int stadiumIndex = 1;
+                long startPosition = fsDataset.Position;
+                long endPosition = 0x8497B;
+
+                while (fsDataset.Read(buffer, 0, buffer.Length) == buffer.Length && fsDataset.Position <= endPosition)
+                {
+                    Stadium stadium = new Stadium
+                    {
+                        StadiumIndex = stadiumIndex++,
+                        StadiumName = Encoding.UTF8.GetString(buffer, 0, 61).Trim(), // Assuming the name takes the first 61 bytes
+                        Seats = 0,
+                        Zone = 0,
+                        Year = 0
+                    };
+                    StadiumCollection.Add(stadium);
+                }
+
+                return stadiums;
             }
         }
 
@@ -386,6 +471,7 @@ namespace PESPlayerEditorTest
             var filteredPeopleA = PeopleA.Where(player => player.Team == selectedTeamId).ToList();
             dataGrid.ItemsSource = filteredPeopleA;
         }
+
         private void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -552,5 +638,13 @@ namespace PESPlayerEditorTest
             }
         }
 
+        private void CallnameListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+        private void StadiumListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

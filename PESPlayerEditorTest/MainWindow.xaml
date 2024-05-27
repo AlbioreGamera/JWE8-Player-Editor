@@ -8,7 +8,7 @@
         Icon="{StaticResource AppIcon}"
         UseLayoutRounding="True"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="760" Width="899" ResizeMode="CanMinimize">
+        Title="J-League Winning Eleven 8 Player Editor beta 0.1 by Albiore" Height="780" Width="899" ResizeMode="CanMinimize">
     <Window.Resources>
         <CollectionViewSource x:Key="FilteredPeopleA" Source="{Binding PeopleA}" />
         <local:PositionToImagePathConverter x:Key="PositionToImagePathConverter"/>
@@ -32,16 +32,24 @@
                 </MenuItem>
             </Menu>
         </Grid>
-        <Grid Grid.Row="1"  Background="#FF212121" Width="900" Height="726" VerticalAlignment="Center">
-            <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="668" Margin="10,27,0,0" VerticalAlignment="Top" Width="189" MouseDoubleClick="OpenPlayer" IsEnabled="False">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding Name}" FontWeight="DemiBold"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <!--<ListBox.ItemContainerStyle>
+        <Grid Grid.Row="1">
+            <TabControl>
+                <TabItem Header="Players">
+                    <Grid Background="#FF212121" Width="900" Height="718" Margin="0,0,-7,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65*"/>
+                            <ColumnDefinition Width="17*"/>
+                            <ColumnDefinition Width="818*"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox x:Name="personListBox" ItemsSource="{Binding People}" SelectionChanged="PersonListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="189" MouseDoubleClick="OpenPlayer" IsEnabled="False" Grid.ColumnSpan="3">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="DemiBold"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <!--<ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Visibility" Value="Visible" />
                         <Style.Triggers>
@@ -51,94 +59,146 @@
                         </Style.Triggers>
                     </Style>
                 </ListBox.ItemContainerStyle>-->
-            </ListBox>
-            <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
+                        </ListBox>
+                        <Separator HorizontalAlignment="Left" Margin="127,333,0,0" VerticalAlignment="Top" Grid.Column="2"/>
 
-            <GroupBox x:Name="Player_Information" Header="Player" Margin="660,19,28,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="135">
-                <Grid Height="102" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="58.516"/>
-                        <ColumnDefinition Width="8.444"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="265*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                    </Grid.RowDefinitions>
+                        <GroupBox x:Name="Player_Information" Header="Player" Margin="579,12,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="135" Grid.Column="2">
+                            <Grid Height="102" VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="58.516"/>
+                                    <ColumnDefinition Width="8.444"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="265*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" TextChanged="nameTextBox_TextChanged" IsEnabled="False"/>
+                                <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" TextChanged="nameTextBox_TextChanged" IsEnabled="False"/>
 
-                    <Label Grid.Row="1" Content="Shirt Name" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="shirtNameTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                <Label Grid.Row="1" Content="Shirt Name" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="shirtNameTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
-                    <Label Grid.Row="2" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="commentaryComboBox" Grid.Row="2" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                <Label Grid.Row="2" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                                <ComboBox x:Name="commentaryComboBox" Grid.Row="2" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex"
                     SelectedItem="{Binding SelectedPlayer.Commentary}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
-                    <Label Grid.Row="3" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="countryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                <Label Grid.Row="3" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox x:Name="countryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
                     SelectedItem="{Binding SelectedPlayer.Country}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
-                    <Label Grid.Row="6" Content="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
+                                <Label Grid.Row="6" Content="" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
 
 
-                </Grid>
-            </GroupBox>
-            <ComboBox x:Name="team1ComboBox" HorizontalAlignment="Left" Margin="209,27,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team1ComboBox_SelectionChanged" Height="25" IsEnabled="False"/>
-            <DataGrid x:Name="team1DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" Margin="209,62,474,31" SelectionChanged="team1DataGrid_SelectionChanged" MouseDoubleClick="Team1DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19">
-                <DataGrid.Columns>
-                 <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="30" Header="Or" Binding="{Binding PlayerIndex}" Visibility="Collapsed" IsReadOnly="True"/>
-                    <DataGridTemplateColumn Header="Nat" Width="32" IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Player.Country, Converter={StaticResource CountryToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Pos" Width="32" IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Player.Position, Converter={StaticResource PositionToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Width="124" Header="Player" Binding="{Binding Player.Name}" IsReadOnly="True"/>
-                 <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number}" IsReadOnly="True"/>
-            </DataGrid.Columns>
-            </DataGrid>
-            <ComboBox x:Name="team2ComboBox" HorizontalAlignment="Left" Margin="433,27,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team2ComboBox_SelectionChanged" Height="25" IsEnabled="False"/>
-            <DataGrid x:Name="team2DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" SelectionChanged="team2DataGrid_SelectionChanged" Margin="431,62,248,31" MouseDoubleClick="Team2DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="30" Header="Or" Binding="{Binding PlayerIndex}" Visibility="Collapsed" IsReadOnly="True"/>
-                    <DataGridTemplateColumn Header="Nat" Width="32" IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Player.Country, Converter={StaticResource CountryToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Pos" Width="32" IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Player.Position, Converter={StaticResource PositionToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Width="124" Header="Player" Binding="{Binding Player.Name}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number}" IsReadOnly="True"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                            </Grid>
+                        </GroupBox>
+                        <ComboBox x:Name="team1ComboBox" HorizontalAlignment="Left" Margin="127,10,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team1ComboBox_SelectionChanged" Height="25" IsEnabled="False" Grid.Column="2"/>
+                        <DataGrid x:Name="team1DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" Margin="127,40,474,53" SelectionChanged="team1DataGrid_SelectionChanged" MouseDoubleClick="Team1DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="30" Header="Or" Binding="{Binding PlayerIndex}" Visibility="Collapsed" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="Nat" Width="32" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Player.Country, Converter={StaticResource CountryToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Pos" Width="32" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Player.Position, Converter={StaticResource PositionToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="124" Header="Player" Binding="{Binding Player.Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <ComboBox x:Name="team2ComboBox" HorizontalAlignment="Left" Margin="351,10,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team2ComboBox_SelectionChanged" Height="25" IsEnabled="False" Grid.Column="2"/>
+                        <DataGrid x:Name="team2DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" SelectionChanged="team2DataGrid_SelectionChanged" Margin="351,40,250,53" MouseDoubleClick="Team2DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="30" Header="Or" Binding="{Binding PlayerIndex}" Visibility="Collapsed" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="Nat" Width="32" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Player.Country, Converter={StaticResource CountryToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Pos" Width="32" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Player.Position, Converter={StaticResource PositionToImagePathConverter}}" Stretch="Uniform" Width="30" Height="16"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="124" Header="Player" Binding="{Binding Player.Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Teams">
+                    <Grid Background="#FF212121"/>
+                </TabItem>
+                <TabItem Header="Stadiums">
+                    <Grid Background="#FF212121">
+                        <ListBox x:Name="stadiumListBox" ItemsSource="{Binding StadiumCollection}" SelectionChanged="StadiumListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="279" IsEnabled="False">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding StadiumName}" FontWeight="DemiBold"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <!--<ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Player}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>-->
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Callnames">
+                    <Grid Background="#FF212121">
+                        <ListBox x:Name="callnameListBox" ItemsSource="{Binding CallnameCollection}" SelectionChanged="CallnameListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="189" IsEnabled="False">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding CommentaryName}" FontWeight="DemiBold"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <!--<ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Player}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>-->
+                        </ListBox>
+                    </Grid>
+                </TabItem>
+            </TabControl>
         </Grid>
     </Grid>
 </Window>

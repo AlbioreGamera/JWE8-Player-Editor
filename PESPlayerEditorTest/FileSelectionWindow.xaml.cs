@@ -54,6 +54,16 @@ namespace PESPlayerEditorTest
                     {
                         _mainWindow.FilePath3 = filePathInfo.FilePath;
                     }
+
+                    if (filePathInfo.Name.Equals("defaultdataset"))
+                    {
+                        _mainWindow.FilePath4 = filePathInfo.FilePath;
+                    }
+
+                    if (filePathInfo.Name.Equals("edit_ovl"))
+                    {
+                        _mainWindow.FilePath5 = filePathInfo.FilePath;
+                    }
                 }
             }
         }
@@ -133,16 +143,62 @@ namespace PESPlayerEditorTest
             }
         }
 
+        private void SelectFile4_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "defaultdataset file (All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string dataset = openFileDialog.FileName;
+                defaultdataset.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void SelectFile5_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "edit.ovl file (*.ovl)|*.ovl|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string edit = openFileDialog.FileName;
+                edit_ovl.Text = openFileDialog.FileName;
+            }
+        }
+
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             string selectedFilePath_000 = para_we8_bin_000.Text;
             string selectedFilePath_002 = para_we8_bin_002.Text;
             string selectedFilePath_004 = para_we8_bin_004.Text;
+            string selectedFilePath_edit = edit_ovl.Text;
+            string selectedFilePath_dataset = defaultdataset.Text;
 
             if (string.IsNullOrEmpty(selectedFilePath_000) || string.IsNullOrEmpty(selectedFilePath_002) || string.IsNullOrEmpty(selectedFilePath_004))
             {
                 MessageBox.Show("Please select all files before proceeding.");
                 return; // Exit the method
+            }
+
+            if(string.IsNullOrEmpty(selectedFilePath_dataset))
+            {
+                MessageBox.Show("No Stadium data will be loaded.");
+            }
+            else
+            {
+                _mainWindow.ParseStadiums(selectedFilePath_dataset);
+                _mainWindow.stadiumListBox.IsEnabled = true;
+                _mainWindow.stadiumListBox.SelectedIndex = 0;
+            }
+
+            if (string.IsNullOrEmpty(selectedFilePath_edit))
+            {
+                MessageBox.Show("No Callname data will be loaded.");
+            }
+            else
+            {
+                _mainWindow.ParseCallnames(selectedFilePath_edit);
+                _mainWindow.callnameListBox.IsEnabled = true;
+                _mainWindow.callnameListBox.SelectedIndex = 0;
             }
 
             _mainWindow.ParsePlayers(selectedFilePath_000);
@@ -157,6 +213,8 @@ namespace PESPlayerEditorTest
                 new FilePathInfo { Name = "para_we8_bin_000", FilePath = selectedFilePath_000 },
                 new FilePathInfo { Name = "para_we8_bin_002", FilePath = selectedFilePath_002 },
                 new FilePathInfo { Name = "para_we8_bin_004", FilePath = selectedFilePath_004 },
+                new FilePathInfo { Name = "edit_ovl", FilePath = selectedFilePath_dataset },
+                new FilePathInfo { Name = "defaultdataset", FilePath = selectedFilePath_edit },
             };
 
             SaveFilePaths(filePathInfos);
