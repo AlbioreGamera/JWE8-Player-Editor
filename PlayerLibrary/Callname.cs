@@ -11,5 +11,6 @@ namespace PlayerLibrary
         public int CommentaryIndex { get; set; }
         public string? CommentaryCode { get; set; }
         public string? CommentaryName { get; set; }
+        public int? CommentaryBytes { get; set; }
     }
 }

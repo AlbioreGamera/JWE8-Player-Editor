@@ -146,7 +146,7 @@ namespace PESPlayerEditorTest
         private void SelectFile4_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "defaultdataset file (All files (*.*)|*.*";
+            openFileDialog.Filter = "defaultdataset.ovl file (*.ovl)|*.ovl|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 string dataset = openFileDialog.FileName;
@@ -199,6 +199,7 @@ namespace PESPlayerEditorTest
                 _mainWindow.ParseCallnames(selectedFilePath_edit);
                 _mainWindow.callnameListBox.IsEnabled = true;
                 _mainWindow.callnameListBox.SelectedIndex = 0;
+                _mainWindow.callnameTextBoxC.IsEnabled = true;
             }
 
             _mainWindow.ParsePlayers(selectedFilePath_000);

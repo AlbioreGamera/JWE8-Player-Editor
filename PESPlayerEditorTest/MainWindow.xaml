@@ -162,40 +162,49 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
-                            <!--<ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Player}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.ItemContainerStyle>-->
                         </ListBox>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Callnames">
+                <TabItem Header="Callnames" Height="20" VerticalAlignment="Top">
                     <Grid Background="#FF212121">
                         <ListBox x:Name="callnameListBox" ItemsSource="{Binding CallnameCollection}" SelectionChanged="CallnameListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="189" IsEnabled="False">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding CommentaryName}" FontWeight="DemiBold"/>
+                                        <TextBlock Text="{Binding CommentaryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="DemiBold"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
-                            <!--<ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Player}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.ItemContainerStyle>-->
                         </ListBox>
+                        <GroupBox x:Name="Callname_Information" Header="Callname" Margin="204,10,460,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="142">
+                            <Grid Height="100" VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="58.516"/>
+                                    <ColumnDefinition Width="8.444"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="265*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="callnameTextBoxC" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" TextChanged="nameTextBox_TextChanged" IsEnabled="False"/>
+
+                                <Label Grid.Row="1" Content="File" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="callnameFileTexBoxC" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+
+                                <Label Grid.Row="2" Content="Real" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <CheckBox Grid.Column="3" Content="Is Real" HorizontalAlignment="Left" Margin="3,0,0,0" Grid.Row="2" VerticalAlignment="Center" Foreground="#FFECECEC" IsEnabled="False"/>
+                                
+                                <Button Grid.Column="3" Content="Apply" HorizontalAlignment="Left" Margin="63,0,0,0" Grid.Row="3" VerticalAlignment="Center" Width="61" Click="ApplyCallname_Click"/>
+
+
+                            </Grid>
+                        </GroupBox>
                     </Grid>
                 </TabItem>
             </TabControl>

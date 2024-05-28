@@ -1,4 +1,8 @@
-﻿using System;
+﻿using JWE8Editor.Logic;
+using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
+using PlayerLibrary;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -16,10 +20,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using JWE8Editor.Logic;
-using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
-using PlayerLibrary;
 
 
 namespace PESPlayerEditorTest
@@ -153,8 +153,8 @@ namespace PESPlayerEditorTest
         private void OpenFileSelectionWindow_Click(object sender, RoutedEventArgs e)
         {
             FileSelectionWindow fileSelectionWindow = new FileSelectionWindow(this);
-            fileSelectionWindow.CheckExistingFiles(); 
-            fileSelectionWindow.ShowDialog();  
+            fileSelectionWindow.CheckExistingFiles();
+            fileSelectionWindow.ShowDialog();
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -240,7 +240,7 @@ namespace PESPlayerEditorTest
             }
         }
 
-        public void ParseAssignment (string filePath, string numberFilePath)
+        public void ParseAssignment(string filePath, string numberFilePath)
         {
             foreach (PlayerAssignment personA in ParsePlayerAssignment(filePath, numberFilePath))
             {
@@ -257,14 +257,30 @@ namespace PESPlayerEditorTest
                 List<Callname> callnames = new List<Callname>();
                 long endPosition = 0x10CA50; // 1101392 in decimal
                 Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+                int callnameIndex = 1;
 
                 while (fsEditOvl.Position < endPosition)
                 {
                     List<byte> bytes = new List<byte>();
+                    List<byte> nullbytes = new List<byte>();
                     int b;
+                    int n;
                     while ((b = fsEditOvl.ReadByte()) != -1 && b != 0x00)
                     {
                         bytes.Add((byte)b);
+                    }
+
+                    // Count consecutive 0x00 bytes
+                    while (b == 0x00)
+                    {
+                        nullbytes.Add((byte)b);
+                        b = fsEditOvl.ReadByte();
+                    }
+
+                    // Put back the last byte read if it is not 0x00 and is not -1
+                    if (b != -1 && b != 0x00)
+                    {
+                        fsEditOvl.Position -= 1;
                     }
 
                     if (bytes.Count > 0)
@@ -272,16 +288,13 @@ namespace PESPlayerEditorTest
                         // Convert the bytes to Shift-JIS string
                         string callnameStr = shiftJis.GetString(bytes.ToArray()).Trim();
 
-                        // Debug output
-                        Console.WriteLine("Raw Bytes: " + BitConverter.ToString(bytes.ToArray()));
-                        Console.WriteLine("Converted: " + callnameStr);
-
                         // Add to the collection
                         Callname callname = new Callname
                         {
-                            CommentaryIndex = callnames.Count + 1,
+                            CommentaryIndex = callnameIndex++,
                             CommentaryName = callnameStr,
                             CommentaryCode = "NODATA",
+                            CommentaryBytes = bytes.Count + nullbytes.Count
                         };
                         CallnameCollection.Add(callname);
                     }
@@ -290,13 +303,6 @@ namespace PESPlayerEditorTest
                 return callnames;
             }
         }
-
-
-
-
-
-
-
 
         public List<Stadium> ParseStadiums(string datasetFilePath)
         {
@@ -408,7 +414,7 @@ namespace PESPlayerEditorTest
 
         public void SavePlayerAssignmentData(string filePath)
         {
-            using(FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 foreach (var playerAssignment in PeopleA)
                 {
@@ -431,11 +437,41 @@ namespace PESPlayerEditorTest
             }
         }
 
+        public void SaveCallnameData(string filePath)
+        {
+            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                fileStream.Seek(0x103758, SeekOrigin.Begin);
+                long endPosition = 0x10CA50;
+                Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+
+                foreach (var callnameList in CallnameCollection)
+                {
+                    using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
+                    {
+                        byte[] callnameBytes = shiftJis.GetBytes(callnameList.CommentaryName);
+                        int totalLength = (int)callnameList.CommentaryBytes; // The length defined in CommentaryLength
+                        byte[] paddedBytes = new byte[totalLength];
+
+                        // Copy callnameBytes into paddedBytes
+                        Array.Copy(callnameBytes, paddedBytes, callnameBytes.Length);
+
+                        // The rest of paddedBytes is already filled with 0x00 by default
+
+                        writer.Write(paddedBytes);
+                    }
+
+                }
+            }
+        }
+
         private void saveChanges_Click(object sender, RoutedEventArgs e)
         {
             SavePlayerData(FilePath1);
             //SavePlayerAssignmentData(FilePath2);
             //SaveNumberData(FilePath3);
+            SaveCallnameData(FilePath4);
             //People.Clear();
             //PeopleA.Clear();
             //ParsePlayers(FilePath1);
@@ -638,13 +674,25 @@ namespace PESPlayerEditorTest
             }
         }
 
-        private void CallnameListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
         private void StadiumListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void CallnameListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Callname selectedPlayerAssignment = (Callname)callnameListBox.SelectedItem;
+            callnameTextBoxC.Text = selectedPlayerAssignment.CommentaryName;
+            callnameFileTexBoxC.Text = selectedPlayerAssignment.CommentaryCode;
+            Callname_Information.Header = "Callname #" + selectedPlayerAssignment.CommentaryIndex + " (" + selectedPlayerAssignment.CommentaryBytes + " bytes)";
+        }
+
+
+        private void ApplyCallname_Click(object sender, RoutedEventArgs e)
+        {
+            Callname selectedPlayerAssignment = (Callname)callnameListBox.SelectedItem;
+            selectedPlayerAssignment.CommentaryName = callnameTextBoxC.Text;
+            callnameListBox.Items.Refresh();
         }
     }
 }
