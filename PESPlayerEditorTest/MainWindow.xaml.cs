@@ -113,6 +113,8 @@ namespace PESPlayerEditorTest
         public string FilePath3 { get; internal set; }
         public string FilePath4 { get; internal set; }
         public string FilePath5 { get; internal set; }
+
+        private BindingList<Callname> filteredCallnames;
         public MainWindow()
         {
             InitializeComponent();
