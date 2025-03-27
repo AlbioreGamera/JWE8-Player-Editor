@@ -29,17 +29,19 @@ namespace PESPlayerEditorTest
         public PlayerAssignment SelectedPlayerAssignment {get; set;}
         public static List<Position> Positions { get; } = new List<Position>
             {
-                new Position { PositionId = 0, PositionName = "Goal Keeper" },
-                new Position { PositionId = 1, PositionName = "Libero" },
-                new Position { PositionId = 2, PositionName = "Sweeper" },
-                new Position { PositionId = 3, PositionName = "Central Back Stopper" },
-                new Position { PositionId = 4, PositionName = "Side Back" },
-                new Position { PositionId = 5, PositionName = "Defensive Midfielder" },
-                new Position { PositionId = 6, PositionName = "Centre Midfielder" },
-                new Position { PositionId = 7, PositionName = "Side Midfielder" },
-                new Position { PositionId = 8, PositionName = "Offensive Midfielder" },
-                new Position { PositionId = 9, PositionName = "Centre Forward" },
-                new Position { PositionId = 10, PositionName = "Wing Forward" },
+                new Position { PositionId = 0, PositionValue = ["9E"], PositionName = "Goal Keeper" },
+                new Position { PositionId = 1, PositionValue = ["41"], PositionName = "Sweeper" },
+                new Position { PositionId = 2, PositionValue = ["35,3E"], PositionName = "Centrer Back" },
+                new Position { PositionId = 3, PositionValue = ["3F","41","44"], PositionName = "Side Back" }, //41 RIGHT - 44 LEFT
+                new Position { PositionId = 4, PositionValue = ["3D"], PositionName = "Defensive Midfielder" },
+                new Position { PositionId = 5, PositionValue = ["3E"], PositionName = "Wing Back" }, 
+                new Position { PositionId = 6, PositionValue = ["42"], PositionName = "Centre Midfielder" },
+                new Position { PositionId = 7, PositionValue = ["46"], PositionName = "Side Midfielder" },// 46 RIGHT - ?? LEFT
+                new Position { PositionId = 8, PositionValue = ["4C"], PositionName = "Attacking Midfielder" },
+                new Position { PositionId = 9, PositionValue = ["4E"], PositionName = "Wing Forward" },
+                new Position { PositionId = 10, PositionValue = ["4C"], PositionName = "Second Striker" },
+                new Position { PositionId = 11, PositionValue = ["4D"], PositionName = "Centre Forward" },
+
         };
 
         public LoadCountries CountriesLoader { get; } = new LoadCountries();
@@ -99,13 +101,45 @@ namespace PESPlayerEditorTest
             playerIdTextBox.Text = selectedPlayer.PlayerIndex.ToString();
             nameTextBox.Text = selectedPlayer.Name;
             shirtNameTextBox.Text = selectedPlayer.ShirtName;
-            countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
+            countryComboBox.SelectedIndex = selectedPlayer.Country;
             ageComboBox.SelectedIndex = selectedPlayer.Age;
             heightTextBox.Text = selectedPlayer.Height.ToString();
             weightTextBox.Text = selectedPlayer.Weight.ToString();
             positionComboBox.SelectedIndex = selectedPlayer.Position;
-            //commentaryComboBox.IsEnabled = true;
-            commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
+            commentaryComboBox.IsEnabled = true;
+            commentaryComboBox.SelectedIndex = 0; //selectedPlayer.Commentary;
+            //Stats
+            statOffenseTextBox.Text = selectedPlayer.StatAttack.ToString();
+            statDefenseTextBox.Text = selectedPlayer.StatDefense.ToString();
+            statBodyBalanceTextBox.Text = selectedPlayer.StatBodyBalance.ToString();
+            statStaminaTextBox.Text = selectedPlayer.StatStamina.ToString();
+            statTopSpeedTextBox.Text = selectedPlayer.StatTopSpeed.ToString();
+            statAccelerationTextBox.Text = selectedPlayer.StatAcceleration.ToString();
+            statResponseTextBox.Text = selectedPlayer.StatResponse.ToString();
+            statAgilityTextBox.Text = selectedPlayer.StatAgility.ToString();
+            statDribbleAccuracyTextBox.Text = selectedPlayer.StatDribbleAccuracy.ToString();
+            statDribbleSpeedTextBox.Text = selectedPlayer.StatDribbleSpeed.ToString();
+            statShortPassAccTextBox.Text = selectedPlayer.StatShortPassAccuracy.ToString();
+            statShortPassSpeedTextBox.Text = selectedPlayer.StatShortPassSpeed.ToString();
+            statLongPassAccTextBox.Text = selectedPlayer.StatLongPassAccuracy.ToString();
+            statLongPassSpeedTextBox.Text = selectedPlayer.StatLongPassSpeed.ToString();
+            statShootAccTextBox.Text = selectedPlayer.StatShotAccuracy.ToString();
+            statShootPowerTextBox.Text = selectedPlayer.StatShotPower.ToString();
+            statShootTechniqueTextBox.Text = selectedPlayer.StatShotTechnique.ToString();
+            statFreeKickTextBox.Text = selectedPlayer.StatFreeKickAccuracy.ToString();
+            statSwerveTextBox.Text = selectedPlayer.StatCurve.ToString();
+            statHeadingTextBox.Text = selectedPlayer.StatHeader.ToString();
+            statJumpTextBox.Text = selectedPlayer.StatJump.ToString();
+            statTechniqueTextBox.Text = selectedPlayer.StatTechnique.ToString();
+            statAggresionTextBox.Text = selectedPlayer.StatAggression.ToString();
+            statMentalityTextBox.Text = selectedPlayer.StatMentality.ToString();
+            statTeamWorkTextBox.Text = selectedPlayer.StatTeamWorkAbility.ToString();
+            conditionComboBox.SelectedIndex = 0;
+            WeakFootAccComboBox.SelectedIndex = 0;
+            WeakFootUseComboBox.SelectedIndex = 0;
+
+            //Skills
+            //Appeareance
         }
 
         private void ApplyPlayerChanges(object sender, RoutedEventArgs e)

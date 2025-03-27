@@ -64,38 +64,38 @@ namespace PESPlayerEditorTest
 
         public static List<Age> Ages { get; } = new List<Age>
         {
-            new Age { AgeIndex = 0, AgeValue = ["02","05","04","05","06","07"], AgeName = 15 },
-            new Age { AgeIndex = 1, AgeValue = ["0A","0B","0C","0D","0E","0F"], AgeName = 16 },
-            new Age { AgeIndex = 2, AgeValue = ["12","13","14","15","16","17"], AgeName = 17 },
-            new Age { AgeIndex = 3, AgeValue = ["1A","1B","1C","1D","1E","1F"], AgeName = 18 },
-            new Age { AgeIndex = 4, AgeValue = ["22","23","24","25","26","27"], AgeName = 19 },
-            new Age { AgeIndex = 5, AgeValue = ["2A","2B","2C","2D","2E","2F"], AgeName = 20 },
-            new Age { AgeIndex = 6, AgeValue = ["32","33","34","35","36","37"], AgeName = 21 },
-            new Age { AgeIndex = 7, AgeValue = ["3A","3B","3C","3D","4E","3F"], AgeName = 22 },
-            new Age { AgeIndex = 8, AgeValue = ["42","43","44","45","46","47"], AgeName = 23 },
-            new Age { AgeIndex = 9, AgeValue = ["4A","4B","4C","4D","4E","4F"], AgeName = 24 },
-            new Age { AgeIndex = 10,AgeValue = ["52","53","54","55","56","57"], AgeName = 25 },
-            new Age { AgeIndex = 11,AgeValue = ["5A","5B","5C","5D","5E","5F"], AgeName = 26 },
-            new Age { AgeIndex = 12,AgeValue = ["62","63","64","65","66","67"], AgeName = 27 },
-            new Age { AgeIndex = 13,AgeValue = ["6A","6B","6C","6D","6E","6F"], AgeName = 28 },
-            new Age { AgeIndex = 14,AgeValue = ["72","73","74","75","76","77"], AgeName = 29 },
-            new Age { AgeIndex = 15,AgeValue = ["7A","7B","7C","7D","7E","7F"], AgeName = 30 },
-            new Age { AgeIndex = 16,AgeValue = ["82","83","84","85","86","87"], AgeName = 31 },
-            new Age { AgeIndex = 17,AgeValue = ["8A","8B","8C","8D","8E","8F"], AgeName = 32 },
-            new Age { AgeIndex = 18,AgeValue = ["92","93","94","95","95","97"], AgeName = 33 },
-            new Age { AgeIndex = 19,AgeValue = ["9A","9B","9C","9D","9E","9F"], AgeName = 34 },
-            new Age { AgeIndex = 20,AgeValue = ["A2","A3","A4","A5","A6","A7"], AgeName = 35 },
-            new Age { AgeIndex = 21,AgeValue = ["AA","AB","AC","AD","AE","AF"], AgeName = 36 },
-            new Age { AgeIndex = 22,AgeValue = ["B2","B3","B4","B5","B6","B7"], AgeName = 37 },
-            new Age { AgeIndex = 23,AgeValue = ["BA","BB","BC","BD","BE","BF"], AgeName = 38 },
-            new Age { AgeIndex = 24,AgeValue = ["C2","C3","C4","C4","C5","C6"], AgeName = 39 },
-            new Age { AgeIndex = 25,AgeValue = ["CA","CB","CC","CD","CE","CF"], AgeName = 40 },
-            new Age { AgeIndex = 26,AgeValue = ["D2","D3","D4","D4","D5","D6"], AgeName = 41 },
-            new Age { AgeIndex = 27,AgeValue = ["DA","DB","DC","DD","DE","DF"], AgeName = 42 },
-            new Age { AgeIndex = 28,AgeValue = ["E2","E3","E4","E5","E6","E7"], AgeName = 43 },
-            new Age { AgeIndex = 29,AgeValue = ["EA","EB","EC","ED","EE","EF"], AgeName = 44 },
-            new Age { AgeIndex = 30,AgeValue = ["F2","F3","F4","F5","F6","F7"], AgeName = 45 },
-            new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC","FD","FE","FF"], AgeName = 46 }
+            new Age { AgeIndex = 0, AgeValue = ["00"], AgeName = 15 },
+            new Age { AgeIndex = 1, AgeValue = ["02"], AgeName = 16 },
+            new Age { AgeIndex = 2, AgeValue = ["04"], AgeName = 17 },
+            new Age { AgeIndex = 3, AgeValue = ["06"], AgeName = 18 },
+            new Age { AgeIndex = 4, AgeValue = ["08"], AgeName = 19 },
+            new Age { AgeIndex = 5, AgeValue = ["0A"], AgeName = 20 },
+            new Age { AgeIndex = 6, AgeValue = ["0C"], AgeName = 21 },
+            new Age { AgeIndex = 7, AgeValue = ["0E"], AgeName = 22 },
+            new Age { AgeIndex = 8, AgeValue = ["10"], AgeName = 23 },
+            new Age { AgeIndex = 9, AgeValue = ["12"], AgeName = 24 },
+            new Age { AgeIndex = 10,AgeValue = ["14"], AgeName = 25 },
+            new Age { AgeIndex = 11,AgeValue = ["16"], AgeName = 26 },
+            new Age { AgeIndex = 12,AgeValue = ["18"], AgeName = 27 },
+            new Age { AgeIndex = 13,AgeValue = ["1A"], AgeName = 28 },
+            new Age { AgeIndex = 14,AgeValue = ["1C"], AgeName = 29 },
+            new Age { AgeIndex = 15,AgeValue = ["1E"], AgeName = 30 },
+            new Age { AgeIndex = 16,AgeValue = ["20"], AgeName = 31 },
+            new Age { AgeIndex = 17,AgeValue = ["22"], AgeName = 32 },
+            new Age { AgeIndex = 18,AgeValue = ["24"], AgeName = 33 },
+            new Age { AgeIndex = 19,AgeValue = ["26"], AgeName = 34 },
+            new Age { AgeIndex = 20,AgeValue = ["28"], AgeName = 35 },
+            new Age { AgeIndex = 21,AgeValue = ["2A"], AgeName = 36 },
+            new Age { AgeIndex = 22,AgeValue = ["2C"], AgeName = 37 },
+            new Age { AgeIndex = 23,AgeValue = ["2E"], AgeName = 38 },
+            new Age { AgeIndex = 24,AgeValue = ["30"], AgeName = 39 },
+            new Age { AgeIndex = 25,AgeValue = ["32"], AgeName = 40 },
+            new Age { AgeIndex = 26,AgeValue = ["34"], AgeName = 41 },
+            new Age { AgeIndex = 27,AgeValue = ["36"], AgeName = 42 },
+            new Age { AgeIndex = 28,AgeValue = ["38"], AgeName = 43 },
+            new Age { AgeIndex = 29,AgeValue = ["3A"], AgeName = 44 },
+            new Age { AgeIndex = 30,AgeValue = ["3C"], AgeName = 45 },
+            new Age { AgeIndex = 31,AgeValue = ["3E"], AgeName = 46 }
         };
 
         List<Player> players = new List<Player>();
@@ -181,7 +181,7 @@ namespace PESPlayerEditorTest
                 int playerIndex = 1;
                 while (fileStream.Read(buffer, 0, buffer.Length) == buffer.Length)
                 {
-                    string ageHexValue = buffer[109].ToString("X2");
+                    string ageHexValue = buffer[113].ToString("X2");
                     Age age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
 
                     byte[] commentaryHex = new byte[2]; Array.Copy(buffer, 48, commentaryHex, 0, 2);
@@ -192,11 +192,40 @@ namespace PESPlayerEditorTest
                         Name = Encoding.Unicode.GetString(buffer, 0, 32).Trim(),
                         ShirtName = Encoding.ASCII.GetString(buffer, 32, 16).Trim(),
                         Commentary = BitConverter.ToInt16(commentaryHex, 0),
-                        Position = buffer[52] & 0x0F,
-                        Height = buffer[88] - 44,
-                        Weight = buffer[89] - 44,
+                        Position = buffer[54] & 0x0F,
+                        Height = buffer[88] + 148,
+                        Weight = buffer[89],
                         Age = age?.AgeIndex ?? 0,
-                        Country = BitConverter.ToInt32(buffer, 110),
+                        Country = buffer[112],
+                        StatAttack = buffer[54] - 128,
+                        StatDefense = buffer[55],
+                        StatBodyBalance = buffer[56],
+                        StatStamina = buffer[57],
+                        StatTopSpeed = buffer[58],
+                        StatAcceleration = buffer[59],
+                        StatResponse = buffer[60],
+                        StatAgility = buffer[61],
+                        StatDribbleAccuracy = buffer[62],
+                        StatDribbleSpeed = buffer[63],
+                        StatShortPassAccuracy = buffer[64],
+                        StatShortPassSpeed = buffer[65],
+                        StatLongPassAccuracy = buffer[66],
+                        StatLongPassSpeed = buffer[67],
+                        StatShotAccuracy = buffer[68],
+                        StatShotPower = buffer[69],
+                        StatShotTechnique = buffer[70],
+                        StatFreeKickAccuracy = buffer[71],
+                        StatCurve = buffer[72],
+                        StatHeader = buffer[73],
+                        StatJump = buffer[74],
+                        StatTechnique = buffer[76],
+                        StatAggression = buffer[77],
+                        StatMentality = buffer[78],
+                        StatGoalkeepingSkills = buffer[79],
+                        StatTeamWorkAbility = buffer[75],
+                        StatCondition = buffer[80],
+                        StatWeakFootAccuracy = buffer[81],
+                        StatWeakFootFrequency = buffer[82],
                     };
                     People.Add(person);
                 }
@@ -353,7 +382,7 @@ namespace PESPlayerEditorTest
                     nameTextBox.Text = selectedPlayer.Name;
                     shirtNameTextBox.Text = selectedPlayer.ShirtName;
                     commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
-                    countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
+                    countryComboBox.SelectedIndex = selectedPlayer.Country;
                 }
             }
         }
@@ -577,8 +606,8 @@ namespace PESPlayerEditorTest
                     Player selectedPlayer = selectedPlayerAssignment.Player;
                     nameTextBox.Text = selectedPlayer.Name;
                     shirtNameTextBox.Text = selectedPlayer.ShirtName;
-                    commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
-                    countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
+                    //commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
+                    countryComboBox.SelectedIndex = selectedPlayer.Country;
                 }
 
             }

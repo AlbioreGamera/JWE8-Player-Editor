@@ -40,17 +40,17 @@ namespace PESPlayerEditorTest
             {
                 if (filePathInfo.Name != null)
                 {
-                    if (filePathInfo.Name.Equals("para_we8_bin_000"))
+                    if (filePathInfo.Name.Equals("unknow_00055_bin_000"))
                     {
                         _mainWindow.FilePath1 = filePathInfo.FilePath;
                     }
 
-                    if (filePathInfo.Name.Equals("para_we8_bin_002"))
+                    if (filePathInfo.Name.Equals("unknow_00055_bin_002"))
                     {
                         _mainWindow.FilePath2 = filePathInfo.FilePath;
                     }
 
-                    if (filePathInfo.Name.Equals("para_we8_bin_004"))
+                    if (filePathInfo.Name.Equals("unknow_00055_bin_004"))
                     {
                         _mainWindow.FilePath3 = filePathInfo.FilePath;
                     }
@@ -113,33 +113,33 @@ namespace PESPlayerEditorTest
         private void SelectFile1_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "para_we8.bin player files (*.bin_000)|*.bin_000|All files (*.*)|*.*";
+            openFileDialog.Filter = "unknow_00055.bin player files (*.bin_000)|*.bin_000|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 string bin_000 = openFileDialog.FileName;
-                para_we8_bin_000.Text = openFileDialog.FileName;
+                unknow_00055_bin_000.Text = openFileDialog.FileName;
             }
         }
 
         private void SelectFile2_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "para_we8.bin player files (*.bin_002)|*.bin_002|All files (*.*)|*.*";
+            openFileDialog.Filter = "unknow_00055.bin player files (*.bin_002)|*.bin_002|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 string bin_002 = openFileDialog.FileName;
-                para_we8_bin_002.Text = openFileDialog.FileName;
+                unknow_00055_bin_002.Text = openFileDialog.FileName;
             }
         }
 
         private void SelectFile3_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "para_we8.bin player files (*.bin_004)|*.bin_004|All files (*.*)|*.*";
+            openFileDialog.Filter = "unknow_00055.bin player files (*.bin_004)|*.bin_004|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 string bin_004 = openFileDialog.FileName;
-                para_we8_bin_004.Text = openFileDialog.FileName;
+                unknow_00055_bin_004.Text = openFileDialog.FileName;
             }
         }
 
@@ -167,9 +167,9 @@ namespace PESPlayerEditorTest
 
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
-            string selectedFilePath_000 = para_we8_bin_000.Text;
-            string selectedFilePath_002 = para_we8_bin_002.Text;
-            string selectedFilePath_004 = para_we8_bin_004.Text;
+            string selectedFilePath_000 = unknow_00055_bin_000.Text;
+            string selectedFilePath_002 = unknow_00055_bin_002.Text;
+            string selectedFilePath_004 = unknow_00055_bin_004.Text;
             string selectedFilePath_edit = edit_ovl.Text;
             string selectedFilePath_dataset = defaultdataset.Text;
 
@@ -211,9 +211,9 @@ namespace PESPlayerEditorTest
 
             List<FilePathInfo> filePathInfos = new List<FilePathInfo>
             {
-                new FilePathInfo { Name = "para_we8_bin_000", FilePath = selectedFilePath_000 },
-                new FilePathInfo { Name = "para_we8_bin_002", FilePath = selectedFilePath_002 },
-                new FilePathInfo { Name = "para_we8_bin_004", FilePath = selectedFilePath_004 },
+                new FilePathInfo { Name = "unknow_00055_bin_000", FilePath = selectedFilePath_000 },
+                new FilePathInfo { Name = "unknow_00055_bin_002", FilePath = selectedFilePath_002 },
+                new FilePathInfo { Name = "unknow_00055_bin_004", FilePath = selectedFilePath_004 },
                 new FilePathInfo { Name = "edit_ovl", FilePath = selectedFilePath_dataset },
                 new FilePathInfo { Name = "defaultdataset", FilePath = selectedFilePath_edit },
             };
