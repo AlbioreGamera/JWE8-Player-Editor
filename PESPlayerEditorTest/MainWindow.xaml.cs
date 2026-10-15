@@ -59,7 +59,6 @@ namespace PESPlayerEditorTest
         };
 
         public LoadCountries CountriesLoader { get; } = new LoadCountries();
-
         public LoadCommentaries CommentariesLoader { get; } = new LoadCommentaries();
 
         public static List<Age> Ages { get; } = new List<Age>
@@ -172,7 +171,7 @@ namespace PESPlayerEditorTest
         public List<Player> ParsePlayers(string filePath)
         {
 
-            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (FileStream fileStream         = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 fileStream.Seek(124, SeekOrigin.Begin);
 
@@ -695,6 +694,22 @@ namespace PESPlayerEditorTest
             Callname selectedPlayerAssignment = (Callname)callnameListBox.SelectedItem;
             selectedPlayerAssignment.CommentaryName = callnameTextBoxC.Text;
             callnameListBox.Items.Refresh();
+        }
+
+        private void TestParaWe8_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string path = @"D:\PES\PlayStation 2\Traducciones\Traducción JWE8\BOOT\BOOT_0\para_we8.bin";
+
+                string info = JWE8Editor.Logic.ParaWe8Reader.GetRawFileInfo(path, 128);
+
+                MessageBox.Show(info, "ParaWe8 Test Result");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}\n\n{ex.StackTrace}", "ParaWe8 Test Error");
+            }
         }
     }
 }

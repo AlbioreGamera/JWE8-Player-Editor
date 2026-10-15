@@ -25,11 +25,14 @@ namespace PESPlayerEditorTest
 
         private readonly MainWindow _mainWindow;
 
+        private Dictionary<string, string> _savedFilePaths = new Dictionary<string, string>();
+
         public FileSelectionWindow(MainWindow mainWindow)
         {
             InitializeComponent();
             LoadFilePaths();
             _mainWindow = mainWindow;
+            PopulateTextBoxesFromSavedPaths();
         }
 
         public void CheckExistingFiles()
@@ -107,13 +110,50 @@ namespace PESPlayerEditorTest
                 }
             }
 
+            _savedFilePaths = filePathInfos
+                .Where(f => f.Name != null)
+                .GroupBy(f => f.Name)
+                .ToDictionary(g => g.Key, g => g.First().FilePath);
+
             return filePathInfos;
+        }
+
+        private void PopulateTextBoxesFromSavedPaths()
+        {
+            para_we8_bin_000.Text = GetSavedPathIfExists("para_we8_bin_000");
+            para_we8_bin_002.Text = GetSavedPathIfExists("para_we8_bin_002");
+            para_we8_bin_004.Text = GetSavedPathIfExists("para_we8_bin_004");
+            defaultdataset.Text = GetSavedPathIfExists("defaultdataset");
+            edit_ovl.Text = GetSavedPathIfExists("edit_ovl");
+        }
+
+        private string GetSavedPathIfExists(string name)
+        {
+            if (_savedFilePaths.TryGetValue(name, out string savedPath) && File.Exists(savedPath))
+            {
+                return savedPath;
+            }
+            return string.Empty;
+        }
+
+        private string GetInitialDirectory(string name)
+        {
+            if (_savedFilePaths.TryGetValue(name, out string savedPath) && !string.IsNullOrEmpty(savedPath))
+            {
+                string directory = Path.GetDirectoryName(savedPath);
+                if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
+                {
+                    return directory;
+                }
+            }
+            return string.Empty;
         }
 
         private void SelectFile1_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "para_we8.bin player files (*.bin_000)|*.bin_000|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = GetInitialDirectory("para_we8_bin_000");
             if (openFileDialog.ShowDialog() == true)
             {
                 string bin_000 = openFileDialog.FileName;
@@ -125,6 +165,7 @@ namespace PESPlayerEditorTest
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "para_we8.bin player files (*.bin_002)|*.bin_002|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = GetInitialDirectory("para_we8_bin_002");
             if (openFileDialog.ShowDialog() == true)
             {
                 string bin_002 = openFileDialog.FileName;
@@ -136,6 +177,7 @@ namespace PESPlayerEditorTest
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "para_we8.bin player files (*.bin_004)|*.bin_004|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = GetInitialDirectory("para_we8_bin_004");
             if (openFileDialog.ShowDialog() == true)
             {
                 string bin_004 = openFileDialog.FileName;
@@ -147,6 +189,7 @@ namespace PESPlayerEditorTest
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "defaultdataset.ovl file (*.ovl)|*.ovl|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = GetInitialDirectory("defaultdataset");
             if (openFileDialog.ShowDialog() == true)
             {
                 string dataset = openFileDialog.FileName;
@@ -158,6 +201,7 @@ namespace PESPlayerEditorTest
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "edit.ovl file (*.ovl)|*.ovl|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = GetInitialDirectory("edit_ovl");
             if (openFileDialog.ShowDialog() == true)
             {
                 string edit = openFileDialog.FileName;
@@ -214,8 +258,8 @@ namespace PESPlayerEditorTest
                 new FilePathInfo { Name = "para_we8_bin_000", FilePath = selectedFilePath_000 },
                 new FilePathInfo { Name = "para_we8_bin_002", FilePath = selectedFilePath_002 },
                 new FilePathInfo { Name = "para_we8_bin_004", FilePath = selectedFilePath_004 },
-                new FilePathInfo { Name = "edit_ovl", FilePath = selectedFilePath_dataset },
-                new FilePathInfo { Name = "defaultdataset", FilePath = selectedFilePath_edit },
+                new FilePathInfo { Name = "edit_ovl", FilePath = selectedFilePath_edit },
+                new FilePathInfo { Name = "defaultdataset", FilePath = selectedFilePath_dataset },
             };
 
             SaveFilePaths(filePathInfos);

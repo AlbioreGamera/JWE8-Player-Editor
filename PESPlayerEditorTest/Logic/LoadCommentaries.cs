@@ -1,6 +1,7 @@
 ﻿using PESPlayerEditorTest;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,35 +12,55 @@ namespace JWE8Editor.Logic
 {
     public class LoadCommentaries
     {
+        private static bool _isPopulated;
+
         public static List<Commentary> Commentaries { get; } = new List<Commentary>();
 
         public LoadCommentaries()
         {
-            PopulateCommentary();
+            if (!_isPopulated)
+            {
+                PopulateCommentary();
+                _isPopulated = true;
+            }
         }
 
-        public void PopulateCommentary()
+        public static void PopulateCommentary()
         {
             try
             {
                 string filePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "commentary.cfg");
-                List<string> callNames = new List<string>();
+
+                var loaded = new List<Commentary>();
 
                 foreach (string line in File.ReadLines(filePath))
                 {
-                    if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
                     {
-                        Commentary commentary = new Commentary();
-                        string[] parts = line.Split(';');
-                        if (parts.Length >= 3)
-                        {
-                            commentary.CommentaryIndex = int.Parse(parts[0]);
-                            commentary.CommentaryCode = parts[1];
-                            commentary.CommentaryName = "("+parts[1]+") "+parts[2];
-                        }
-                        Commentaries.Add(commentary);
+                        continue;
                     }
+
+                    string[] parts = line.Split(';');
+                    if (parts.Length < 3)
+                    {
+                        continue;
+                    }
+
+                    if (!int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int index))
+                    {
+                        continue;
+                    }
+
+                    loaded.Add(new Commentary
+                    {
+                        CommentaryIndex = index,
+                        CommentaryCode = parts[1],
+                        CommentaryName = $"({parts[1]}) {parts[2]}"
+                    });
                 }
+
+                Commentaries.Capacity = loaded.Count;
+                Commentaries.AddRange(loaded);
             }
             catch (Exception ex)
             {

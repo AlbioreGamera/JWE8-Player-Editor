@@ -10,11 +10,17 @@ namespace JWE8Editor.Logic
 {
     public class LoadCountries
     {
+        private bool _isPopulated;
+
         public static List<Country> Countries { get; } = new List<Country>();
 
-        public LoadCountries()
+        public LoadCountries()  // constructor de INSTANCIA
         {
-            PopulateCommentary();
+            if (!_isPopulated)
+            {
+                PopulateCommentary();
+                _isPopulated = true;
+            }
         }
 
         public void PopulateCommentary()
