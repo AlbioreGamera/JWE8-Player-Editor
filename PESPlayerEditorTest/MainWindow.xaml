@@ -270,6 +270,6 @@
                 </TabItem>
             </TabControl>
         </Grid>
-        <Button Content="Test ParaWe8" Click="TestParaWe8_Click" Width="120" Height="30" Margin="5"/>
+        <!--<Button Content="Test ParaWe8" Click="TestParaWe8_Click" Width="120" Height="30" Margin="5"/>-->
     </Grid>
 </Window>
