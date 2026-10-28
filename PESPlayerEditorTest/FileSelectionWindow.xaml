@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="File Selection" Height="200" Width="363" ResizeMode="NoResize" >
     <Grid Background="#FF212121">
         <Grid.RowDefinitions>

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         xmlns:logic="clr-namespace:JWE8Editor.Logic"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="{Binding SelectedPlayerAssignment.Player.Name}" Height="800" Width="700" ResizeMode="NoResize">
     <Window.Resources>
         <logic:StatValueToBackgroundConverter x:Key="StatValueToBackgroundConverter"/>
