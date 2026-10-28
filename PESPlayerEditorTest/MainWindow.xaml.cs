@@ -654,9 +654,10 @@ namespace PESPlayerEditorTest
 
         private void saveChanges_Click(object sender, RoutedEventArgs e)
         {
-            SavePlayerData(FilePath1);
+            SaveAllPlayersData(FilePath1);
             //SavePlayerAssignmentData(FilePath2);
             //SaveNumberData(FilePath3);
+            BackupFileIfExists(FilePath4);
             SaveCallnameData(FilePath4);
             //People.Clear();
             //PeopleA.Clear();
@@ -667,6 +668,8 @@ namespace PESPlayerEditorTest
             //team1DataGrid.Items.Refresh();
             //team2DataGrid.Items.Refresh();
             //personListBox.Items.Refresh();
+
+            MessageBox.Show("Data saved successfully.", "Save Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ClearFilter()
@@ -1282,6 +1285,35 @@ namespace PESPlayerEditorTest
 
                 fs.Seek(recordOffset, SeekOrigin.Begin);
                 fs.Write(buffer, 0, RecordSize);
+            }
+        }
+
+        /// <summary>
+        /// Crea una copia de respaldo del archivo original antes de sobrescribirlo,
+        /// agregando la extensión adicional ".bkp" (ej. "para_we8.bin_000.bkp").
+        /// Si ya existe un backup previo, se sobrescribe con el contenido actual del archivo origen.
+        /// </summary>
+        private void BackupFileIfExists(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                return;
+            }
+
+            string backupPath = filePath + ".bkp";
+            File.Copy(filePath, backupPath, overwrite: true);
+        }
+
+        private void SaveAllPlayersData(string filePath)
+        {
+            BackupFileIfExists(filePath);
+
+            foreach (var player in People)
+            {
+                if (player != null)
+                {
+                    WritePlayerToFile(filePath, player);
+                }
             }
         }
     }
