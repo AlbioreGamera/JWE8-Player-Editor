@@ -210,6 +210,76 @@ namespace PESPlayerEditorTest
             e.Handled = true;
         }
 
+        private void FaceIdTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !DigitsOnlyRegex.IsMatch(e.Text);
+        }
+
+        private void FaceIdTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+            {
+                return;
+            }
+
+            if (!int.TryParse(textBox.Text, out int value))
+            {
+                value = 0;
+            }
+
+            int maxFaceId = LoadFacePlayers.GetMaxFaceId(SelectedPlayer.SkinColour);
+
+            if (value < 0)
+            {
+                value = 0;
+            }
+            else if (value > maxFaceId)
+            {
+                value = maxFaceId;
+            }
+
+            string clamped = value.ToString();
+            if (textBox.Text != clamped)
+            {
+                textBox.Text = clamped;
+            }
+        }
+
+        private void FaceIdTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+            {
+                return;
+            }
+
+            if (e.Key != Key.Up && e.Key != Key.Down)
+            {
+                return;
+            }
+
+            if (!int.TryParse(textBox.Text, out int value))
+            {
+                value = 0;
+            }
+
+            value += e.Key == Key.Up ? 1 : -1;
+
+            int maxFaceId = LoadFacePlayers.GetMaxFaceId(SelectedPlayer.SkinColour);
+
+            if (value < 0)
+            {
+                value = 0;
+            }
+            else if (value > maxFaceId)
+            {
+                value = maxFaceId;
+            }
+
+            textBox.Text = value.ToString();
+            textBox.CaretIndex = textBox.Text.Length;
+            e.Handled = true;
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 

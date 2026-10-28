@@ -9,6 +9,8 @@
         Title="{Binding SelectedPlayerAssignment.Player.Name}" Height="740" Width="682" ResizeMode="NoResize">
     <Window.Resources>
         <logic:StatValueToBackgroundConverter x:Key="StatValueToBackgroundConverter"/>
+        <logic:FaceTypeToIsEnabledConverter x:Key="FaceTypeToIsEnabledConverter"/>
+        <local:FaceIdToPlayerNameConverter x:Key="FaceIdToPlayerNameConverter"/>
         <Style x:Key="StatTextBoxStyle" TargetType="TextBox">
             <Setter Property="MaxLength" Value="2"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -427,7 +429,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="38"/>
                                     <RowDefinition Height="24"/>
                                     <RowDefinition Height="24"/>
                                     <RowDefinition Height="24"/>
@@ -479,9 +481,22 @@
                                     <RowDefinition Height="24"/>
                                 </Grid.RowDefinitions>
 
-                                <Label Grid.Row="0" Content="Face Id" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedPlayer.FaceId, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
-
+                                <Label Grid.Row="0" Content="Face Id" FontSize="10" Foreground="#FFECECEC" VerticalAlignment="Top" Margin="0,2,0,0"/>
+                                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" Margin="0,2,0,0">
+                                    <TextBox Text="{Binding SelectedPlayer.FaceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="21" Width="90" HorizontalAlignment="Left" MaxLength="3"
+                          IsEnabled="{Binding SelectedPlayer.FaceType, Converter={StaticResource FaceTypeToIsEnabledConverter}}"
+                          PreviewTextInput="FaceIdTextBox_PreviewTextInput"
+                          PreviewKeyDown="FaceIdTextBox_PreviewKeyDown"
+                          LostFocus="FaceIdTextBox_LostFocus"/>
+                                    <Label FontSize="10" Foreground="#FF8FD3FF" HorizontalAlignment="Left" Padding="0" Margin="2,2,0,0">
+                                        <Label.Content>
+                                            <MultiBinding Converter="{StaticResource FaceIdToPlayerNameConverter}">
+                                                <Binding Path="SelectedPlayer.FaceId"/>
+                                                <Binding Path="SelectedPlayer.SkinColour"/>
+                                            </MultiBinding>
+                                        </Label.Content>
+                                    </Label>
+                                </StackPanel>
                                 <Label Grid.Row="1" Content="Face Type" FontSize="10" Foreground="#FFECECEC"/>
                                 <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FaceTypeValues}" SelectedItem="{Binding SelectedPlayer.FaceType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
 
