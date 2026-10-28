@@ -101,11 +101,15 @@ namespace PESPlayerEditorTest
         public ObservableCollection<PlayerAssignment> PeopleA { get; set; } = new ObservableCollection<PlayerAssignment>();
         public ObservableCollection<Callname> CallnameCollection { get; set; } = new ObservableCollection<Callname>();
         public ObservableCollection<Stadium> StadiumCollection { get; set; } = new ObservableCollection<Stadium>();
+        public ObservableCollection<League> LeagueCollection { get; set; } = new ObservableCollection<League>();
+        public ObservableCollection<Team> TeamCollection { get; set; } = new ObservableCollection<Team>();
+
         public string? FilePath1 { get; internal set; }
         public string? FilePath2 { get; internal set; }
         public string? FilePath3 { get; internal set; }
         public string? FilePath4 { get; internal set; }
         public string? FilePath5 { get; internal set; }
+        public string? FilePath6 { get; internal set; }
 
         // TODO: confirmar offsets reales con editor hexadecimal
         private const long LeagueBlockStart = 0x00000000; // <-- reemplazar con offset real
@@ -113,7 +117,23 @@ namespace PESPlayerEditorTest
         private const int LeagueRecordSize = 82;           // 21 (nombre+pad) * 2 + 40 padding aprox, confirmar
         private const int LeagueNameFieldSize = 21;        // bytes por copia del nombre
 
-        public ObservableCollection<League> LeagueCollection { get; set; } = new ObservableCollection<League>();
+        // Offsets confirmados a partir de SLPM_657.40
+        private const long TeamBlockStart = 0x00204480;
+        private const long TeamBlockEnd = 0x00205c77;       // último byte del listado principal (inclusive)
+        private const int TeamRecordSize = 64;              // 32 (nombre original) + 24 (romaji) + 8 (abreviación)
+        private const int TeamOriginalNameSize = 32;
+        private const int TeamRomajiNameSize = 24;
+        private const int TeamAbbreviationSize = 8;
+
+        // Bloque de equipos "Reserve" que comparten abreviación.
+        // NOTA: el layout de este bloque es distinto al principal (campos de 16 bytes en vez de 32/24,
+        // y una sola abreviación de 8 bytes compartida por todo el grupo). Los límites fueron inferidos
+        // de la muestra proporcionada; conviene validarlos con un editor hexadecimal si aparecen datos
+        // desalineados al cargar el archivo.
+        private const long TeamReserveBlockStart = 0x00205c88;
+        private const long TeamReserveBlockEnd = 0x00205d6f;
+        private const int ReserveNameFieldSize = 16;
+        private const int ReserveAbbreviationSize = 8;
 
         public MainWindow()
         {
@@ -121,24 +141,89 @@ namespace PESPlayerEditorTest
             DataContext = this;
         }
 
+        public void ParseTeams(string filePath)
+        {
+            TeamCollection.Clear();
+
+            using (FileStream fsTeams = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+
+                fsTeams.Seek(TeamBlockStart, SeekOrigin.Begin);
+
+                int teamIndex = 1;
+                long blockLength = TeamBlockEnd - TeamBlockStart + 1;
+                int recordCount = (int)(blockLength / TeamRecordSize);
+
+                for (int i = 0; i < recordCount; i++)
+                {
+                    byte[] originalNameBytes = new byte[TeamOriginalNameSize];
+                    byte[] romajiNameBytes = new byte[TeamRomajiNameSize];
+                    byte[] abbreviationBytes = new byte[TeamAbbreviationSize];
+
+                    fsTeams.Read(originalNameBytes, 0, TeamOriginalNameSize);
+                    fsTeams.Read(romajiNameBytes, 0, TeamRomajiNameSize);
+                    fsTeams.Read(abbreviationBytes, 0, TeamAbbreviationSize);
+
+                    TeamCollection.Add(new Team
+                    {
+                        TeamId = teamIndex++,
+                        TeamName = shiftJis.GetString(originalNameBytes).TrimEnd('\0'),
+                        TeamNameRomaji = Encoding.ASCII.GetString(romajiNameBytes).TrimEnd('\0'),
+                        TeamCode = Encoding.ASCII.GetString(abbreviationBytes).TrimEnd('\0')
+                    });
+                }
+
+                // Bloque "Reserve": el primer registro trae su propia abreviación (p. ej. "RES"),
+                // que luego se reutiliza para los siguientes equipos del grupo.
+                fsTeams.Seek(TeamReserveBlockStart, SeekOrigin.Begin);
+
+                byte[] resName1 = new byte[ReserveNameFieldSize];
+                byte[] resName2 = new byte[ReserveNameFieldSize];
+                byte[] resAbbr = new byte[ReserveAbbreviationSize];
+
+                fsTeams.Read(resName1, 0, ReserveNameFieldSize);
+                fsTeams.Read(resName2, 0, ReserveNameFieldSize);
+                fsTeams.Read(resAbbr, 0, ReserveAbbreviationSize);
+
+                string reserveAbbreviation = Encoding.ASCII.GetString(resAbbr).TrimEnd('\0');
+
+                TeamCollection.Add(new Team
+                {
+                    TeamId = teamIndex++,
+                    TeamName = Encoding.ASCII.GetString(resName1).TrimEnd('\0'),
+                    TeamNameRomaji = Encoding.ASCII.GetString(resName2).TrimEnd('\0'),
+                    TeamCode = reserveAbbreviation
+                });
+
+                while (fsTeams.Position + (ReserveNameFieldSize * 2) <= TeamReserveBlockEnd + 1)
+                {
+                    byte[] nameA = new byte[ReserveNameFieldSize];
+                    byte[] nameB = new byte[ReserveNameFieldSize];
+
+                    fsTeams.Read(nameA, 0, ReserveNameFieldSize);
+                    fsTeams.Read(nameB, 0, ReserveNameFieldSize);
+
+                    TeamCollection.Add(new Team
+                    {
+                        TeamId = teamIndex++,
+                        TeamName = Encoding.ASCII.GetString(nameA).TrimEnd('\0'),
+                        TeamNameRomaji = Encoding.ASCII.GetString(nameB).TrimEnd('\0'),
+                        TeamCode = reserveAbbreviation
+                    });
+                }
+            }
+        }
+
         public void PopulateTeamsComboBox()
         {
             try
             {
-                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "team.cfg");
-                List<string> teamNames = new List<string>();
+                List<string> teamNames = TeamCollection
+                    .Select(t => (t.TeamCode ?? string.Empty).ToUpper())
+                    .ToList();
 
-                foreach (string line in File.ReadLines(filePath))
-                {
-                    if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
-                    {
-                        string[] parts = line.Split(';');
-                        if (parts.Length >= 3)
-                        {
-                            teamNames.Add(parts[2].ToUpper());
-                        }
-                    }
-                }
                 team1ComboBox.IsEnabled = true;
                 team2ComboBox.IsEnabled = true;
                 team1ComboBox.ItemsSource = teamNames;

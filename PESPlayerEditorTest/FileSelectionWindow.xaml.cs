@@ -60,6 +60,11 @@ namespace PESPlayerEditorTest
                     {
                         _mainWindow.FilePath5 = filePathInfo.FilePath;
                     }
+
+                    if (filePathInfo.Name.Equals("slpm_657_40"))
+                    {
+                        _mainWindow.FilePath6 = filePathInfo.FilePath;
+                    }
                 }
             }
         }
@@ -118,6 +123,7 @@ namespace PESPlayerEditorTest
             para_we8_bin_004.Text = GetSavedPathIfExists("para_we8_bin_004");
             defaultdataset.Text = GetSavedPathIfExists("defaultdataset");
             edit_ovl.Text = GetSavedPathIfExists("edit_ovl");
+            slpm_657_40.Text = GetSavedPathIfExists("slpm_657_40");
         }
 
         private string GetSavedPathIfExists(string name)
@@ -202,6 +208,17 @@ namespace PESPlayerEditorTest
             }
         }
 
+        private void SelectFile6_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "SLPM_657.40 file (SLPM_657.40)|SLPM_657.40|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = GetInitialDirectory("slpm_657_40");
+            if (openFileDialog.ShowDialog() == true)
+            {
+                slpm_657_40.Text = openFileDialog.FileName;
+            }
+        }
+
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             string selectedFilePath_000 = para_we8_bin_000.Text;
@@ -209,6 +226,7 @@ namespace PESPlayerEditorTest
             string selectedFilePath_004 = para_we8_bin_004.Text;
             string selectedFilePath_edit = edit_ovl.Text;
             string selectedFilePath_dataset = defaultdataset.Text;
+            string selectedFilePath_slpm = slpm_657_40.Text;
 
             if (string.IsNullOrEmpty(selectedFilePath_000) || string.IsNullOrEmpty(selectedFilePath_002) || string.IsNullOrEmpty(selectedFilePath_004))
             {
@@ -239,6 +257,15 @@ namespace PESPlayerEditorTest
                 _mainWindow.callnameTextBoxC.IsEnabled = true;
             }
 
+            if (string.IsNullOrEmpty(selectedFilePath_slpm))
+            {
+                MessageBox.Show("No Team data will be loaded. Please select SLPM_657.40 to populate team names.");
+            }
+            else
+            {
+                _mainWindow.ParseTeams(selectedFilePath_slpm);
+            }
+
             _mainWindow.ParsePlayers(selectedFilePath_000);
             _mainWindow.personListBox.IsEnabled = true;
             _mainWindow.personListBox.SelectedIndex = 0;
@@ -253,6 +280,7 @@ namespace PESPlayerEditorTest
                 new FilePathInfo { Name = "para_we8_bin_004", FilePath = selectedFilePath_004 },
                 new FilePathInfo { Name = "edit_ovl", FilePath = selectedFilePath_edit },
                 new FilePathInfo { Name = "defaultdataset", FilePath = selectedFilePath_dataset },
+                new FilePathInfo { Name = "slpm_657_40", FilePath = selectedFilePath_slpm },
             };
 
             SaveFilePaths(filePathInfos);

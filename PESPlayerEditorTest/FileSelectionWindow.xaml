@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="File Selection" Height="200" Width="363" ResizeMode="NoResize" >
+        Title="File Selection" Height="225" Width="363" ResizeMode="NoResize" >
     <Grid Background="#FF212121">
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
@@ -36,7 +37,9 @@
         <Button Grid.Row="4" Content="Open edit.ovl" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile5_Click" Width="128"/>
         <TextBox x:Name="edit_ovl" Grid.Column="1" Grid.Row="4" Text="{Binding FilePath5, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
+        <Button Grid.Row="5" Content="Open SLPM_657.40" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile6_Click" Width="128"/>
+        <TextBox x:Name="slpm_657_40" Grid.Column="1" Grid.Row="5" Text="{Binding FilePath6, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="5" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
+        <Button Grid.Row="6" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
     </Grid>
 </Window>
