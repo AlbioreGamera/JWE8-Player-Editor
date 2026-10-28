@@ -119,26 +119,70 @@ namespace PESPlayerEditorTest
 
         // Offsets confirmados a partir de SLPM_657.40
         private const long TeamBlockStart = 0x00204480;
-        private const long TeamBlockEnd = 0x00205c77;       // último byte del listado principal (inclusive)
-        private const int TeamRecordSize = 64;              // 32 (nombre original) + 24 (romaji) + 8 (abreviación)
-        private const int TeamOriginalNameSize = 32;
-        private const int TeamRomajiNameSize = 24;
-        private const int TeamAbbreviationSize = 8;
+        private const long TeamBlockEnd = 0x00205d6f; // último byte (inclusive) de todo el listado, incluyendo el grupo "Reserve"
 
-        // Bloque de equipos "Reserve" que comparten abreviación.
-        // NOTA: el layout de este bloque es distinto al principal (campos de 16 bytes en vez de 32/24,
-        // y una sola abreviación de 8 bytes compartida por todo el grupo). Los límites fueron inferidos
-        // de la muestra proporcionada; conviene validarlos con un editor hexadecimal si aparecen datos
-        // desalineados al cargar el archivo.
-        private const long TeamReserveBlockStart = 0x00205c88;
-        private const long TeamReserveBlockEnd = 0x00205d6f;
-        private const int ReserveNameFieldSize = 16;
-        private const int ReserveAbbreviationSize = 8;
-
-        public MainWindow()
+        // Estos equipos traen un cuarto campo extra (nombre duplicado/extendido) que el juego
+        // ignora y que debe descartarse al parsear. Identificados por su abreviación, que es
+        // el dato más estable del registro.
+        private static readonly HashSet<string> TeamsWithExtraField = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            InitializeComponent();
-            DataContext = this;
+            "URW", // Urawa Reds
+            "YFM", // Yokohama F・Marinos
+            "BSK", // Bucheon SK
+            "ASM", // AS Monaco
+            "DEF", // Default
+        };
+
+        // Estos equipos no deben tener su romaji ni abreviación editados porque la lógica del
+        // editor depende de ellos (detección de campo extra, filtros especiales, etc.).
+        private static readonly HashSet<string> ProtectedTeamCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "URW", // Urawa Reds
+            "YFM", // Yokohama F・Marinos
+            "ASM", // AS Monaco
+            "DEF", // Default Team
+        };
+
+        private class TeamField
+        {
+            public long StartOffset;
+            public byte[] Bytes = Array.Empty<byte>();
+            public int TotalLength; // bytes útiles + relleno (0x00) hasta el siguiente campo
+        }
+
+        private TeamField? ReadNullTerminatedField(FileStream fs)
+        {
+            long start = fs.Position;
+            List<byte> bytes = new List<byte>();
+            int b;
+            while ((b = fs.ReadByte()) != -1 && b != 0x00)
+            {
+                bytes.Add((byte)b);
+            }
+
+            int nullCount = 0;
+            while (b == 0x00)
+            {
+                nullCount++;
+                b = fs.ReadByte();
+            }
+
+            if (b != -1 && b != 0x00)
+            {
+                fs.Position -= 1;
+            }
+
+            if (bytes.Count == 0 && nullCount == 0)
+            {
+                return null; // EOF
+            }
+
+            return new TeamField
+            {
+                StartOffset = start,
+                Bytes = bytes.ToArray(),
+                TotalLength = bytes.Count + nullCount
+            };
         }
 
         public void ParseTeams(string filePath)
@@ -153,65 +197,44 @@ namespace PESPlayerEditorTest
                 fsTeams.Seek(TeamBlockStart, SeekOrigin.Begin);
 
                 int teamIndex = 1;
-                long blockLength = TeamBlockEnd - TeamBlockStart + 1;
-                int recordCount = (int)(blockLength / TeamRecordSize);
 
-                for (int i = 0; i < recordCount; i++)
+                while (fsTeams.Position <= TeamBlockEnd)
                 {
-                    byte[] originalNameBytes = new byte[TeamOriginalNameSize];
-                    byte[] romajiNameBytes = new byte[TeamRomajiNameSize];
-                    byte[] abbreviationBytes = new byte[TeamAbbreviationSize];
+                    TeamField? nameField = ReadNullTerminatedField(fsTeams);
+                    if (nameField == null)
+                    {
+                        break;
+                    }
 
-                    fsTeams.Read(originalNameBytes, 0, TeamOriginalNameSize);
-                    fsTeams.Read(romajiNameBytes, 0, TeamRomajiNameSize);
-                    fsTeams.Read(abbreviationBytes, 0, TeamAbbreviationSize);
+                    TeamField? romajiField = ReadNullTerminatedField(fsTeams);
+                    TeamField? codeField = ReadNullTerminatedField(fsTeams);
+
+                    if (romajiField == null || codeField == null)
+                    {
+                        break;
+                    }
+
+                    string code = Encoding.ASCII.GetString(codeField.Bytes).Trim();
 
                     TeamCollection.Add(new Team
                     {
                         TeamId = teamIndex++,
-                        TeamName = shiftJis.GetString(originalNameBytes).TrimEnd('\0'),
-                        TeamNameRomaji = Encoding.ASCII.GetString(romajiNameBytes).TrimEnd('\0'),
-                        TeamCode = Encoding.ASCII.GetString(abbreviationBytes).TrimEnd('\0')
+                        TeamName = shiftJis.GetString(nameField.Bytes).Trim(),
+                        TeamNameRomaji = shiftJis.GetString(romajiField.Bytes).Trim(),
+                        TeamCode = code,
+                        NameOffset = nameField.StartOffset,
+                        NameFieldLength = nameField.TotalLength,
+                        RomajiOffset = romajiField.StartOffset,
+                        RomajiFieldLength = romajiField.TotalLength,
+                        CodeOffset = codeField.StartOffset,
+                        CodeFieldLength = codeField.TotalLength
                     });
-                }
 
-                // Bloque "Reserve": el primer registro trae su propia abreviación (p. ej. "RES"),
-                // que luego se reutiliza para los siguientes equipos del grupo.
-                fsTeams.Seek(TeamReserveBlockStart, SeekOrigin.Begin);
-
-                byte[] resName1 = new byte[ReserveNameFieldSize];
-                byte[] resName2 = new byte[ReserveNameFieldSize];
-                byte[] resAbbr = new byte[ReserveAbbreviationSize];
-
-                fsTeams.Read(resName1, 0, ReserveNameFieldSize);
-                fsTeams.Read(resName2, 0, ReserveNameFieldSize);
-                fsTeams.Read(resAbbr, 0, ReserveAbbreviationSize);
-
-                string reserveAbbreviation = Encoding.ASCII.GetString(resAbbr).TrimEnd('\0');
-
-                TeamCollection.Add(new Team
-                {
-                    TeamId = teamIndex++,
-                    TeamName = Encoding.ASCII.GetString(resName1).TrimEnd('\0'),
-                    TeamNameRomaji = Encoding.ASCII.GetString(resName2).TrimEnd('\0'),
-                    TeamCode = reserveAbbreviation
-                });
-
-                while (fsTeams.Position + (ReserveNameFieldSize * 2) <= TeamReserveBlockEnd + 1)
-                {
-                    byte[] nameA = new byte[ReserveNameFieldSize];
-                    byte[] nameB = new byte[ReserveNameFieldSize];
-
-                    fsTeams.Read(nameA, 0, ReserveNameFieldSize);
-                    fsTeams.Read(nameB, 0, ReserveNameFieldSize);
-
-                    TeamCollection.Add(new Team
+                    // Urawa Reds y Yokohama F・Marinos traen un cuarto campo extra que se descarta.
+                    if (TeamsWithExtraField.Contains(code))
                     {
-                        TeamId = teamIndex++,
-                        TeamName = Encoding.ASCII.GetString(nameA).TrimEnd('\0'),
-                        TeamNameRomaji = Encoding.ASCII.GetString(nameB).TrimEnd('\0'),
-                        TeamCode = reserveAbbreviation
-                    });
+                        ReadNullTerminatedField(fsTeams);
+                    }
                 }
             }
         }
@@ -221,7 +244,7 @@ namespace PESPlayerEditorTest
             try
             {
                 List<string> teamNames = TeamCollection
-                    .Select(t => (t.TeamCode ?? string.Empty).ToUpper())
+                    .Select(t => t.TeamName ?? string.Empty)
                     .ToList();
 
                 team1ComboBox.IsEnabled = true;
@@ -235,6 +258,85 @@ namespace PESPlayerEditorTest
             {
                 MessageBox.Show($"Error loading teams: {ex.Message}");
             }
+        }
+
+        public void TeamListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (teamListBox.SelectedItem is Team selectedTeam)
+            {
+                bool isProtected = ProtectedTeamCodes.Contains(selectedTeam.TeamCode ?? string.Empty);
+
+                teamNameTextBox.Text = selectedTeam.TeamName;
+                teamNameTextBox.MaxLength = selectedTeam.NameFieldLength;
+
+                teamRomajiTextBox.Text = selectedTeam.TeamNameRomaji;
+                teamRomajiTextBox.MaxLength = selectedTeam.RomajiFieldLength;
+                teamRomajiTextBox.IsEnabled = !isProtected;
+
+                teamCodeTextBox.Text = selectedTeam.TeamCode;
+                teamCodeTextBox.MaxLength = selectedTeam.CodeFieldLength;
+                teamCodeTextBox.IsEnabled = !isProtected;
+            }
+        }
+
+        private void ApplyTeam_Click(object sender, RoutedEventArgs e)
+        {
+            if (teamListBox.SelectedItem is not Team selectedTeam)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(FilePath6))
+            {
+                MessageBox.Show("No se cargó el archivo SLPM_657.40, no se puede guardar los datos del equipo.");
+                return;
+            }
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+
+            bool isProtected = ProtectedTeamCodes.Contains(selectedTeam.TeamCode ?? string.Empty);
+
+            using (FileStream fs = new FileStream(FilePath6, FileMode.Open, FileAccess.Write))
+            {
+                WriteTeamField(fs, shiftJis, teamNameTextBox.Text ?? string.Empty, selectedTeam.NameOffset, selectedTeam.NameFieldLength,
+                    updatedBytes => selectedTeam.TeamName = shiftJis.GetString(updatedBytes).TrimEnd('\0'));
+
+                if (!isProtected)
+                {
+                    WriteTeamField(fs, shiftJis, teamRomajiTextBox.Text ?? string.Empty, selectedTeam.RomajiOffset, selectedTeam.RomajiFieldLength,
+                        updatedBytes => selectedTeam.TeamNameRomaji = shiftJis.GetString(updatedBytes).TrimEnd('\0'));
+
+                    WriteTeamField(fs, Encoding.ASCII, teamCodeTextBox.Text ?? string.Empty, selectedTeam.CodeOffset, selectedTeam.CodeFieldLength,
+                        updatedBytes => selectedTeam.TeamCode = Encoding.ASCII.GetString(updatedBytes).TrimEnd('\0'));
+                }
+            }
+
+            teamListBox.Items.Refresh();
+
+            MessageBox.Show(isProtected
+                ? "Nombre del equipo actualizado. El romaji y la abreviación están bloqueados para este equipo."
+                : "Datos del equipo actualizados.");
+        }
+
+        private void WriteTeamField(FileStream fs, Encoding encoding, string newValue, long offset, int fieldLength, Action<byte[]> onWritten)
+        {
+            byte[] valueBytes = encoding.GetBytes(newValue);
+
+            if (valueBytes.Length > fieldLength)
+            {
+                MessageBox.Show($"El valor excede el espacio disponible en el archivo ({fieldLength} bytes) y será truncado.");
+                Array.Resize(ref valueBytes, fieldLength);
+            }
+
+            // El resto del campo se rellena con 0x00 (el array ya nace en ceros)
+            byte[] fieldBuffer = new byte[fieldLength];
+            Array.Copy(valueBytes, fieldBuffer, valueBytes.Length);
+
+            fs.Seek(offset, SeekOrigin.Begin);
+            fs.Write(fieldBuffer, 0, fieldBuffer.Length);
+
+            onWritten(fieldBuffer);
         }
 
         private void OpenFileSelectionWindow_Click(object sender, RoutedEventArgs e)
