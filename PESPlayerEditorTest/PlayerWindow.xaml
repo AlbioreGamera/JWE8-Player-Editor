@@ -4,9 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
+        xmlns:logic="clr-namespace:JWE8Editor.Logic"
         mc:Ignorable="d"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="{Binding SelectedPlayerAssignment.Player.Name}" Height="740" Width="865" ResizeMode="NoResize">
+        Title="{Binding SelectedPlayerAssignment.Player.Name}" Height="740" Width="682" ResizeMode="NoResize">
+    <Window.Resources>
+        <logic:StatValueToBackgroundConverter x:Key="StatValueToBackgroundConverter"/>
+        <Style x:Key="StatTextBoxStyle" TargetType="TextBox">
+            <Setter Property="MaxLength" Value="2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{Binding Text, RelativeSource={RelativeSource Self}, Converter={StaticResource StatValueToBackgroundConverter}}"/>
+            <EventSetter Event="PreviewTextInput" Handler="StatTextBox_PreviewTextInput"/>
+            <EventSetter Event="LostFocus" Handler="StatTextBox_LostFocus"/>
+            <EventSetter Event="PreviewKeyDown" Handler="StatTextBox_PreviewKeyDown"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="SelectionBrush" Value="#FF4A90D9"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,383 +30,680 @@
             <RowDefinition Height="*"/>
             <!-- Remaining space for the rest of the content -->
         </Grid.RowDefinitions>
-        <Grid  Background="#FF212121" Width="900" Height="726" VerticalAlignment="Center" Margin="0,0,-35,0">
-            <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
-            <GroupBox x:Name="Player_Information" Header="General" Margin="14,15,674,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="386">
-                <Grid Height="383">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="58.516"/>
-                        <ColumnDefinition Width="8.444"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="265*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                    </Grid.RowDefinitions>
+        <TabControl Grid.Row="1" Background="#FF212121">
+            <TabItem Header="Player">
+                <Grid  Background="#FF212121" Width="1300" Height="726" VerticalAlignment="Center" Margin="0,0,-35,0">
+                    <Separator HorizontalAlignment="Left" Margin="209,333,0,0" VerticalAlignment="Top"/>
+                    <GroupBox x:Name="Player_Information" Header="General" Margin="14,15,1074,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="386">
+                        <Grid Height="383">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="58.516"/>
+                                <ColumnDefinition Width="8.444"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="265*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
 
-                    <Label Content="Player ID" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="playerIdTextBox" Grid.Column="3" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Height="21" Width="60" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="4,0,0,0"/>
+                            <Label Content="Player ID" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox x:Name="playerIdTextBox" Grid.Column="3" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Height="21" Width="60" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Margin="4,0,0,0"/>
 
-                    <Label Grid.Row="1" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="nameTextBox" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Grid.Row="1" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="1" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox x:Name="nameTextBox" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Grid.Row="1" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
-                    <Label Grid.Row="2" Content="Shirt Name" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="shirtNameTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="2" Content="Shirt Name" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox x:Name="shirtNameTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
-                    <Label Grid.Row="3" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <!--<TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>-->
-                    <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="3"  VerticalAlignment="Center" HorizontalContentAlignment="Left" Width="120" ItemsSource="{Binding CommentariesLoader.Commentaries}" SelectedItem="{Binding SelectedPlayer.Commentary, Mode=TwoWay}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True" Margin="-2,0,0,0" IsEnabled="True">
-                        <ComboBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel />
-                            </ItemsPanelTemplate>
-                        </ComboBox.ItemsPanel>
-                    </ComboBox>
-                    <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries}" SelectedItem="{Binding SelectedPlayer.Country, Mode=TwoWay}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True"
+                            <Label Grid.Row="3" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <!--<TextBox x:Name="callnameTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>-->
+                            <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="3"  VerticalAlignment="Center" HorizontalContentAlignment="Left" Width="120" ItemsSource="{Binding CommentariesLoader.Commentaries}" SelectedItem="{Binding SelectedPlayer.Commentary, Mode=TwoWay}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True" Margin="-2,0,0,0" IsEnabled="True">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                            </ComboBox>
+                            <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries}" SelectedItem="{Binding SelectedPlayer.Country, Mode=TwoWay}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True"
                     DisplayMemberPath="CountryName" SelectedValuePath="CountryId" IsEditable="False"
                     HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
-                    <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedItem="{Binding SelectedPlayer.Age}" ScrollViewer.CanContentScroll="False"
+                            <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedValue="{Binding SelectedPlayer.Age, Mode=TwoWay}" ScrollViewer.CanContentScroll="False"
                     DisplayMemberPath="AgeName" SelectedValuePath="AgeIndex"
                     Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
-                    <Label Grid.Row="6" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="heightTextBox" Grid.Row="6" Grid.Column="3" TextWrapping="Wrap" Margin="4,0,0,0" Height="21" Width="58" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="6" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="heightTextBox" Grid.Row="6" Grid.Column="3" TextWrapping="Wrap" Margin="4,0,0,0" Height="21" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Height, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="7" Content="Weight (kg)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="weightTextBox" Grid.Row="7" Grid.Column="3" TextWrapping="Wrap" RenderTransformOrigin="0.438,2.093" Margin="4,0,0,0" Height="21" Width="58" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="7" Content="Weight (kg)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="weightTextBox" Grid.Row="7" Grid.Column="3" TextWrapping="Wrap" RenderTransformOrigin="0.438,2.093" Margin="4,0,0,0" Height="21" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Weight, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="8" Content="Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="footComboBox" Grid.Row="8" Grid.Column="2" IsEnabled="False" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="8" Content="Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <ComboBox x:Name="footComboBox" Grid.Row="8" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ItemsSource="{Binding FeetValues}" SelectedItem="{Binding SelectedPlayer.DominantFoot, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="9" Content="Side" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="sideComboBox" Grid.Row="9" Grid.Column="2" IsEnabled="False" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="9" Content="Side" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <CheckBox x:Name="sideCheckBox" Grid.Row="9" Grid.Column="2" Height="21" Width="16" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding SelectedPlayer.Side, Mode=TwoWay}"/>
+                            <Label Grid.Row="9" Grid.Column="3" Content="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <CheckBox x:Name="centerCheckBox" Grid.Row="9" Grid.Column="3" Height="21" Width="16" Margin="48,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding SelectedPlayer.Center, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="11" Content="Consistency" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="consistencyComboBox" Grid.Row="11" Grid.Column="2" IsEnabled="False" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="11" Content="Consistency" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <TextBox x:Name="consistencyTextBox" Grid.Row="11" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Consistency, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="12" Content="Condition" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="conditionComboBox" Grid.Row="12" Grid.Column="2" IsEnabled="False" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="12" Content="Condition" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <TextBox x:Name="conditionTextBox" Grid.Row="12" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Condition, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="10" Content="Weak Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="WeakFootAccComboBox" Grid.Row="10" Grid.Column="2" IsEnabled="False" Height="21" Margin="5,0,61,0" Grid.ColumnSpan="2" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
-                    <ComboBox x:Name="WeakFootUseComboBox" Grid.Row="10" Grid.Column="3" VerticalAlignment="Center" IsEnabled="False" Height="21" Margin="66,0,6,0" Width="58"/>
+                            <Label Grid.Row="10" Content="Weak Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <TextBox x:Name="WeakFootAccTextBox" Grid.Row="10" Grid.Column="2" Height="21" Margin="5,0,61,0" Grid.ColumnSpan="2" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.WeakFootAccuracy, Mode=TwoWay}"/>
+                            <TextBox x:Name="WeakFootUseTextBox" Grid.Row="10" Grid.Column="3" VerticalAlignment="Center" Height="21" Margin="66,0,6,0" Width="58" Text="{Binding SelectedPlayer.WeakFootFrequency, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="13" Content="Injury Res." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="injuryComboBox" Grid.Row="13" Grid.Column="2" IsEnabled="False" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+                            <Label Grid.Row="13" Content="Injury Res." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <ComboBox x:Name="injuryComboBox" Grid.Row="13" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ItemsSource="{Binding InjuryValues}" SelectedItem="{Binding SelectedPlayer.Injury, Mode=TwoWay}"/>
 
 
-                </Grid>
-            </GroupBox>
-            <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="436,599,0,0" VerticalAlignment="Top" Width="212" Height="48" Click="ApplyPlayerChanges" RenderTransformOrigin="-0.236,0.52"/>
-            <GroupBox x:Name="Position" Header="Position" Margin="14,406,674,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="289">
-                <Grid Height="257">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="22"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="17*"/>
-                        <ColumnDefinition Width="145*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                    </Grid.RowDefinitions>
+                        </Grid>
+                    </GroupBox>
+                    <Button x:Name="applyButton" Content="Apply" HorizontalAlignment="Left" Margin="436,599,0,0" VerticalAlignment="Top" Width="212" Height="48" Click="ApplyPlayerChanges" RenderTransformOrigin="-0.236,0.52"/>
+                    <GroupBox x:Name="Position" Header="Position" Margin="14,406,1074,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="289">
+                        <Grid Height="257">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="17*"/>
+                                <ColumnDefinition Width="145*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                            </Grid.RowDefinitions>
 
-                    <Label Content="Reg. Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="5" Width="68"/>
-                    <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions}" SelectedValue="{Binding SelectedPlayer.Position}" DisplayMemberPath="PositionName" SelectedValuePath="PositionId" ScrollViewer.CanContentScroll="False"
+                            <Label Content="Reg. Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="5" Width="68"/>
+                            <ComboBox x:Name="positionComboBox" ItemsSource="{Binding Positions}" SelectedValue="{Binding SelectedPlayer.Position}" DisplayMemberPath="PositionName" SelectedValuePath="PositionId" ScrollViewer.CanContentScroll="False"
                     Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="21" Margin="25,0,0,0"/>
 
-                    <CheckBox x:Name="gkCheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="1" Grid.Column="2" Content="Goal Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="gkCheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayGK, Mode=TwoWay}"/>
+                            <Label Grid.Row="1" Grid.Column="2" Content="Goal Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="liCheckBox"  VerticalAlignment="Center" Grid.Row="2" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="2" Grid.Column="2" Content="Libero" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="liCheckBox"  VerticalAlignment="Center" Grid.Row="2" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayCBT, Mode=TwoWay}"/>
+                            <Label Grid.Row="2" Grid.Column="2" Content="Libero" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="swCheckBox"  VerticalAlignment="Center" Grid.Row="3" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="3" Grid.Column="2" Content="Sweeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="swCheckBox"  VerticalAlignment="Center" Grid.Row="3" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayCBW, Mode=TwoWay}"/>
+                            <Label Grid.Row="3" Grid.Column="2" Content="Sweeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="cbCheckBox"  VerticalAlignment="Center" Grid.Row="4" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="4" Grid.Column="2" Content="Central Back Stopper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="cbCheckBox"  VerticalAlignment="Center" Grid.Row="4" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayCBW, Mode=TwoWay}"/>
+                            <Label Grid.Row="4" Grid.Column="2" Content="Central Back Stopper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="sbCheckBox"  VerticalAlignment="Center" Grid.Row="5" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="5" Grid.Column="2" Content="Side Back" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="sbCheckBox"  VerticalAlignment="Center" Grid.Row="5" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlaySB, Mode=TwoWay}"/>
+                            <Label Grid.Row="5" Grid.Column="2" Content="Side Back" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="dmfCheckBox"  VerticalAlignment="Center" Grid.Row="6" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="6" Grid.Column="2" Content="Defensive Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="dmfCheckBox"  VerticalAlignment="Center" Grid.Row="6" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayDMF, Mode=TwoWay}"/>
+                            <Label Grid.Row="6" Grid.Column="2" Content="Defensive Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="cmfCheckBox"  VerticalAlignment="Center" Grid.Row="7" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="7" Grid.Column="2" Content="Centre Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="cmfCheckBox"  VerticalAlignment="Center" Grid.Row="7" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayCMF, Mode=TwoWay}"/>
+                            <Label Grid.Row="7" Grid.Column="2" Content="Centre Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="smfCheckBox"  VerticalAlignment="Center" Grid.Row="8" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="8" Grid.Column="2" Content="Side Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="smfCheckBox"  VerticalAlignment="Center" Grid.Row="8" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlaySMF, Mode=TwoWay}"/>
+                            <Label Grid.Row="8" Grid.Column="2" Content="Side Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="amfCheckBox"  VerticalAlignment="Center" Grid.Row="9" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="9" Grid.Column="2" Content="Offensive Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="amfCheckBox"  VerticalAlignment="Center" Grid.Row="9" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayAMF, Mode=TwoWay}"/>
+                            <Label Grid.Row="9" Grid.Column="2" Content="Offensive Midfielder" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="cfCheckBox"  VerticalAlignment="Center" Grid.Row="10" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="10" Grid.Column="2" Content="Centre Forward" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="cfCheckBox"  VerticalAlignment="Center" Grid.Row="10" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayCF, Mode=TwoWay}"/>
+                            <Label Grid.Row="10" Grid.Column="2" Content="Centre Forward" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
-                    <CheckBox x:Name="wgCheckBox"  VerticalAlignment="Center" Grid.Row="11" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="11" Grid.Column="2" Content="Wing Forward" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+                            <CheckBox x:Name="wgCheckBox"  VerticalAlignment="Center" Grid.Row="11" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.CanPlayWF, Mode=TwoWay}"/>
+                            <Label Grid.Row="11" Grid.Column="2" Content="Wing Forward" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
 
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox x:Name="Player_Abilities" Header="Abilities" Margin="231,15,869,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" Width="200" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="680">
+                        <Grid Height="649">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="86.516"/>
+                                <ColumnDefinition Width="8.444"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="72*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Offense" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="44"/>
+                            <TextBox x:Name="statOffenseTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Attack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="1" Content="Defense" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="46"/>
+                            <TextBox x:Name="statDefenseTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Defense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="2" Content="Body Balance" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="69"/>
+                            <TextBox x:Name="statBodyBalanceTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Balance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="3" Content="Stamina" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="45"/>
+                            <TextBox x:Name="statStaminaTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Stamina, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="4" Content="Top Speed" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="56"/>
+                            <TextBox x:Name="statTopSpeedTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="4" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.TopSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="5" Content="Acceleration" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="64"/>
+                            <TextBox x:Name="statAccelerationTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="5" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Acceleration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="6" Content="Response" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="52"/>
+                            <TextBox x:Name="statResponseTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="6" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Response, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="7" Content="Agility" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="38"/>
+                            <TextBox x:Name="statAgilityTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="7" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Agility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="8" Content="Dribble Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="63"/>
+                            <TextBox x:Name="statDribbleAccuracyTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="8" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.DribbleAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="9" Content="Dribble Speed" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="73"/>
+                            <TextBox x:Name="statDribbleSpeedTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="9" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.DribbleSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="10" Content="Short Pass Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Margin="1,0,0,0" Height="24" Width="76"/>
+                            <TextBox x:Name="statShortPassAccTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="10" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.ShortPassAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="11" Content="Short Pass Speed" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="86"/>
+                            <TextBox x:Name="statShortPassSpeedTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="11" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.ShortPassSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="12" Content="Long Pass Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="74"/>
+                            <TextBox x:Name="statLongPassAccTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="12" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.LongPassAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="13" Content="Long Pass Speed" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="84"/>
+                            <TextBox x:Name="statLongPassSpeedTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="13" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.LongPassSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="14" Content="Shoot Accuracy" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="78"/>
+                            <TextBox x:Name="statShootAccTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="14" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.ShotAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="15" Content="Shot Power" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="60"/>
+                            <TextBox x:Name="statShootPowerTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="15" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.ShotPower, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="16" Content="Shoot Technique" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="83"/>
+                            <TextBox x:Name="statShootTechniqueTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="16" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.ShotTechnique, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="17" Content="Free Kick Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="70"/>
+                            <TextBox x:Name="statFreeKickTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="17" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.FreeKickAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="18" Content="Swerve" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="41"/>
+                            <TextBox x:Name="statSwerveTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="18" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Curling, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="19" Content="Heading" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="47"/>
+                            <TextBox x:Name="statHeadingTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="19" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Header, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="20" Content="Jump" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="34"/>
+                            <TextBox x:Name="statJumpTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="20" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Jump, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="21" Content="Technique" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="55"/>
+                            <TextBox x:Name="statTechniqueTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="21" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Technique, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="22" Content="Aggresion" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="55"/>
+                            <TextBox x:Name="statAggresionTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="22" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Aggression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="23" Content="Mentality" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="51"/>
+                            <TextBox x:Name="statMentalityTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="23" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.Mentality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="24" Content="Goalkeeper Skills" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="85"/>
+                            <TextBox x:Name="statGoalkeeperTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="24" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.GoalKeepingSkills, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Grid.Row="25" Content="Team Work" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Height="24" Width="59"/>
+                            <TextBox x:Name="statTeamWorkTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="25" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.TeamWorkAbility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox x:Name="Position_Copy" Header="Skills" Margin="436,15,637,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="524">
+                        <Grid Height="482">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="17*"/>
+                                <ColumnDefinition Width="145*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                                <RowDefinition Height="21"/>
+                            </Grid.RowDefinitions>
+
+                            <CheckBox x:Name="skill1CheckBox"  VerticalAlignment="Center" Grid.Row="0" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Dribbling, Mode=TwoWay}"/>
+                            <Label Grid.Row="0" Grid.Column="2" Content="Dribbling" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill2CheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.TacticalDribble, Mode=TwoWay}"/>
+                            <Label Grid.Row="1" Grid.Column="2" Content="Dribble Keeping" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill3CheckBox"  VerticalAlignment="Center" Grid.Row="2" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.PostPlayer, Mode=TwoWay}"/>
+                            <Label Grid.Row="2" Grid.Column="2" Content="Post Player" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill4CheckBox"  VerticalAlignment="Center" Grid.Row="3" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Positioning, Mode=TwoWay}"/>
+                            <Label Grid.Row="3" Grid.Column="2" Content="Positioning" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill5CheckBox"  VerticalAlignment="Center" Grid.Row="4" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Reaction, Mode=TwoWay}"/>
+                            <Label Grid.Row="4" Grid.Column="2" Content="Running Out" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill6CheckBox"  VerticalAlignment="Center" Grid.Row="5" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.LinePositioning, Mode=TwoWay}"/>
+                            <Label Grid.Row="5" Grid.Column="2" Content="Line Positioning" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill7CheckBox"  VerticalAlignment="Center" Grid.Row="6" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Scoring, Mode=TwoWay}"/>
+                            <Label Grid.Row="6" Grid.Column="2" Content="Striker" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill8CheckBox"  VerticalAlignment="Center" Grid.Row="7" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Playmaking, Mode=TwoWay}"/>
+                            <Label Grid.Row="7" Grid.Column="2" Content="Playmaking" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill9CheckBox"  VerticalAlignment="Center" Grid.Row="8" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Passing, Mode=TwoWay}"/>
+                            <Label Grid.Row="8" Grid.Column="2" Content="Passing" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill10CheckBox"  VerticalAlignment="Center" Grid.Row="9" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.BothFeetFeint, Mode=TwoWay}"/>
+                            <Label Grid.Row="9" Grid.Column="2" Content="Both Feet Feint" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill11CheckBox"  VerticalAlignment="Center" Grid.Row="10" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Penalties, Mode=TwoWay}"/>
+                            <Label Grid.Row="10" Grid.Column="2" Content="PK Kicker" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill12CheckBox"  VerticalAlignment="Center" Grid.Row="11" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.OneOnOneScoring, Mode=TwoWay}"/>
+                            <Label Grid.Row="11" Grid.Column="2" Content="1vs1 Finisher" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill13CheckBox"  VerticalAlignment="Center" Grid.Row="12" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.LongThrow, Mode=TwoWay}"/>
+                            <Label Grid.Row="12" Grid.Column="2" Content="Long Throw" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill14CheckBox"  VerticalAlignment="Center" Grid.Row="13" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.OneTouchPass, Mode=TwoWay}"/>
+                            <Label Grid.Row="13" Grid.Column="2" Content="1-Touch Pass" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill15CheckBox"  VerticalAlignment="Center" Grid.Row="14" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Side, Mode=TwoWay}"/>
+                            <Label Grid.Row="14" Grid.Column="2" Content="Side Player" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill16CheckBox"  VerticalAlignment="Center" Grid.Row="15" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Center, Mode=TwoWay}"/>
+                            <Label Grid.Row="15" Grid.Column="2" Content="Center Player" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill17CheckBox"  VerticalAlignment="Center" Grid.Row="16" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Outside, Mode=TwoWay}"/>
+                            <Label Grid.Row="16" Grid.Column="2" Content="Outside" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill18CheckBox"  VerticalAlignment="Center" Grid.Row="17" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.Marking, Mode=TwoWay}"/>
+                            <Label Grid.Row="17" Grid.Column="2" Content="Man Marking" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill19CheckBox"  VerticalAlignment="Center" Grid.Row="18" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.DLineControl, Mode=TwoWay}"/>
+                            <Label Grid.Row="18" Grid.Column="2" Content="DF Line" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill20CheckBox"  VerticalAlignment="Center" Grid.Row="19" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.SlidingTackle, Mode=TwoWay}"/>
+                            <Label Grid.Row="19" Grid.Column="2" Content="Sliding" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill21CheckBox"  VerticalAlignment="Center" Grid.Row="20" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.DirectGKKick, Mode=TwoWay}"/>
+                            <Label Grid.Row="20" Grid.Column="2" Content="Direct GK Kick" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill22CheckBox"  VerticalAlignment="Center" Grid.Row="21" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.PenaltyStopper, Mode=TwoWay}"/>
+                            <Label Grid.Row="21" Grid.Column="2" Content="PK Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+                            <CheckBox x:Name="skill23CheckBox"  VerticalAlignment="Center" Grid.Row="22" Height="16" Margin="3,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.OneOnOneStopper, Mode=TwoWay}"/>
+                            <Label Grid.Row="22" Grid.Column="2" Content="1vs1 Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
+
+
+                        </Grid>
+                    </GroupBox>
+                    <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="436,652,0,0" VerticalAlignment="Top" Width="212" Height="43" Click="ClosePlayerWindow" RenderTransformOrigin="-0.236,0.52"/>
                 </Grid>
-            </GroupBox>
-            <GroupBox x:Name="Player_Abilities" Header="Abilities" Margin="231,15,469,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" Width="200" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="680">
-                <Grid Height="649">
+            </TabItem>
+            <TabItem Header="Appearance">
+                <Grid Background="#FF212121" Height="726" Margin="0,0,10,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="86.516"/>
-                        <ColumnDefinition Width="8.444"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="9*"/>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="75*"/>
+                        <ColumnDefinition Width="311*"/>
+                        <ColumnDefinition Width="355*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
-                    </Grid.RowDefinitions>
+                    <GroupBox x:Name="Appearance" Header="Appearance / Face / Hair / Boots" Margin="20,15,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="680">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <Grid Height="Auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                </Grid.RowDefinitions>
 
-                    <Label Content="Offense" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statOffenseTextBox" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="0" Content="Face Id" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedPlayer.FaceId, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="1" Content="Defense" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statDefenseTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="1" Content="Face Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FaceTypeValues}" SelectedItem="{Binding SelectedPlayer.FaceType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="2" Content="Body Balance" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statBodyBalanceTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="2" Content="Skin Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SkinColourValues}" SelectedItem="{Binding SelectedPlayer.SkinColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="3" Content="Stamina" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statStaminaTextBox" Grid.Row="3" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="3" Content="Head Height" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedPlayer.HeadHeight, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="4" Content="Top Speed" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statTopSpeedTextBox" Grid.Row="4" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="4" Content="Head Width" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding SelectedPlayer.HeadWidth, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="5" Content="Acceleration" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statAccelerationTextBox" Grid.Row="5" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="5" Content="Hair Id" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding SelectedPlayer.HairId, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="6" Content="Response" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statResponseTextBox" Grid.Row="6" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="6" Content="Hair Colour Pattern" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding SelectedPlayer.HairColourPattern, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="7" Content="Agility" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statAgilityTextBox" Grid.Row="7" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="7" Content="Hair Colour R" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding SelectedPlayer.HairColorR, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="8" Content="Dribble Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statDribbleAccuracyTextBox" Grid.Row="8" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="8" Content="Hair Colour G" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding SelectedPlayer.HairColorG, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="9" Content="Dribble Speed" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statDribbleSpeedTextBox" Grid.Row="9" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="9" Content="Hair Colour B" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding SelectedPlayer.HairColorB, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="10" Content="Short Pass Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Margin="1,0,0,0"/>
-                    <TextBox x:Name="statShortPassAccTextBox" Grid.Row="10" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="10" Content="Eyes Colour 1" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding SelectedPlayer.EyesColor1, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="11" Content="Short Pass Speed" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statShortPassSpeedTextBox" Grid.Row="11" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="11" Content="Eyes Colour 2" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding EyesColor2Values}" SelectedItem="{Binding SelectedPlayer.EyesColor2, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="12" Content="Long Pass Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statLongPassAccTextBox" Grid.Row="12" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="12" Content="Eyes Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding SelectedPlayer.EyesType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="13" Content="Long Pass Speed" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statLongPassSpeedTextBox" Grid.Row="13" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="13" Content="Eyes Position" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding SelectedPlayer.EyesPosition, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="14" Content="Shoot Accuracy" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statShootAccTextBox" Grid.Row="14" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="14" Content="Eyes Angle" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="14" Grid.Column="1" Text="{Binding SelectedPlayer.EyesAngle, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="15" Content="Shot Power" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statShootPowerTextBox" Grid.Row="15" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="15" Content="Eyes Size" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="15" Grid.Column="1" Text="{Binding SelectedPlayer.EyesSize, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="16" Content="Shoot Technique" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statShootTechniqueTextBox" Grid.Row="16" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="16" Content="Brows Height" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="16" Grid.Column="1" Text="{Binding SelectedPlayer.BrowsHeight, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="17" Content="Free Kick Acc." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statFreeKickTextBox" Grid.Row="17" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="17" Content="Brows Type/Angle" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding SelectedPlayer.BrowsTypeAngle, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="18" Content="Swerve" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statSwerveTextBox" Grid.Row="18" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="18" Content="Nose Height" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="18" Grid.Column="1" Text="{Binding SelectedPlayer.NoseHeight, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="19" Content="Heading" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statHeadingTextBox" Grid.Row="19" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="19" Content="Nose Width" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="19" Grid.Column="1" Text="{Binding SelectedPlayer.NoseWidth, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="20" Content="Jump" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statJumpTextBox" Grid.Row="20" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="20" Content="Nose Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="20" Grid.Column="1" Text="{Binding SelectedPlayer.NoseType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="21" Content="Technique" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statTechniqueTextBox" Grid.Row="21" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="21" Content="Jaw Width" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="21" Grid.Column="1" Text="{Binding SelectedPlayer.JawWidth, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="22" Content="Aggresion" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statAggresionTextBox" Grid.Row="22" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="22" Content="Jaw Chin" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="22" Grid.Column="1" Text="{Binding SelectedPlayer.JawChin, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="23" Content="Mentality" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statMentalityTextBox" Grid.Row="23" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="23" Content="Jaw Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="23" Grid.Column="1" Text="{Binding SelectedPlayer.JawType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="24" Content="Goalkeeper Skills" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statGoalkeeperTextBox" Grid.Row="24" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="24" Content="Mouth Size" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="24" Grid.Column="1" Text="{Binding SelectedPlayer.MouthSize, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="25" Content="Team Work" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                    <TextBox x:Name="statTeamWorkTextBox" Grid.Row="25" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="4" Margin="0,0,41,0" Height="21" Width="60"/>
+                                <Label Grid.Row="25" Content="Mouth Lips Thick." FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="25" Grid.Column="1" Text="{Binding SelectedPlayer.MouthThicknessOfLips, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="26" Content="Mouth Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="26" Grid.Column="1" Text="{Binding SelectedPlayer.MouthType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="27" Content="Mouth Position" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="27" Grid.Column="1" Text="{Binding SelectedPlayer.MouthPosition, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="28" Content="Cheeks Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="28" Grid.Column="1" Text="{Binding SelectedPlayer.CheeksType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="29" Content="Facial Hair Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="29" Grid.Column="1" Text="{Binding SelectedPlayer.FacialHairType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="30" Content="Facial Hair Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="30" Grid.Column="1" Text="{Binding SelectedPlayer.FacialHairColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="31" Content="Sleeves" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="31" Grid.Column="1" ItemsSource="{Binding SleevesValues}" SelectedItem="{Binding SelectedPlayer.Sleeves, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="32" Content="Sun Glasses Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="32" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="33" Content="Sun Glasses Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="33" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="34" Content="Mask Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="34" Grid.Column="1" Text="{Binding SelectedPlayer.MaskType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="35" Content="Mask Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="35" Grid.Column="1" Text="{Binding SelectedPlayer.MaskColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="36" Content="Cap Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="36" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.CapType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="37" Content="Cap Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="37" Grid.Column="1" ItemsSource="{Binding CapColourValues}" SelectedItem="{Binding SelectedPlayer.CapColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="38" Content="Bandana Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="38" Grid.Column="1" ItemsSource="{Binding BandanaColourValues}" SelectedItem="{Binding SelectedPlayer.BandanaColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="39" Content="Wristband Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="39" Grid.Column="1" ItemsSource="{Binding WristbandTypeValues}" SelectedItem="{Binding SelectedPlayer.WristbandType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="40" Content="Gloves" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="40" Grid.Column="1" ItemsSource="{Binding GlovesOptionValues}" SelectedItem="{Binding SelectedPlayer.Gloves, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="41" Content="Tape" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="41" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.Tape, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="42" Content="Socks" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="42" Grid.Column="1" ItemsSource="{Binding SocksHeightValues}" SelectedItem="{Binding SelectedPlayer.Socks, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="43" Content="Boots Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="43" Grid.Column="1" ItemsSource="{Binding BootsTypeValues}" SelectedItem="{Binding SelectedPlayer.BootsType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="44" Content="Boots Base Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="44" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsBaseColor, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="45" Content="Boots Line Colour 1" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="45" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsLineColor1, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="46" Content="Boots Line Colour 2" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="46" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsLineColor2, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="47" Content="Boots Tongue Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="47" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsTongueColor, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="48" Content="Boots Studs Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="48" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsStudsColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+
+                    <GroupBox x:Name="BodyMeasurements" Header="Body Measurements" Margin="5,15,0,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="330" Width="340" HorizontalAlignment="Left" Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Content="Neck Length" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedPlayer.NeckLength, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="1" Content="Chest Measurement" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedPlayer.ChestMeasurement, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="2" Content="Arm Circumference" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedPlayer.ArmCircumference, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="3" Content="Waist Circumference" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedPlayer.WaisteCircumference, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="4" Content="Leg Circumference" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding SelectedPlayer.LegCircumference, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="5" Content="Calf Circumference" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding SelectedPlayer.CalfCircumference, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="6" Content="Leg Length" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding SelectedPlayer.LegLength, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="7" Content="Shoulder Height" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding SelectedPlayer.ShoulderHeight, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="8" Content="Shoulder Width" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding SelectedPlayer.ShoulderWidth, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox x:Name="FreeKickPenalty" Header="Free Kick / Penalty" Margin="5,355,0,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="120" Width="340" HorizontalAlignment="Left" Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                                <RowDefinition Height="24"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Content="Free Kick Type" FontSize="10" Foreground="#FFECECEC"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding FreeKickTypeValues}" SelectedItem="{Binding SelectedPlayer.FreeKickType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="1" Content="Penalty Kick Type" FontSize="10" Foreground="#FFECECEC"/>
+                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PenaltyKickTypeValues}" SelectedItem="{Binding SelectedPlayer.PenaltyKickType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="2" Content="Goal Celeb. 1 / 2" FontSize="10" Foreground="#FFECECEC"/>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                <TextBox Text="{Binding SelectedPlayer.GoalCelebration1, Mode=TwoWay}" Height="21" Width="65"/>
+                                <TextBox Text="{Binding SelectedPlayer.GoalCelebration2, Mode=TwoWay}" Height="21" Width="65" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
                 </Grid>
-            </GroupBox>
-            <GroupBox x:Name="Position_Copy" Header="Skills" Margin="436,15,252,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="524">
-                <Grid Height="482">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="22"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="17*"/>
-                        <ColumnDefinition Width="145*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                        <RowDefinition Height="21"/>
-                    </Grid.RowDefinitions>
-
-                    <CheckBox x:Name="skill1CheckBox"  VerticalAlignment="Center" Grid.Row="0" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="0" Grid.Column="2" Content="Dribbling" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill2CheckBox"  VerticalAlignment="Center" Grid.Row="1" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="1" Grid.Column="2" Content="Dribble Keeping" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill3CheckBox"  VerticalAlignment="Center" Grid.Row="2" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="2" Grid.Column="2" Content="Post Player" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill4CheckBox"  VerticalAlignment="Center" Grid.Row="3" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="3" Grid.Column="2" Content="Positioning" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill5CheckBox"  VerticalAlignment="Center" Grid.Row="4" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="4" Grid.Column="2" Content="Running Out" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill6CheckBox"  VerticalAlignment="Center" Grid.Row="5" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="5" Grid.Column="2" Content="Line Positioning" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill7CheckBox"  VerticalAlignment="Center" Grid.Row="6" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="6" Grid.Column="2" Content="Striker" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill8CheckBox"  VerticalAlignment="Center" Grid.Row="7" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="7" Grid.Column="2" Content="Playmaking" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill9CheckBox"  VerticalAlignment="Center" Grid.Row="8" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="8" Grid.Column="2" Content="Passing" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill10CheckBox"  VerticalAlignment="Center" Grid.Row="9" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="9" Grid.Column="2" Content="Both Feet Feint" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill11CheckBox"  VerticalAlignment="Center" Grid.Row="10" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="10" Grid.Column="2" Content="PK Kicker" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill12CheckBox"  VerticalAlignment="Center" Grid.Row="11" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="11" Grid.Column="2" Content="1vs1 Finisher" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill13CheckBox"  VerticalAlignment="Center" Grid.Row="12" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="12" Grid.Column="2" Content="Long Throw" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill14CheckBox"  VerticalAlignment="Center" Grid.Row="13" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="13" Grid.Column="2" Content="1-Touch Pass" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill15CheckBox"  VerticalAlignment="Center" Grid.Row="14" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="14" Grid.Column="2" Content="Side Player" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" IsEnabled="False" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill16CheckBox"  VerticalAlignment="Center" Grid.Row="15" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="15" Grid.Column="2" Content="Center Player" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill17CheckBox"  VerticalAlignment="Center" Grid.Row="16" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="16" Grid.Column="2" Content="Outside" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill18CheckBox"  VerticalAlignment="Center" Grid.Row="17" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="17" Grid.Column="2" Content="Man Marking" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill19CheckBox"  VerticalAlignment="Center" Grid.Row="18" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="18" Grid.Column="2" Content="DF Line" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill20CheckBox"  VerticalAlignment="Center" Grid.Row="19" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="19" Grid.Column="2" Content="Sliding" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill21CheckBox"  VerticalAlignment="Center" Grid.Row="20" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="20" Grid.Column="2" Content="Direct GK Kick" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill22CheckBox"  VerticalAlignment="Center" Grid.Row="21" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="21" Grid.Column="2" Content="PK Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-                    <CheckBox x:Name="skill23CheckBox"  VerticalAlignment="Center" Grid.Row="22" Height="16" Margin="3,0,3,0" Width="16" IsEnabled="False"/>
-                    <Label Grid.Row="22" Grid.Column="2" Content="1vs1 Keeper" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Grid.ColumnSpan="3" Margin="1,0,0,0"/>
-
-
-                </Grid>
-            </GroupBox>
-            <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="436,652,0,0" VerticalAlignment="Top" Width="212" Height="43" Click="ClosePlayerWindow" RenderTransformOrigin="-0.236,0.52"/>
-        </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

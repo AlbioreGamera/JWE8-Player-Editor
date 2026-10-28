@@ -7,19 +7,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.Metrics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Navigation;
 
 
 namespace PESPlayerEditorTest
@@ -29,19 +23,19 @@ namespace PESPlayerEditorTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SafeFileHandle filePath;
+        public SafeFileHandle? filePath;
 
-        public FileStream fileStream;
+        public FileStream? fileStream;
 
-        public FileStream fsPlayerAssignment;
+        public FileStream? fsPlayerAssignment;
 
-        public FileStream fsNumbers;
+        public FileStream? fsNumbers;
 
-        public FileStream fsEditOvl;
+        public FileStream? fsEditOvl;
 
-        public FileStream fsDataset;
+        public FileStream? fsDataset;
 
-        public Player SelectedPlayer { get; set; }
+        public Player? SelectedPlayer { get; set; }
 
         public static List<Position> Positions { get; } = new List<Position>
             {
@@ -107,13 +101,20 @@ namespace PESPlayerEditorTest
         public ObservableCollection<PlayerAssignment> PeopleA { get; set; } = new ObservableCollection<PlayerAssignment>();
         public ObservableCollection<Callname> CallnameCollection { get; set; } = new ObservableCollection<Callname>();
         public ObservableCollection<Stadium> StadiumCollection { get; set; } = new ObservableCollection<Stadium>();
-        public string FilePath1 { get; internal set; }
-        public string FilePath2 { get; internal set; }
-        public string FilePath3 { get; internal set; }
-        public string FilePath4 { get; internal set; }
-        public string FilePath5 { get; internal set; }
+        public string? FilePath1 { get; internal set; }
+        public string? FilePath2 { get; internal set; }
+        public string? FilePath3 { get; internal set; }
+        public string? FilePath4 { get; internal set; }
+        public string? FilePath5 { get; internal set; }
 
-        private BindingList<Callname> filteredCallnames;
+        // TODO: confirmar offsets reales con editor hexadecimal
+        private const long LeagueBlockStart = 0x00000000; // <-- reemplazar con offset real
+        private const long LeagueBlockEnd = 0x00000000;    // <-- reemplazar con offset real
+        private const int LeagueRecordSize = 82;           // 21 (nombre+pad) * 2 + 40 padding aprox, confirmar
+        private const int LeagueNameFieldSize = 21;        // bytes por copia del nombre
+
+        public ObservableCollection<League> LeagueCollection { get; set; } = new ObservableCollection<League>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -170,37 +171,226 @@ namespace PESPlayerEditorTest
 
         public List<Player> ParsePlayers(string filePath)
         {
+            const int RecordSize = 0x7C; // 124 bytes, coincide con PES4WE8Player
 
-            using (FileStream fileStream         = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
                 fileStream.Seek(124, SeekOrigin.Begin);
 
-                byte[] buffer = new byte[0x7C];
-
+                byte[] buffer = new byte[RecordSize];
                 int playerIndex = 1;
+
                 while (fileStream.Read(buffer, 0, buffer.Length) == buffer.Length)
                 {
-                    string ageHexValue = buffer[109].ToString("X2");
-                    Age age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
-
-                    byte[] commentaryHex = new byte[2]; Array.Copy(buffer, 48, commentaryHex, 0, 2);
-
-                    Player person = new Player
-                    {
-                        PlayerIndex = playerIndex++,
-                        Name = Encoding.Unicode.GetString(buffer, 0, 32).Trim(),
-                        ShirtName = Encoding.ASCII.GetString(buffer, 32, 16).Trim(),
-                        Commentary = BitConverter.ToInt16(commentaryHex, 0),
-                        Position = buffer[52] & 0x0F,
-                        Height = buffer[88] - 44,
-                        Weight = buffer[89] - 44,
-                        Age = age?.AgeIndex ?? 0,
-                        Country = BitConverter.ToInt32(buffer, 110),
-                    };
-                    People.Add(person);
+                    People.Add(ParsePlayerRecord(buffer, playerIndex++));
                 }
             }
             return players;
+        }
+
+        private Player ParsePlayerRecord(byte[] buffer, int playerIndex)
+        {
+            uint block34 = BitConverter.ToUInt32(buffer, 0x34);
+            uint block38 = BitConverter.ToUInt32(buffer, 0x38);
+            uint block3c = BitConverter.ToUInt32(buffer, 0x3c);
+            uint block40 = BitConverter.ToUInt32(buffer, 0x40);
+            uint block44 = BitConverter.ToUInt32(buffer, 0x44);
+            uint block48 = BitConverter.ToUInt32(buffer, 0x48);
+            uint block4c = BitConverter.ToUInt32(buffer, 0x4c);
+            uint block50 = BitConverter.ToUInt32(buffer, 0x50);
+            uint block54 = BitConverter.ToUInt32(buffer, 0x54);
+            uint block58 = BitConverter.ToUInt32(buffer, 0x58);
+            uint block5c = BitConverter.ToUInt32(buffer, 0x5c);
+            uint block60 = BitConverter.ToUInt32(buffer, 0x60);
+            uint block64 = BitConverter.ToUInt32(buffer, 0x64);
+            uint block68 = BitConverter.ToUInt32(buffer, 0x68);
+            uint block6c = BitConverter.ToUInt32(buffer, 0x6c);
+            uint block74 = BitConverter.ToUInt32(buffer, 0x74);
+            uint block78 = BitConverter.ToUInt32(buffer, 0x78);
+
+            static uint Bits(uint v, int offset, int count) => BitFieldReader.ReadBits(v, offset, count);
+
+            var player = new Player
+            {
+                PlayerIndex = playerIndex,
+                Name = Encoding.Unicode.GetString(buffer, 0x00, 32).TrimEnd('\0').Trim(),
+                ShirtName = Encoding.ASCII.GetString(buffer, 0x20, 16).TrimEnd('\0').Trim(),
+                Commentary = BitConverter.ToUInt16(buffer, 0x30),
+
+                // 0x34
+                RegPosition = (PlayerPosition)Bits(block34, 0, 4),
+                Attack = (int)Bits(block34, 4, 7),
+                Defense = (int)Bits(block34, 11, 7),
+                Balance = (int)Bits(block34, 18, 7),
+                Stamina = (int)Bits(block34, 25, 7),
+
+                // 0x38
+                TopSpeed = (int)Bits(block38, 0, 7),
+                Acceleration = (int)Bits(block38, 7, 7),
+                Response = (int)Bits(block38, 14, 7),
+                DribbleAccuracy = (int)Bits(block38, 21, 7),
+                CanPlayGK = Bits(block38, 28, 1) != 0,
+                CanPlayCBW = Bits(block38, 30, 1) != 0,
+                CanPlayCBT = Bits(block38, 31, 1) != 0,
+
+                // 0x3c
+                DribbleSpeed = (int)Bits(block3c, 0, 7),
+                ShortPassAccuracy = (int)Bits(block3c, 7, 7),
+                ShortPassSpeed = (int)Bits(block3c, 14, 7),
+                LongPassAccuracy = (int)Bits(block3c, 21, 7),
+                CanPlaySB = Bits(block3c, 28, 1) != 0,
+                CanPlayDMF = Bits(block3c, 29, 1) != 0,
+                CanPlayCMF = Bits(block3c, 30, 1) != 0,
+                CanPlaySMF = Bits(block3c, 31, 1) != 0,
+
+                // 0x40
+                LongPassSpeed = (int)Bits(block40, 0, 7),
+                ShotPower = (int)Bits(block40, 7, 7),
+                ShotAccuracy = (int)Bits(block40, 14, 7),
+                ShotTechnique = (int)Bits(block40, 21, 7),
+                CanPlayAMF = Bits(block40, 28, 1) != 0,
+                CanPlayCF = Bits(block40, 29, 1) != 0,
+                CanPlayWF = Bits(block40, 30, 1) != 0,
+                Dribbling = Bits(block40, 31, 1) != 0,
+
+                // 0x44
+                Jump = (int)Bits(block44, 0, 7),
+                Header = (int)Bits(block44, 7, 7),
+                Technique = (int)Bits(block44, 14, 7),
+                Curling = (int)Bits(block44, 21, 7),
+                PostPlayer = Bits(block44, 28, 1) != 0,
+                Positioning = Bits(block44, 29, 1) != 0,
+                Reaction = Bits(block44, 30, 1) != 0,
+                Scoring = Bits(block44, 31, 1) != 0,
+
+                // 0x48
+                Aggression = (int)Bits(block48, 0, 7),
+                Mentality = (int)Bits(block48, 7, 7),
+                Condition = (int)Bits(block48, 14, 3),
+                Consistency = (int)Bits(block48, 17, 3),
+                FreeKickAccuracy = (int)Bits(block48, 20, 7),
+                Playmaking = Bits(block48, 27, 1) != 0,
+                Passing = Bits(block48, 28, 1) != 0,
+                Penalties = Bits(block48, 29, 1) != 0,
+                OneOnOneScoring = Bits(block48, 30, 1) != 0,
+                LongThrow = Bits(block48, 31, 1) != 0,
+
+                // 0x4c
+                TeamWorkAbility = (int)Bits(block4c, 0, 7),
+                Agility = (int)Bits(block4c, 7, 7),
+                GoalKeepingSkills = (int)Bits(block4c, 14, 7),
+                DominantFoot = (Foot)Bits(block4c, 21, 1),
+                WeakFootAccuracy = (int)Bits(block4c, 23, 3) + 1,
+                WeakFootFrequency = (int)Bits(block4c, 26, 3) + 1,
+                FreeKickType = (FreeKickType)Bits(block4c, 29, 3),
+
+                // 0x50
+                OneTouchPass = Bits(block50, 2, 1) != 0,
+                Marking = Bits(block50, 3, 1) != 0,
+                DLineControl = Bits(block50, 4, 1) != 0,
+                DirectGKKick = Bits(block50, 5, 1) != 0,
+                OneOnOneStopper = Bits(block50, 6, 1) != 0,
+                PenaltyStopper = Bits(block50, 7, 1) != 0,
+                BothFeetFeint = Bits(block50, 8, 1) != 0,
+                Outside = Bits(block50, 9, 1) != 0,
+                Injury = (InjuryResistance)Bits(block50, 10, 2),
+                SlidingTackle = Bits(block50, 12, 1) != 0,
+
+                // 0x54
+                PenaltyKickType = (PenaltyKickType)Bits(block54, 2, 2),
+                GoalCelebration1 = (int)Bits(block54, 4, 6),
+                GoalCelebration2 = (int)Bits(block54, 11, 6),
+                TacticalDribble = Bits(block54, 17, 1) != 0,
+                LinePositioning = Bits(block54, 18, 1) != 0,
+                Side = Bits(block54, 19, 1) != 0,
+                Center = Bits(block54, 20, 1) != 0,
+
+                // 0x58
+                Height = (int)Bits(block58, 0, 6) + 148,
+                Weight = (int)Bits(block58, 6, 7),
+                SkinColour = (SkinColour)Bits(block58, 16, 2),
+                HeadHeight = (int)Bits(block58, 18, 4) - 7,
+                HeadWidth = (int)Bits(block58, 22, 4) - 7,
+                BootsTongueColor = (BootsColor)Bits(block58, 26, 3),
+                BootsLineColor2 = (BootsColor)Bits(block58, 29, 3),
+
+                // 0x5c
+                HairId = (int)Bits(block5c, 0, 11),
+                HairColourPattern = (int)Bits(block5c, 11, 6),
+                EyesColor1 = (int)Bits(block5c, 17, 2) + 1,
+                EyesColor2 = (EyesColor2)Bits(block5c, 19, 4),
+                FacialHairType = (int)Bits(block5c, 23, 7) + 1,
+                Sleeves = (SleevesLength)Bits(block5c, 30, 2),
+
+                // 0x60
+                FacialHairColour = (int)Bits(block60, 0, 6) + 1,
+                SunGlassesType = (int)Bits(block60, 6, 2),
+                SunGlassesColour = (int)Bits(block60, 8, 3) + 1,
+                MaskType = (int)Bits(block60, 11, 2),
+                MaskColour = (int)Bits(block60, 13, 3) + 1,
+                CapType = (YesNo)Bits(block60, 16, 1),
+                CapColour = (CapColour)Bits(block60, 17, 3),
+                WristbandType = (WristbandType)Bits(block60, 20, 2),
+                BootsType = (BootsType)Bits(block60, 22, 4),
+                BootsBaseColor = (BootsColor)Bits(block60, 26, 3),
+                BootsLineColor1 = (BootsColor)Bits(block60, 29, 3),
+
+                // 0x64
+                FaceId = (int)Bits(block64, 0, 9) + 1,
+                BootsStudsColour = (BootsColor)Bits(block64, 9, 3),
+                Tape = (YesNo)Bits(block64, 12, 1),
+                HairColorR = (int)Bits(block64, 13, 6) * 4,
+                HairColorG = (int)Bits(block64, 19, 6) * 4,
+                HairColorB = (int)Bits(block64, 25, 6) * 4,
+                Gloves = (GlovesOption)Bits(block64, 31, 1),
+
+                // 0x68
+                Socks = (SocksHeight)Bits(block68, 0, 2),
+                NeckLength = (int)Bits(block68, 2, 4) - 7,
+                ChestMeasurement = (int)Bits(block68, 6, 4) - 7,
+                ArmCircumference = (int)Bits(block68, 10, 4) - 7,
+                WaisteCircumference = (int)Bits(block68, 14, 4) - 7,
+                LegCircumference = (int)Bits(block68, 18, 4) - 7,
+                CalfCircumference = (int)Bits(block68, 22, 4) - 7,
+                FaceType = (FaceType)Bits(block68, 26, 2),
+                LegLength = (int)Bits(block68, 28, 4) - 7,
+
+                // 0x6c
+                BandanaColour = (BandanaColour)Bits(block6c, 0, 3),
+                ShoulderHeight = (int)Bits(block6c, 3, 4) - 7,
+                ShoulderWidth = (int)Bits(block6c, 7, 4) - 7,
+                Age = (int)Bits(block6c, 11, 5) + 15,
+                Nationality = (int)Bits(block6c, 16, 9),
+
+                // 0x74
+                BrowsHeight = 3 - (int)Bits(block74, 0, 3),
+                EyesPosition = 3 - (int)Bits(block74, 3, 3),
+                EyesAngle = 3 - (int)Bits(block74, 6, 3),
+                EyesSize = 3 - (int)Bits(block74, 9, 3),
+                NoseHeight = 3 - (int)Bits(block74, 12, 3),
+                JawWidth = 3 - (int)Bits(block74, 15, 3),
+                JawChin = 3 - (int)Bits(block74, 18, 3),
+                NoseWidth = 3 - (int)Bits(block74, 21, 3),
+                MouthSize = 3 - (int)Bits(block74, 24, 3),
+                MouthThicknessOfLips = (int)Bits(block74, 27, 2) - 1,
+                MouthType = (int)Bits(block74, 29, 2) + 1,
+
+                // 0x78
+                BrowsTypeAngle = (int)Bits(block78, 0, 6),
+                NoseType = (int)Bits(block78, 7, 3) + 1,
+                CheeksType = (int)Bits(block78, 11, 3) + 1,
+                MouthPosition = 3 - (int)Bits(block78, 14, 3),
+                EyesType = (int)Bits(block78, 17, 5) + 1,
+                JawType = (int)Bits(block78, 23, 3) + 1,
+            };
+
+            // Comentario/edad original (compatibilidad con lógica previa basada en Ages[])
+            string ageHexValue = buffer[0x6d].ToString("X2");
+            Age? age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
+            player.Country = (int)player.Nationality;
+            player.Position = (int)player.RegPosition;
+
+            return player;
         }
 
         public List<PlayerAssignment> ParsePlayerAssignment(string filePath, string numberFilePath)
@@ -225,7 +415,7 @@ namespace PESPlayerEditorTest
                         int number = ReadNumber(fsNumbers, teamIndex, playerIndexWithinTeam);
 
                         // Retrieve the player object from the People collection based on the player index
-                        Player playerObj = People.FirstOrDefault(p => p.PlayerIndex == player);
+                        Player? playerObj = People.FirstOrDefault(p => p.PlayerIndex == player);
 
                         playerAssignments.Add(new PlayerAssignment { Player = playerObj, PlayerIndex = playerIndexWithinTeam, Team = teamIndex, Number = number });
                         playerIndexWithinTeam++;
@@ -265,7 +455,6 @@ namespace PESPlayerEditorTest
                     List<byte> bytes = new List<byte>();
                     List<byte> nullbytes = new List<byte>();
                     int b;
-                    int n;
                     while ((b = fsEditOvl.ReadByte()) != -1 && b != 0x00)
                     {
                         bytes.Add((byte)b);
@@ -310,7 +499,7 @@ namespace PESPlayerEditorTest
             using (FileStream fsDataset = new FileStream(datasetFilePath, FileMode.Open, FileAccess.Read))
             {
                 fsDataset.Seek(0x84030, SeekOrigin.Begin);
-                byte[] buffer = new byte[0x3D]; // 64 bytes
+                byte[] buffer = new byte[0x3D]; // 61 bytes
                 List<Stadium> stadiums = new List<Stadium>();
                 int stadiumIndex = 1;
                 long startPosition = fsDataset.Position;
@@ -378,11 +567,11 @@ namespace PESPlayerEditorTest
                         {
                             // Set the file stream position to the bit offset divided by 8 to write at the correct byte position
                             fileStream.Seek(bitOffset / 8, SeekOrigin.Begin);
-                            byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name.PadRight(12, '\0'));
+                            byte[] nameBytes = Encoding.Unicode.GetBytes((player.Name ?? string.Empty).PadRight(12, '\0'));
                             writer.Write(nameBytes);
 
                             fileStream.Seek((bitOffset + 32 * 8) / 8, SeekOrigin.Begin);
-                            byte[] shirtNameBytes = Encoding.ASCII.GetBytes(player.ShirtName.PadRight(16, '\0').Substring(0, 16));
+                            byte[] shirtNameBytes = Encoding.ASCII.GetBytes((player.ShirtName ?? string.Empty).PadRight(16, '\0').Substring(0, 16));
                             writer.Write(shirtNameBytes);
 
                             // Calculate the byte position based on the bit offset
@@ -422,7 +611,7 @@ namespace PESPlayerEditorTest
                     using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
                     {
                         fileStream.Seek(0, SeekOrigin.Begin);
-                        byte[] playersAssignment = BitConverter.GetBytes(playerAssignment.Player.PlayerIndex);
+                        byte[] playersAssignment = BitConverter.GetBytes(playerAssignment.Player?.PlayerIndex ?? 0);
                         writer.Write(playersAssignment);
                     }
 
@@ -444,15 +633,14 @@ namespace PESPlayerEditorTest
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 fileStream.Seek(0x103758, SeekOrigin.Begin);
-                long endPosition = 0x10CA50;
                 Encoding shiftJis = Encoding.GetEncoding("shift_jis");
 
                 foreach (var callnameList in CallnameCollection)
                 {
                     using (BinaryWriter writer = new BinaryWriter(fileStream, Encoding.Unicode, true))
                     {
-                        byte[] callnameBytes = shiftJis.GetBytes(callnameList.CommentaryName);
-                        int totalLength = (int)callnameList.CommentaryBytes; // The length defined in CommentaryLength
+                        byte[] callnameBytes = shiftJis.GetBytes(callnameList.CommentaryName ?? string.Empty);
+                        int totalLength = callnameList.CommentaryBytes ?? 0; // The length defined in CommentaryLength
                         byte[] paddedBytes = new byte[totalLength];
 
                         // Copy callnameBytes into paddedBytes
@@ -528,7 +716,11 @@ namespace PESPlayerEditorTest
         public void OpenPlayerFromDataGrid(DataGrid dataGrid)
         {
             PlayerAssignment selectedPlayerAssignment = (PlayerAssignment)dataGrid.SelectedItem;
-            Player selectedPlayer = selectedPlayerAssignment.Player;
+            Player? selectedPlayer = selectedPlayerAssignment.Player;
+            if (selectedPlayer == null)
+            {
+                return;
+            }
             PlayerWindow playerWindow = new PlayerWindow(selectedPlayer, this);
             playerWindow.ShowDialog();
         }
@@ -589,14 +781,14 @@ namespace PESPlayerEditorTest
             PeopleA.CollectionChanged += PeopleA_CollectionChanged;
         }
 
-        private void People_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void People_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (Player player in e.NewItems)
+                foreach (Player player in e.NewItems!)
                 {
                     // Check if the player exists in PeopleA
-                    PlayerAssignment assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
+                    PlayerAssignment? assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
                     if (assignment != null)
                     {
                         assignment.Player = player;
@@ -606,10 +798,10 @@ namespace PESPlayerEditorTest
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (Player player in e.OldItems)
+                foreach (Player player in e.OldItems!)
                 {
                     // Remove the player from PeopleA
-                    PlayerAssignment assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
+                    PlayerAssignment? assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
                     if (assignment != null)
                     {
                         assignment.Player = null;
@@ -619,10 +811,10 @@ namespace PESPlayerEditorTest
             }
             else if (e.Action == NotifyCollectionChangedAction.Replace)
             {
-                foreach (Player player in e.NewItems)
+                foreach (Player player in e.NewItems!)
                 {
                     // Update the player in PeopleA
-                    PlayerAssignment assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
+                    PlayerAssignment? assignment = PeopleA.FirstOrDefault(a => a.PlayerIndex == player.PlayerIndex);
                     if (assignment != null)
                     {
                         assignment.Player = player;
@@ -632,14 +824,14 @@ namespace PESPlayerEditorTest
             }
         }
 
-        private void PeopleA_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void PeopleA_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (PlayerAssignment assignment in e.NewItems)
+                foreach (PlayerAssignment assignment in e.NewItems!)
                 {
                     // Check if the assignment's player exists in People
-                    Player player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
+                    Player? player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
                     if (player != null)
                     {
                         player = assignment.Player;
@@ -649,10 +841,10 @@ namespace PESPlayerEditorTest
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (PlayerAssignment assignment in e.OldItems)
+                foreach (PlayerAssignment assignment in e.OldItems!)
                 {
                     // Remove the player from People
-                    Player player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
+                    Player? player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
                     if (player != null)
                     {
                         player = null;
@@ -662,10 +854,10 @@ namespace PESPlayerEditorTest
             }
             else if (e.Action == NotifyCollectionChangedAction.Replace)
             {
-                foreach (PlayerAssignment assignment in e.NewItems)
+                foreach (PlayerAssignment assignment in e.NewItems!)
                 {
                     // Update the player in People
-                    Player player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
+                    Player? player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
                     if (player != null)
                     {
                         player = assignment.Player;
@@ -677,8 +869,22 @@ namespace PESPlayerEditorTest
 
         private void StadiumListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (stadiumListBox.SelectedItem is Stadium selectedStadium)
+            {
+                stadiumNameTextBox.Text = selectedStadium.StadiumName;
+            }
         }
+
+        private void ApplyStadium_Click(object sender, RoutedEventArgs e)
+        {
+            if (stadiumListBox.SelectedItem is Stadium selectedStadium)
+            {
+                selectedStadium.StadiumName = stadiumNameTextBox.Text;
+                WriteStadiumName(FilePath4, selectedStadium.StadiumIndex, stadiumNameTextBox.Text);
+                stadiumListBox.Items.Refresh();
+            }
+        }
+
 
         private void CallnameListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -709,6 +915,376 @@ namespace PESPlayerEditorTest
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}\n\n{ex.StackTrace}", "ParaWe8 Test Error");
+            }
+        }
+
+        private const int StadiumRecordSize = 0x3D; // 61 bytes
+        private const long StadiumBlockStart = 0x84030;
+        private const long StadiumBlockEnd = 0x8497B;
+
+        /// <summary>
+        /// Escribe el nombre actualizado de un estadio en el archivo de dataset,
+        /// respetando el límite de bytes del registro (61 bytes) y evitando
+        /// corromper el registro siguiente.
+        /// </summary>
+        public void WriteStadiumName(string datasetFilePath, int stadiumIndex, string newName)
+        {
+            long offset = StadiumBlockStart + ((stadiumIndex - 1) * StadiumRecordSize);
+
+            if (offset + StadiumRecordSize > StadiumBlockEnd + StadiumRecordSize)
+            {
+                MessageBox.Show("Índice de estadio fuera de rango.");
+                return;
+            }
+
+            byte[] nameBytes = Encoding.UTF8.GetBytes(newName);
+
+            // Reservamos al menos 1 byte para el terminador nulo final del registro
+            const int maxNameBytes = StadiumRecordSize - 1;
+
+            if (nameBytes.Length > maxNameBytes)
+            {
+                MessageBox.Show($"El nombre excede el límite de {maxNameBytes} bytes y será truncado.");
+                Array.Resize(ref nameBytes, maxNameBytes);
+            }
+
+            byte[] record = new byte[StadiumRecordSize]; // ya queda en 0x00 por defecto
+            Array.Copy(nameBytes, record, nameBytes.Length);
+
+            using (FileStream fs = new FileStream(datasetFilePath, FileMode.Open, FileAccess.ReadWrite))
+            {
+                fs.Seek(offset, SeekOrigin.Begin);
+                fs.Write(record, 0, record.Length);
+            }
+        }
+
+        public List<League> ParseLeagues(string datasetFilePath)
+        {
+            var leagues = new List<League>();
+
+            using (FileStream fsDataset = new FileStream(datasetFilePath, FileMode.Open, FileAccess.Read))
+            {
+                fsDataset.Seek(LeagueBlockStart, SeekOrigin.Begin);
+                byte[] buffer = new byte[LeagueRecordSize];
+                int leagueIndex = 1;
+
+                while (fsDataset.Read(buffer, 0, buffer.Length) == buffer.Length && fsDataset.Position <= LeagueBlockEnd)
+                {
+                    // El nombre está duplicado al inicio del registro; tomamos la primera copia
+                    string name = Encoding.UTF8.GetString(buffer, 0, LeagueNameFieldSize).TrimEnd('\0').Trim();
+
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        leagues.Add(new League
+                        {
+                            LeagueIndex = leagueIndex++,
+                            LeagueName = name,
+                            CountryCode = 0 // la tabla de códigos está en otro bloque; mapear por separado si es necesario
+                        });
+
+                        LeagueCollection.Add(leagues[^1]);
+                    }
+                }
+            }
+
+            return leagues;
+        }
+
+        public void WriteLeagueName(string datasetFilePath, int leagueIndex, string newName)
+        {
+            long offset = LeagueBlockStart + ((leagueIndex - 1) * LeagueRecordSize);
+            const int maxNameBytes = LeagueNameFieldSize - 1; // reservar terminador nulo
+
+            byte[] nameBytes = Encoding.UTF8.GetBytes(newName);
+
+            if (nameBytes.Length > maxNameBytes)
+            {
+                MessageBox.Show($"El nombre excede el límite de {maxNameBytes} bytes y será truncado.");
+                Array.Resize(ref nameBytes, maxNameBytes);
+            }
+
+            byte[] nameField = new byte[LeagueNameFieldSize];
+            Array.Copy(nameBytes, nameField, nameBytes.Length);
+
+            using (FileStream fs = new FileStream(datasetFilePath, FileMode.Open, FileAccess.ReadWrite))
+            {
+                // Se escribe en ambas copias del nombre (patrón observado: nombre duplicado)
+                fs.Seek(offset, SeekOrigin.Begin);
+                fs.Write(nameField, 0, nameField.Length);
+                fs.Write(nameField, 0, nameField.Length);
+            }
+        }
+
+        private void LeagueListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (leagueListBox.SelectedItem is League selectedLeague)
+            {
+                leagueNameTextBox.Text = selectedLeague.LeagueName;
+            }
+        }
+
+        private void ApplyLeague_Click(object sender, RoutedEventArgs e)
+        {
+            if (leagueListBox.SelectedItem is League selectedLeague)
+            {
+                selectedLeague.LeagueName = leagueNameTextBox.Text;
+                WriteLeagueName(FilePath4, selectedLeague.LeagueIndex, leagueNameTextBox.Text);
+                leagueListBox.Items.Refresh();
+            }
+        }
+
+        public void WritePlayerRecord(byte[] buffer, Player player)
+        {
+            static void Pack(byte[] buf, int offset, ref uint block, int bitOffset, int bitCount, uint fieldValue)
+            {
+                block = BitFieldReader.WriteBits(block, bitOffset, bitCount, fieldValue);
+            }
+
+            // --- Nombre / ShirtName / Commentary (campos fuera de bitfields) ---
+            byte[] nameBytes = Encoding.Unicode.GetBytes(player.Name ?? string.Empty);
+            Array.Clear(buffer, 0x00, 32);
+            Array.Copy(nameBytes, 0, buffer, 0x00, Math.Min(nameBytes.Length, 32));
+
+            byte[] shirtBytes = Encoding.ASCII.GetBytes(player.ShirtName ?? string.Empty);
+            Array.Clear(buffer, 0x20, 16);
+            Array.Copy(shirtBytes, 0, buffer, 0x20, Math.Min(shirtBytes.Length, 16));
+
+            byte[] commentaryBytes = BitConverter.GetBytes((ushort)player.Commentary);
+            Array.Copy(commentaryBytes, 0, buffer, 0x30, 2);
+
+            // --- 0x34 ---
+            uint block34 = 0;
+            Pack(buffer, 0x34, ref block34, 0, 4, PlayerFieldValidator.ClampEnum(player.RegPosition, 4));
+            Pack(buffer, 0x34, ref block34, 4, 7, PlayerFieldValidator.ClampRawRange(player.Attack, 7));
+            Pack(buffer, 0x34, ref block34, 11, 7, PlayerFieldValidator.ClampRawRange(player.Defense, 7));
+            Pack(buffer, 0x34, ref block34, 18, 7, PlayerFieldValidator.ClampRawRange(player.Balance, 7));
+            Pack(buffer, 0x34, ref block34, 25, 7, PlayerFieldValidator.ClampRawRange(player.Stamina, 7));
+            BitConverter.GetBytes(block34).CopyTo(buffer, 0x34);
+
+            // --- 0x38 ---
+            uint block38 = 0;
+            Pack(buffer, 0x38, ref block38, 0, 7, PlayerFieldValidator.ClampRawRange(player.TopSpeed, 7));
+            Pack(buffer, 0x38, ref block38, 7, 7, PlayerFieldValidator.ClampRawRange(player.Acceleration, 7));
+            Pack(buffer, 0x38, ref block38, 14, 7, PlayerFieldValidator.ClampRawRange(player.Response, 7));
+            Pack(buffer, 0x38, ref block38, 21, 7, PlayerFieldValidator.ClampRawRange(player.DribbleAccuracy, 7));
+            Pack(buffer, 0x38, ref block38, 28, 1, PlayerFieldValidator.ClampBool(player.CanPlayGK));
+            Pack(buffer, 0x38, ref block38, 30, 1, PlayerFieldValidator.ClampBool(player.CanPlayCBW));
+            Pack(buffer, 0x38, ref block38, 31, 1, PlayerFieldValidator.ClampBool(player.CanPlayCBT));
+            BitConverter.GetBytes(block38).CopyTo(buffer, 0x38);
+
+            // --- 0x3c ---
+            uint block3c = 0;
+            Pack(buffer, 0x3c, ref block3c, 0, 7, PlayerFieldValidator.ClampRawRange(player.DribbleSpeed, 7));
+            Pack(buffer, 0x3c, ref block3c, 7, 7, PlayerFieldValidator.ClampRawRange(player.ShortPassAccuracy, 7));
+            Pack(buffer, 0x3c, ref block3c, 14, 7, PlayerFieldValidator.ClampRawRange(player.ShortPassSpeed, 7));
+            Pack(buffer, 0x3c, ref block3c, 21, 7, PlayerFieldValidator.ClampRawRange(player.LongPassAccuracy, 7));
+            Pack(buffer, 0x3c, ref block3c, 28, 1, PlayerFieldValidator.ClampBool(player.CanPlaySB));
+            Pack(buffer, 0x3c, ref block3c, 29, 1, PlayerFieldValidator.ClampBool(player.CanPlayDMF));
+            Pack(buffer, 0x3c, ref block3c, 30, 1, PlayerFieldValidator.ClampBool(player.CanPlayCMF));
+            Pack(buffer, 0x3c, ref block3c, 31, 1, PlayerFieldValidator.ClampBool(player.CanPlaySMF));
+            BitConverter.GetBytes(block3c).CopyTo(buffer, 0x3c);
+
+            // --- 0x40 ---
+            uint block40 = 0;
+            Pack(buffer, 0x40, ref block40, 0, 7, PlayerFieldValidator.ClampRawRange(player.LongPassSpeed, 7));
+            Pack(buffer, 0x40, ref block40, 7, 7, PlayerFieldValidator.ClampRawRange(player.ShotPower, 7));
+            Pack(buffer, 0x40, ref block40, 14, 7, PlayerFieldValidator.ClampRawRange(player.ShotAccuracy, 7));
+            Pack(buffer, 0x40, ref block40, 21, 7, PlayerFieldValidator.ClampRawRange(player.ShotTechnique, 7));
+            Pack(buffer, 0x40, ref block40, 28, 1, PlayerFieldValidator.ClampBool(player.CanPlayAMF));
+            Pack(buffer, 0x40, ref block40, 29, 1, PlayerFieldValidator.ClampBool(player.CanPlayCF));
+            Pack(buffer, 0x40, ref block40, 30, 1, PlayerFieldValidator.ClampBool(player.CanPlayWF));
+            Pack(buffer, 0x40, ref block40, 31, 1, PlayerFieldValidator.ClampBool(player.Dribbling));
+            BitConverter.GetBytes(block40).CopyTo(buffer, 0x40);
+
+            // --- 0x44 ---
+            uint block44 = 0;
+            Pack(buffer, 0x44, ref block44, 0, 7, PlayerFieldValidator.ClampRawRange(player.Jump, 7));
+            Pack(buffer, 0x44, ref block44, 7, 7, PlayerFieldValidator.ClampRawRange(player.Header, 7));
+            Pack(buffer, 0x44, ref block44, 14, 7, PlayerFieldValidator.ClampRawRange(player.Technique, 7));
+            Pack(buffer, 0x44, ref block44, 21, 7, PlayerFieldValidator.ClampRawRange(player.Curling, 7));
+            Pack(buffer, 0x44, ref block44, 28, 1, PlayerFieldValidator.ClampBool(player.PostPlayer));
+            Pack(buffer, 0x44, ref block44, 29, 1, PlayerFieldValidator.ClampBool(player.Positioning));
+            Pack(buffer, 0x44, ref block44, 30, 1, PlayerFieldValidator.ClampBool(player.Reaction));
+            Pack(buffer, 0x44, ref block44, 31, 1, PlayerFieldValidator.ClampBool(player.Scoring));
+            BitConverter.GetBytes(block44).CopyTo(buffer, 0x44);
+
+            // --- 0x48 ---
+            uint block48 = 0;
+            Pack(buffer, 0x48, ref block48, 0, 7, PlayerFieldValidator.ClampRawRange(player.Aggression, 7));
+            Pack(buffer, 0x48, ref block48, 7, 7, PlayerFieldValidator.ClampRawRange(player.Mentality, 7));
+            Pack(buffer, 0x48, ref block48, 14, 3, PlayerFieldValidator.ClampRawRange(player.Condition, 3));
+            Pack(buffer, 0x48, ref block48, 17, 3, PlayerFieldValidator.ClampRawRange(player.Consistency, 3));
+            Pack(buffer, 0x48, ref block48, 20, 7, PlayerFieldValidator.ClampRawRange(player.FreeKickAccuracy, 7));
+            Pack(buffer, 0x48, ref block48, 27, 1, PlayerFieldValidator.ClampBool(player.Playmaking));
+            Pack(buffer, 0x48, ref block48, 28, 1, PlayerFieldValidator.ClampBool(player.Passing));
+            Pack(buffer, 0x48, ref block48, 29, 1, PlayerFieldValidator.ClampBool(player.Penalties));
+            Pack(buffer, 0x48, ref block48, 30, 1, PlayerFieldValidator.ClampBool(player.OneOnOneScoring));
+            Pack(buffer, 0x48, ref block48, 31, 1, PlayerFieldValidator.ClampBool(player.LongThrow));
+            BitConverter.GetBytes(block48).CopyTo(buffer, 0x48);
+
+            // --- 0x4c ---
+            uint block4c = 0;
+            Pack(buffer, 0x4c, ref block4c, 0, 7, PlayerFieldValidator.ClampRawRange(player.TeamWorkAbility, 7));
+            Pack(buffer, 0x4c, ref block4c, 7, 7, PlayerFieldValidator.ClampRawRange(player.Agility, 7));
+            Pack(buffer, 0x4c, ref block4c, 14, 7, PlayerFieldValidator.ClampRawRange(player.GoalKeepingSkills, 7));
+            Pack(buffer, 0x4c, ref block4c, 21, 1, PlayerFieldValidator.ClampEnum(player.DominantFoot, 1));
+            Pack(buffer, 0x4c, ref block4c, 23, 3, PlayerFieldValidator.ClampPlus1(player.WeakFootAccuracy, 3));
+            Pack(buffer, 0x4c, ref block4c, 26, 3, PlayerFieldValidator.ClampPlus1(player.WeakFootFrequency, 3));
+            Pack(buffer, 0x4c, ref block4c, 29, 3, PlayerFieldValidator.ClampEnum(player.FreeKickType, 3));
+            BitConverter.GetBytes(block4c).CopyTo(buffer, 0x4c);
+
+            // --- 0x50 ---
+            uint block50 = 0;
+            Pack(buffer, 0x50, ref block50, 2, 1, PlayerFieldValidator.ClampBool(player.OneTouchPass));
+            Pack(buffer, 0x50, ref block50, 3, 1, PlayerFieldValidator.ClampBool(player.Marking));
+            Pack(buffer, 0x50, ref block50, 4, 1, PlayerFieldValidator.ClampBool(player.DLineControl));
+            Pack(buffer, 0x50, ref block50, 5, 1, PlayerFieldValidator.ClampBool(player.DirectGKKick));
+            Pack(buffer, 0x50, ref block50, 6, 1, PlayerFieldValidator.ClampBool(player.OneOnOneStopper));
+            Pack(buffer, 0x50, ref block50, 7, 1, PlayerFieldValidator.ClampBool(player.PenaltyStopper));
+            Pack(buffer, 0x50, ref block50, 8, 1, PlayerFieldValidator.ClampBool(player.BothFeetFeint));
+            Pack(buffer, 0x50, ref block50, 9, 1, PlayerFieldValidator.ClampBool(player.Outside));
+            Pack(buffer, 0x50, ref block50, 10, 2, PlayerFieldValidator.ClampEnum(player.Injury, 2));
+            Pack(buffer, 0x50, ref block50, 12, 1, PlayerFieldValidator.ClampBool(player.SlidingTackle));
+            BitConverter.GetBytes(block50).CopyTo(buffer, 0x50);
+
+            // --- 0x54 ---
+            uint block54 = 0;
+            Pack(buffer, 0x54, ref block54, 2, 2, PlayerFieldValidator.ClampEnum(player.PenaltyKickType, 2));
+            Pack(buffer, 0x54, ref block54, 4, 6, PlayerFieldValidator.ClampRawRange(player.GoalCelebration1, 6));
+            Pack(buffer, 0x54, ref block54, 11, 6, PlayerFieldValidator.ClampRawRange(player.GoalCelebration2, 6));
+            Pack(buffer, 0x54, ref block54, 17, 1, PlayerFieldValidator.ClampBool(player.TacticalDribble));
+            Pack(buffer, 0x54, ref block54, 18, 1, PlayerFieldValidator.ClampBool(player.LinePositioning));
+            Pack(buffer, 0x54, ref block54, 19, 1, PlayerFieldValidator.ClampBool(player.Side));
+            Pack(buffer, 0x54, ref block54, 20, 1, PlayerFieldValidator.ClampBool(player.Center));
+            BitConverter.GetBytes(block54).CopyTo(buffer, 0x54);
+
+            // --- 0x58 ---
+            uint block58 = 0;
+            Pack(buffer, 0x58, ref block58, 0, 6, PlayerFieldValidator.ClampHeight(player.Height));
+            Pack(buffer, 0x58, ref block58, 6, 7, PlayerFieldValidator.ClampRawRange(player.Weight, 7));
+            Pack(buffer, 0x58, ref block58, 16, 2, PlayerFieldValidator.ClampEnum(player.SkinColour, 2));
+            Pack(buffer, 0x58, ref block58, 18, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.HeadHeight, 4));
+            Pack(buffer, 0x58, ref block58, 22, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.HeadWidth, 4));
+            Pack(buffer, 0x58, ref block58, 26, 3, PlayerFieldValidator.ClampEnum(player.BootsTongueColor, 3));
+            Pack(buffer, 0x58, ref block58, 29, 3, PlayerFieldValidator.ClampEnum(player.BootsLineColor2, 3));
+            BitConverter.GetBytes(block58).CopyTo(buffer, 0x58);
+
+            // --- 0x5c ---
+            uint block5c = 0;
+            Pack(buffer, 0x5c, ref block5c, 0, 11, PlayerFieldValidator.ClampRawRange(player.HairId, 11));
+            Pack(buffer, 0x5c, ref block5c, 11, 6, PlayerFieldValidator.ClampRawRange(player.HairColourPattern, 6));
+            Pack(buffer, 0x5c, ref block5c, 17, 2, PlayerFieldValidator.ClampPlus1(player.EyesColor1, 2));
+            Pack(buffer, 0x5c, ref block5c, 19, 4, PlayerFieldValidator.ClampEnum(player.EyesColor2, 4));
+            Pack(buffer, 0x5c, ref block5c, 23, 7, PlayerFieldValidator.ClampPlus1(player.FacialHairType, 7));
+            Pack(buffer, 0x5c, ref block5c, 30, 2, PlayerFieldValidator.ClampEnum(player.Sleeves, 2));
+            BitConverter.GetBytes(block5c).CopyTo(buffer, 0x5c);
+
+            // --- 0x60 ---
+            uint block60 = 0;
+            Pack(buffer, 0x60, ref block60, 0, 6, PlayerFieldValidator.ClampPlus1(player.FacialHairColour, 6));
+            Pack(buffer, 0x60, ref block60, 6, 2, PlayerFieldValidator.ClampRawRange(player.SunGlassesType, 2));
+            Pack(buffer, 0x60, ref block60, 8, 3, PlayerFieldValidator.ClampPlus1(player.SunGlassesColour, 3));
+            Pack(buffer, 0x60, ref block60, 11, 2, PlayerFieldValidator.ClampRawRange(player.MaskType, 2));
+            Pack(buffer, 0x60, ref block60, 13, 3, PlayerFieldValidator.ClampPlus1(player.MaskColour, 3));
+            Pack(buffer, 0x60, ref block60, 16, 1, PlayerFieldValidator.ClampEnum(player.CapType, 1));
+            Pack(buffer, 0x60, ref block60, 17, 3, PlayerFieldValidator.ClampEnum(player.CapColour, 3));
+            Pack(buffer, 0x60, ref block60, 20, 2, PlayerFieldValidator.ClampEnum(player.WristbandType, 2));
+            Pack(buffer, 0x60, ref block60, 22, 4, PlayerFieldValidator.ClampEnum(player.BootsType, 4));
+            Pack(buffer, 0x60, ref block60, 26, 3, PlayerFieldValidator.ClampEnum(player.BootsBaseColor, 3));
+            Pack(buffer, 0x60, ref block60, 29, 3, PlayerFieldValidator.ClampEnum(player.BootsLineColor1, 3));
+            BitConverter.GetBytes(block60).CopyTo(buffer, 0x60);
+
+            // --- 0x64 ---
+            uint block64 = 0;
+            Pack(buffer, 0x64, ref block64, 0, 9, PlayerFieldValidator.ClampPlus1(player.FaceId, 9));
+            Pack(buffer, 0x64, ref block64, 9, 3, PlayerFieldValidator.ClampEnum(player.BootsStudsColour, 3));
+            Pack(buffer, 0x64, ref block64, 12, 1, PlayerFieldValidator.ClampEnum(player.Tape, 1));
+            Pack(buffer, 0x64, ref block64, 13, 6, PlayerFieldValidator.ClampMultiplyBy4(player.HairColorR, 6));
+            Pack(buffer, 0x64, ref block64, 19, 6, PlayerFieldValidator.ClampMultiplyBy4(player.HairColorG, 6));
+            Pack(buffer, 0x64, ref block64, 25, 6, PlayerFieldValidator.ClampMultiplyBy4(player.HairColorB, 6));
+            Pack(buffer, 0x64, ref block64, 31, 1, PlayerFieldValidator.ClampEnum(player.Gloves, 1));
+            BitConverter.GetBytes(block64).CopyTo(buffer, 0x64);
+
+            // --- 0x68 ---
+            uint block68 = 0;
+            Pack(buffer, 0x68, ref block68, 0, 2, PlayerFieldValidator.ClampEnum(player.Socks, 2));
+            Pack(buffer, 0x68, ref block68, 2, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.NeckLength, 4));
+            Pack(buffer, 0x68, ref block68, 6, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.ChestMeasurement, 4));
+            Pack(buffer, 0x68, ref block68, 10, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.ArmCircumference, 4));
+            Pack(buffer, 0x68, ref block68, 14, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.WaisteCircumference, 4));
+            Pack(buffer, 0x68, ref block68, 18, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.LegCircumference, 4));
+            Pack(buffer, 0x68, ref block68, 22, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.CalfCircumference, 4));
+            Pack(buffer, 0x68, ref block68, 26, 2, PlayerFieldValidator.ClampEnum(player.FaceType, 2));
+            Pack(buffer, 0x68, ref block68, 28, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.LegLength, 4));
+            BitConverter.GetBytes(block68).CopyTo(buffer, 0x68);
+
+            // --- 0x6c ---
+            uint block6c = 0;
+            Pack(buffer, 0x6c, ref block6c, 0, 3, PlayerFieldValidator.ClampEnum(player.BandanaColour, 3));
+            Pack(buffer, 0x6c, ref block6c, 3, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.ShoulderHeight, 4));
+            Pack(buffer, 0x6c, ref block6c, 7, 4, PlayerFieldValidator.ClampPhysicalAttribute(player.ShoulderWidth, 4));
+            Pack(buffer, 0x6c, ref block6c, 11, 5, PlayerFieldValidator.ClampAge(player.Age));
+            Pack(buffer, 0x6c, ref block6c, 16, 9, PlayerFieldValidator.ClampRawRange(player.Nationality, 9));
+            BitConverter.GetBytes(block6c).CopyTo(buffer, 0x6c);
+
+            // --- 0x74 ---
+            uint block74 = 0;
+            Pack(buffer, 0x74, ref block74, 0, 3, PlayerFieldValidator.ClampInverted(player.BrowsHeight, 3));
+            Pack(buffer, 0x74, ref block74, 3, 3, PlayerFieldValidator.ClampInverted(player.EyesPosition, 3));
+            Pack(buffer, 0x74, ref block74, 6, 3, PlayerFieldValidator.ClampInverted(player.EyesAngle, 3));
+            Pack(buffer, 0x74, ref block74, 9, 3, PlayerFieldValidator.ClampInverted(player.EyesSize, 3));
+            Pack(buffer, 0x74, ref block74, 12, 3, PlayerFieldValidator.ClampInverted(player.NoseHeight, 3));
+            Pack(buffer, 0x74, ref block74, 15, 3, PlayerFieldValidator.ClampInverted(player.JawWidth, 3));
+            Pack(buffer, 0x74, ref block74, 18, 3, PlayerFieldValidator.ClampInverted(player.JawChin, 3));
+            Pack(buffer, 0x74, ref block74, 21, 3, PlayerFieldValidator.ClampInverted(player.NoseWidth, 3));
+            Pack(buffer, 0x74, ref block74, 24, 3, PlayerFieldValidator.ClampInverted(player.MouthSize, 3));
+            Pack(buffer, 0x74, ref block74, 27, 2, (uint)(player.MouthThicknessOfLips + 1));
+            Pack(buffer, 0x74, ref block74, 29, 2, PlayerFieldValidator.ClampPlus1(player.MouthType, 2));
+            BitConverter.GetBytes(block74).CopyTo(buffer, 0x74);
+
+            // --- 0x78 ---
+            uint block78 = 0;
+            Pack(buffer, 0x78, ref block78, 0, 6, PlayerFieldValidator.ClampRawRange(player.BrowsTypeAngle, 6));
+            Pack(buffer, 0x78, ref block78, 7, 3, PlayerFieldValidator.ClampPlus1(player.NoseType, 3));
+            Pack(buffer, 0x78, ref block78, 11, 3, PlayerFieldValidator.ClampPlus1(player.CheeksType, 3));
+            Pack(buffer, 0x78, ref block78, 14, 3, PlayerFieldValidator.ClampInverted(player.MouthPosition, 3));
+            Pack(buffer, 0x78, ref block78, 17, 5, PlayerFieldValidator.ClampPlus1(player.EyesType, 5));
+            Pack(buffer, 0x78, ref block78, 23, 3, PlayerFieldValidator.ClampPlus1(player.JawType, 3));
+            BitConverter.GetBytes(block78).CopyTo(buffer, 0x78);
+        }
+
+        private object ClampRawRange(int weight, int v)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Sobrescribe un jugador específico directamente en el archivo binario,
+        /// localizándolo por su índice (registro de 124 bytes).
+        /// </summary>
+        public void WritePlayerToFile(string filePath, Player player)
+        {
+            const int RecordSize = 0x7C;
+            const long HeaderOffset = 124; // mismo offset inicial usado en ParsePlayers
+
+            long recordOffset = HeaderOffset + (long)(player.PlayerIndex - 1) * RecordSize;
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
+            {
+                if (recordOffset + RecordSize > fs.Length)
+                {
+                    MessageBox.Show("Índice de jugador fuera de rango.");
+                    return;
+                }
+
+                byte[] buffer = new byte[RecordSize];
+                fs.Seek(recordOffset, SeekOrigin.Begin);
+                fs.Read(buffer, 0, RecordSize);
+
+                WritePlayerRecord(buffer, player);
+
+                fs.Seek(recordOffset, SeekOrigin.Begin);
+                fs.Write(buffer, 0, RecordSize);
             }
         }
     }

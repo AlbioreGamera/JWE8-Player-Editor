@@ -164,7 +164,7 @@
                 </TabItem>
                 <TabItem Header="Stadiums">
                     <Grid Background="#FF212121">
-                        <ListBox x:Name="stadiumListBox" ItemsSource="{Binding StadiumCollection}" SelectionChanged="StadiumListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="279" IsEnabled="False">
+                        <ListBox x:Name="stadiumListBox" ItemsSource="{Binding StadiumCollection}" SelectionChanged="StadiumListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="279" IsEnabled="True">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -173,6 +173,25 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                        <GroupBox x:Name="Stadium_Information" Header="Stadium" Margin="299,10,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="90">
+                            <Grid Height="60" VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="58.516"/>
+                                    <ColumnDefinition Width="8.444"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="265*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="stadiumNameTextBox" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" MaxLength="60"/>
+
+                                <Button Grid.Column="3" Content="Apply" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="61" Click="ApplyStadium_Click"/>
+                            </Grid>
+                        </GroupBox>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Callnames" Height="20" VerticalAlignment="Top">
@@ -213,6 +232,38 @@
                                 <Button Grid.Column="3" Content="Apply" HorizontalAlignment="Left" Margin="63,0,0,0" Grid.Row="3" VerticalAlignment="Center" Width="61" Click="ApplyCallname_Click"/>
 
 
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Leagues">
+                    <Grid Background="#FF212121">
+                        <ListBox x:Name="leagueListBox" ItemsSource="{Binding LeagueCollection}" SelectionChanged="LeagueListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="279">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding LeagueName}" FontWeight="DemiBold"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <GroupBox x:Name="League_Information" Header="League" Margin="299,10,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="90">
+                            <Grid Height="60" VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="58.516"/>
+                                    <ColumnDefinition Width="8.444"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="265*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="leagueNameTextBox" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" MaxLength="20"/>
+
+                                <Button Grid.Column="3" Content="Apply" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="61" Click="ApplyLeague_Click"/>
                             </Grid>
                         </GroupBox>
                     </Grid>

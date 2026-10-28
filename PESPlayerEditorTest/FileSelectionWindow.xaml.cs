@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 using PlayerLibrary;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows;
 
 namespace PESPlayerEditorTest
 {
@@ -223,7 +216,7 @@ namespace PESPlayerEditorTest
                 return; // Exit the method
             }
 
-            if(string.IsNullOrEmpty(selectedFilePath_dataset))
+            if (string.IsNullOrEmpty(selectedFilePath_dataset))
             {
                 MessageBox.Show("No Stadium data will be loaded.");
             }

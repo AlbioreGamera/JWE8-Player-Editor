@@ -2,18 +2,11 @@
 using PlayerLibrary;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PESPlayerEditorTest
 {
@@ -26,7 +19,7 @@ namespace PESPlayerEditorTest
     {
         public Player SelectedPlayer { get; set; }
 
-        public PlayerAssignment SelectedPlayerAssignment {get; set;}
+        public PlayerAssignment SelectedPlayerAssignment { get; set; }
         public static List<Position> Positions { get; } = new List<Position>
             {
                 new Position { PositionId = 0, PositionName = "Goal Keeper" },
@@ -81,6 +74,23 @@ namespace PESPlayerEditorTest
 
         public LoadCommentaries CommentariesLoader { get; } = new LoadCommentaries();
 
+        public static Array FeetValues { get; } = Enum.GetValues(typeof(Foot));
+        public static Array InjuryValues { get; } = Enum.GetValues(typeof(InjuryResistance));
+        public static Array SkinColourValues { get; } = Enum.GetValues(typeof(SkinColour));
+        public static Array BootsColorValues { get; } = Enum.GetValues(typeof(BootsColor));
+        public static Array EyesColor2Values { get; } = Enum.GetValues(typeof(EyesColor2));
+        public static Array SleevesValues { get; } = Enum.GetValues(typeof(SleevesLength));
+        public static Array YesNoValues { get; } = Enum.GetValues(typeof(YesNo));
+        public static Array CapColourValues { get; } = Enum.GetValues(typeof(CapColour));
+        public static Array WristbandTypeValues { get; } = Enum.GetValues(typeof(WristbandType));
+        public static Array BootsTypeValues { get; } = Enum.GetValues(typeof(BootsType));
+        public static Array GlovesOptionValues { get; } = Enum.GetValues(typeof(GlovesOption));
+        public static Array SocksHeightValues { get; } = Enum.GetValues(typeof(SocksHeight));
+        public static Array FaceTypeValues { get; } = Enum.GetValues(typeof(FaceType));
+        public static Array BandanaColourValues { get; } = Enum.GetValues(typeof(BandanaColour));
+        public static Array FreeKickTypeValues { get; } = Enum.GetValues(typeof(FreeKickType));
+        public static Array PenaltyKickTypeValues { get; } = Enum.GetValues(typeof(PenaltyKickType));
+
         private MainWindow mainWindow;
 
         public PlayerWindow(Player selectedPlayer, MainWindow mainWindow)
@@ -93,14 +103,10 @@ namespace PESPlayerEditorTest
             positionComboBox.ItemsSource = Positions;
             positionComboBox.SelectedItem = Positions.FirstOrDefault(p => p.PositionId == selectedPlayer.Position);
 
-            ageComboBox.ItemsSource = Ages;
-            ageComboBox.SelectedItem = Ages.FirstOrDefault(a => a.AgeIndex == selectedPlayer.Age);
-
             playerIdTextBox.Text = selectedPlayer.PlayerIndex.ToString();
             nameTextBox.Text = selectedPlayer.Name;
             shirtNameTextBox.Text = selectedPlayer.ShirtName;
             countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
-            ageComboBox.SelectedIndex = selectedPlayer.Age;
             heightTextBox.Text = selectedPlayer.Height.ToString();
             weightTextBox.Text = selectedPlayer.Weight.ToString();
             positionComboBox.SelectedIndex = selectedPlayer.Position;
@@ -134,6 +140,74 @@ namespace PESPlayerEditorTest
         private void ClosePlayerWindow(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private static readonly Regex DigitsOnlyRegex = new Regex("^[0-9]+$");
+
+        private void StatTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !DigitsOnlyRegex.IsMatch(e.Text);
+        }
+
+        private void StatTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+            {
+                return;
+            }
+
+            if (!int.TryParse(textBox.Text, out int value))
+            {
+                value = 0;
+            }
+
+            if (value < 0)  
+            {
+                value = 0;
+            }
+            else if (value > 99)
+            {
+                value = 99;
+            }
+
+            string clamped = value.ToString();
+            if (textBox.Text != clamped)
+            {
+                textBox.Text = clamped;
+            }
+        }
+
+        private void StatTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+            {
+                return;
+            }
+
+            if (e.Key != Key.Up && e.Key != Key.Down)
+            {
+                return;
+            }
+
+            if (!int.TryParse(textBox.Text, out int value))
+            {
+                value = 0;
+            }
+
+            value += e.Key == Key.Up ? 1 : -1;
+
+            if (value < 0)
+            {
+                value = 0;
+            }
+            else if (value > 99)
+            {
+                value = 99;
+            }
+
+            textBox.Text = value.ToString();
+            textBox.CaretIndex = textBox.Text.Length;
+            e.Handled = true;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
