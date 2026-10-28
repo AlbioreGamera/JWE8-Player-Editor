@@ -87,10 +87,8 @@
                     HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
                             <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                            <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedValue="{Binding SelectedPlayer.Age, Mode=TwoWay}" ScrollViewer.CanContentScroll="False"
-                    DisplayMemberPath="AgeName" SelectedValuePath="AgeIndex"
+                            <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedItem="{Binding SelectedPlayer.Age, Mode=TwoWay}" ScrollViewer.CanContentScroll="False"
                     Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
-
                             <Label Grid.Row="6" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="2"/>
                             <TextBox x:Name="heightTextBox" Grid.Row="6" Grid.Column="3" TextWrapping="Wrap" Margin="4,0,0,0" Height="21" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Height, Mode=TwoWay}"/>
 

@@ -384,9 +384,6 @@ namespace PESPlayerEditorTest
                 JawType = (int)Bits(block78, 23, 3) + 1,
             };
 
-            // Comentario/edad original (compatibilidad con lógica previa basada en Ages[])
-            string ageHexValue = buffer[0x6d].ToString("X2");
-            Age? age = Ages.FirstOrDefault(a => a.AgeValue.Contains(ageHexValue));
             player.Country = (int)player.Nationality;
             player.Position = (int)player.RegPosition;
 
