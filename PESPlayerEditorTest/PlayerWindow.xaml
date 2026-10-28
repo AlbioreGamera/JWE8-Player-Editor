@@ -10,6 +10,7 @@
     <Window.Resources>
         <logic:StatValueToBackgroundConverter x:Key="StatValueToBackgroundConverter"/>
         <logic:FaceTypeToIsEnabledConverter x:Key="FaceTypeToIsEnabledConverter"/>
+        <logic:BootsTypeToIsEnabledConverter x:Key="BootsTypeToIsEnabledConverter"/>
         <local:FaceIdToPlayerNameConverter x:Key="FaceIdToPlayerNameConverter"/>
         <Style x:Key="StatTextBoxStyle" TargetType="TextBox">
             <Setter Property="MaxLength" Value="2"/>
@@ -458,25 +459,6 @@
                                     <RowDefinition Height="24"/>
                                     <RowDefinition Height="24"/>
                                     <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
-                                    <RowDefinition Height="24"/>
                                 </Grid.RowDefinitions>
 
                                 <Label Grid.Row="0" Content="Face Id" FontSize="10" Foreground="#FFECECEC" VerticalAlignment="Top" Margin="0,2,0,0"/>
@@ -585,60 +567,6 @@
                                 <Label Grid.Row="30" Content="Facial Hair Colour" FontSize="10" Foreground="#FFECECEC"/>
                                 <TextBox Grid.Row="30" Grid.Column="1" Text="{Binding SelectedPlayer.FacialHairColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
 
-                                <Label Grid.Row="31" Content="Sleeves" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="31" Grid.Column="1" ItemsSource="{Binding SleevesValues}" SelectedItem="{Binding SelectedPlayer.Sleeves, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="32" Content="Sun Glasses Type" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox Grid.Row="32" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="33" Content="Sun Glasses Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox Grid.Row="33" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="34" Content="Mask Type" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox Grid.Row="34" Grid.Column="1" Text="{Binding SelectedPlayer.MaskType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="35" Content="Mask Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox Grid.Row="35" Grid.Column="1" Text="{Binding SelectedPlayer.MaskColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="36" Content="Cap Type" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="36" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.CapType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="37" Content="Cap Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="37" Grid.Column="1" ItemsSource="{Binding CapColourValues}" SelectedItem="{Binding SelectedPlayer.CapColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="38" Content="Bandana Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="38" Grid.Column="1" ItemsSource="{Binding BandanaColourValues}" SelectedItem="{Binding SelectedPlayer.BandanaColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="39" Content="Wristband Type" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="39" Grid.Column="1" ItemsSource="{Binding WristbandTypeValues}" SelectedItem="{Binding SelectedPlayer.WristbandType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="40" Content="Gloves" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="40" Grid.Column="1" ItemsSource="{Binding GlovesOptionValues}" SelectedItem="{Binding SelectedPlayer.Gloves, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="41" Content="Tape" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="41" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.Tape, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="42" Content="Socks" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="42" Grid.Column="1" ItemsSource="{Binding SocksHeightValues}" SelectedItem="{Binding SelectedPlayer.Socks, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="43" Content="Boots Type" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="43" Grid.Column="1" ItemsSource="{Binding BootsTypeValues}" SelectedItem="{Binding SelectedPlayer.BootsType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="44" Content="Boots Base Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="44" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsBaseColor, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="45" Content="Boots Line Colour 1" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="45" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsLineColor1, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="46" Content="Boots Line Colour 2" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="46" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsLineColor2, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="47" Content="Boots Tongue Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="47" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsTongueColor, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
-                                <Label Grid.Row="48" Content="Boots Studs Colour" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox Grid.Row="48" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsStudsColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
-
                             </Grid>
                         </ScrollViewer>
                     </GroupBox>
@@ -714,6 +642,99 @@
                                 <TextBox Text="{Binding SelectedPlayer.GoalCelebration2, Mode=TwoWay}" Height="21" Width="65" Margin="5,0,0,0"/>
                             </StackPanel>
                         </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Accessories">
+                <Grid Background="#FF212121" Height="726" Margin="0,0,10,0">
+                    <GroupBox x:Name="Accessories" Header="Accessories / Boots" Margin="20,15,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="680" HorizontalAlignment="Left" Width="340">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <Grid Height="Auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="24"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Content="Sleeves" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SleevesValues}" SelectedItem="{Binding SelectedPlayer.Sleeves, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="1" Content="Sun Glasses Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="2" Content="Sun Glasses Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="3" Content="Mask Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedPlayer.MaskType, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="4" Content="Mask Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding SelectedPlayer.MaskColour, Mode=TwoWay}" Height="21" Width="90" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="5" Content="Cap Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.CapType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="6" Content="Cap Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding CapColourValues}" SelectedItem="{Binding SelectedPlayer.CapColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="7" Content="Bandana Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding BandanaColourValues}" SelectedItem="{Binding SelectedPlayer.BandanaColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="8" Content="Wristband Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding WristbandTypeValues}" SelectedItem="{Binding SelectedPlayer.WristbandType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="9" Content="Gloves" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding GlovesOptionValues}" SelectedItem="{Binding SelectedPlayer.Gloves, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="10" Content="Tape" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.Tape, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="11" Content="Socks" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding SocksHeightValues}" SelectedItem="{Binding SelectedPlayer.Socks, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="12" Content="Boots Type" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding BootsTypeValues}" SelectedItem="{Binding SelectedPlayer.BootsType, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="13" Content="Boots Base Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsBaseColor, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"
+                        IsEnabled="{Binding SelectedPlayer.BootsType, Converter={StaticResource BootsTypeToIsEnabledConverter}}"/>
+
+                                <Label Grid.Row="14" Content="Boots Line Colour 1" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="14" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsLineColor1, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"
+                        IsEnabled="{Binding SelectedPlayer.BootsType, Converter={StaticResource BootsTypeToIsEnabledConverter}}"/>
+
+                                <Label Grid.Row="15" Content="Boots Line Colour 2" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="15" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsLineColor2, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"
+                        IsEnabled="{Binding SelectedPlayer.BootsType, Converter={StaticResource BootsTypeToIsEnabledConverter}}"/>
+
+                                <Label Grid.Row="16" Content="Boots Tongue Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="16" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsTongueColor, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"
+                        IsEnabled="{Binding SelectedPlayer.BootsType, Converter={StaticResource BootsTypeToIsEnabledConverter}}"/>
+
+                                <Label Grid.Row="17" Content="Boots Studs Colour" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox Grid.Row="17" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.BootsStudsColour, Mode=TwoWay}" Height="21" Width="150" HorizontalAlignment="Left"
+                        IsEnabled="{Binding SelectedPlayer.BootsType, Converter={StaticResource BootsTypeToIsEnabledConverter}}"/>
+
+                            </Grid>
+                        </ScrollViewer>
                     </GroupBox>
                 </Grid>
             </TabItem>

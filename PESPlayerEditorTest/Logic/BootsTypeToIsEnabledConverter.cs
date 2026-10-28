@@ -1,3 +1,4 @@
+ï»¿using System;
 using System.Globalization;
 using System.Windows.Data;
 using PlayerLibrary;
@@ -5,26 +6,23 @@ using PlayerLibrary;
 namespace JWE8Editor.Logic
 {
     /// <summary>
-    /// Convierte el BootsType del jugador en un bool IsEnabled para los demás campos de Boots
-    /// (colores, etc.). A partir del tipo de bota "3" (índice 2, primera bota con licencia:
-    /// BOOT_ADIDAS_F50_BLACK_WHITE) en adelante, las botas son licenciadas y modeladas por el
-    /// juego, por lo que sus colores no pueden ser editados.
+    /// Habilita los campos de personalizaciï¿½n de botas (colores base, lï¿½neas,
+    /// lengueta, tacos) ï¿½nicamente cuando el BootsType seleccionado es uno de
+    /// los modelos editables (BOOT_EDITABLE_1 o BOOT_EDITABLE_2); el resto de
+    /// los modelos (marcas reales como Adidas F50/Predator) tienen colores
+    /// fijos y no admiten personalizaciï¿½n.
     /// </summary>
     public class BootsTypeToIsEnabledConverter : IValueConverter
     {
-        public object Convert(object value, System.Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is BootsType bootsType)
-            {
-                return (int)bootsType < 2;
-            }
-
-            return true;
+            return value is BootsType bootsType &&
+                (bootsType == BootsType.BOOT_EDITABLE_1 || bootsType == BootsType.BOOT_EDITABLE_2);
         }
 
-        public object ConvertBack(object value, System.Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new System.NotSupportedException();
+            throw new NotImplementedException();
         }
     }
 }
