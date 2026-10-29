@@ -692,7 +692,6 @@ namespace PESPlayerEditorTest
                 if (selectedPlayer != null)
                 {
                     nameTextBox.Text = selectedPlayer.Name;
-                    shirtNameTextBox.Text = selectedPlayer.ShirtName;
                     commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
                     countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
 
@@ -704,18 +703,18 @@ namespace PESPlayerEditorTest
 
         private void UpdatePlayerDetailPanels(Player selectedPlayer, PlayerAssignment? assignment)
         {
-            //nrTextBox.Text = assignment?.Number.ToString() ?? string.Empty;
+            jerseyTextBox.Text = assignment?.Number.ToString() ?? string.Empty;
 
-            //Team? team = assignment != null
-            //    ? TeamCollection.FirstOrDefault(t => t.TeamId == assignment.Team)
-            //    : null;
-            //clubTextBox.Text = team?.TeamName ?? string.Empty;
+            Team? team = assignment != null
+                ? TeamCollection.FirstOrDefault(t => t.TeamId == assignment.Team)
+                : null;
+            currentTeamTextBox.Text = team?.TeamName ?? string.Empty;
 
-            //playerIdTextBlock.Text = selectedPlayer.PlayerIndex.ToString();
-            //faceTypeTextBlock.Text = selectedPlayer.FaceType.ToString();
-            //faceIdTextBlock.Text = selectedPlayer.FaceId.ToString();
-            //ageTextBlock.Text = selectedPlayer.Age.ToString();
-            //injuryTextBlock.Text = selectedPlayer.Injury.ToString();
+            ageTextBox.Text = selectedPlayer.Age.ToString();
+            heightTextBox.Text = selectedPlayer.Height.ToString();
+            weightTextBox.Text = selectedPlayer.Weight.ToString();
+            positionTextBox.Text = PlayerWindow.Positions
+                .FirstOrDefault(p => p.PositionId == selectedPlayer.Position)?.PositionName ?? string.Empty;
         }
 
         private void SavePlayerData(string filePath)
@@ -942,7 +941,6 @@ namespace PESPlayerEditorTest
                 {
                     Player selectedPlayer = selectedPlayerAssignment.Player;
                     nameTextBox.Text = selectedPlayer.Name;
-                    shirtNameTextBox.Text = selectedPlayer.ShirtName;
                     commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
                     countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
 

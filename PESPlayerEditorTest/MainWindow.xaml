@@ -90,13 +90,7 @@
                                 <TextBox x:Name="currentTeamTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
                                 <Label Grid.Row="2" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                                <ComboBox x:Name="commentaryComboBox" Grid.Row="2" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}} "
-    DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex"
-    SelectedItem="{Binding SelectedPlayer.Commentary}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"
-    VirtualizingPanel.IsVirtualizing="True"
-    VirtualizingPanel.VirtualizationMode="Recycling"
-    VirtualizingPanel.ScrollUnit="Item"
-    ScrollViewer.CanContentScroll="True">
+                                <ComboBox x:Name="commentaryComboBox" Grid.Row="2" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" SelectedItem="{Binding SelectedPlayer.Commentary}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item" ScrollViewer.CanContentScroll="True">
                                     <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <VirtualizingStackPanel />
@@ -105,11 +99,8 @@
                                 </ComboBox>
 
                                 <Label Grid.Row="3" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox x:Name="countryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    DisplayMemberPath="CountryName" SelectedValuePath="CountryId"
-                    SelectedItem="{Binding SelectedPlayer.Country}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="True"/>
-
-
+                                <ComboBox x:Name="countryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CountryName" SelectedValuePath="CountryId" SelectedItem="{Binding SelectedPlayer.Country}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                
                                 <Label Grid.Row="4" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
                                 <TextBox x:Name="ageTextBox" Grid.Row="4" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
