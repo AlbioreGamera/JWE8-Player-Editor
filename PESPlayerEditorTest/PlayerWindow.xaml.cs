@@ -79,7 +79,6 @@ namespace PESPlayerEditorTest
 
             playerIdTextBox.Text = selectedPlayer.PlayerIndex.ToString();
             nameTextBox.Text = selectedPlayer.Name;
-            shirtNameTextBox.Text = selectedPlayer.ShirtName;
             countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
             heightTextBox.Text = selectedPlayer.Height.ToString();
             weightTextBox.Text = selectedPlayer.Weight.ToString();
@@ -93,7 +92,6 @@ namespace PESPlayerEditorTest
             // Update the selected player's data with the new values from the window
             SelectedPlayer.PlayerIndex = int.Parse(playerIdTextBox.Text);
             SelectedPlayer.Name = nameTextBox.Text;
-            SelectedPlayer.ShirtName = shirtNameTextBox.Text;
             SelectedPlayer.Commentary = commentaryComboBox.SelectedIndex;
             SelectedPlayer.Country = countryComboBox.SelectedIndex + 121;
             SelectedPlayer.Age = ageComboBox.SelectedIndex;

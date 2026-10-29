@@ -48,6 +48,9 @@ namespace PESPlayerEditorTest
         public ObservableCollection<League> LeagueCollection { get; set; } = new ObservableCollection<League>();
         public ObservableCollection<Team> TeamCollection { get; set; } = new ObservableCollection<Team>();
 
+        public JWE8Editor.Logic.LoadCommentaries CommentariesLoader { get; } = new JWE8Editor.Logic.LoadCommentaries();
+        public JWE8Editor.Logic.LoadCountries CountriesLoader { get; } = new JWE8Editor.Logic.LoadCountries();
+
         public string? FilePath1 { get; internal set; }
         public string? FilePath2 { get; internal set; }
         public string? FilePath3 { get; internal set; }
@@ -236,7 +239,6 @@ namespace PESPlayerEditorTest
 
                 teamRomajiTextBox.Text = selectedTeam.TeamNameRomaji;
                 teamRomajiTextBox.MaxLength = selectedTeam.RomajiFieldLength;
-                teamRomajiTextBox.IsEnabled = !isProtected;
 
                 teamCodeTextBox.Text = selectedTeam.TeamCode;
                 teamCodeTextBox.MaxLength = selectedTeam.CodeFieldLength;
