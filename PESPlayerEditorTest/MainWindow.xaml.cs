@@ -35,62 +35,6 @@ namespace PESPlayerEditorTest
 
         public FileStream? fsDataset;
 
-        public Player? SelectedPlayer { get; set; }
-
-        public static List<Position> Positions { get; } = new List<Position>
-            {
-                new Position { PositionId = 0, PositionCode = "GK", PositionName = "Goal Keeper" },
-                new Position { PositionId = 1, PositionCode = "LI", PositionName = "Libero" },
-                new Position { PositionId = 2, PositionCode = "SW", PositionName = "Sweeper" },
-                new Position { PositionId = 3, PositionCode = "CB", PositionName = "Central Back Stopper" },
-                new Position { PositionId = 4, PositionCode = "SB", PositionName = "Side Back" },
-                new Position { PositionId = 5, PositionCode = "DMF", PositionName = "Defensive Midfielder" },
-                new Position { PositionId = 6, PositionCode = "CMF", PositionName = "Centre Midfielder" },
-                new Position { PositionId = 7, PositionCode = "SMF", PositionName = "Side Midfielder" },
-                new Position { PositionId = 8, PositionCode = "OMF", PositionName = "Offensive Midfielder" },
-                new Position { PositionId = 9, PositionCode = "CF", PositionName = "Centre Forward" },
-                new Position { PositionId = 10, PositionCode = "WF", PositionName = "Wing Forward" },
-        };
-
-        public LoadCountries CountriesLoader { get; } = new LoadCountries();
-        public LoadCommentaries CommentariesLoader { get; } = new LoadCommentaries();
-
-        public static List<Age> Ages { get; } = new List<Age>
-        {
-            new Age { AgeIndex = 0, AgeValue = ["02","05","04","05","06","07"], AgeName = 15 },
-            new Age { AgeIndex = 1, AgeValue = ["0A","0B","0C","0D","0E","0F"], AgeName = 16 },
-            new Age { AgeIndex = 2, AgeValue = ["12","13","14","15","16","17"], AgeName = 17 },
-            new Age { AgeIndex = 3, AgeValue = ["1A","1B","1C","1D","1E","1F"], AgeName = 18 },
-            new Age { AgeIndex = 4, AgeValue = ["22","23","24","25","26","27"], AgeName = 19 },
-            new Age { AgeIndex = 5, AgeValue = ["2A","2B","2C","2D","2E","2F"], AgeName = 20 },
-            new Age { AgeIndex = 6, AgeValue = ["32","33","34","35","36","37"], AgeName = 21 },
-            new Age { AgeIndex = 7, AgeValue = ["3A","3B","3C","3D","4E","3F"], AgeName = 22 },
-            new Age { AgeIndex = 8, AgeValue = ["42","43","44","45","46","47"], AgeName = 23 },
-            new Age { AgeIndex = 9, AgeValue = ["4A","4B","4C","4D","4E","4F"], AgeName = 24 },
-            new Age { AgeIndex = 10,AgeValue = ["52","53","54","55","56","57"], AgeName = 25 },
-            new Age { AgeIndex = 11,AgeValue = ["5A","5B","5C","5D","5E","5F"], AgeName = 26 },
-            new Age { AgeIndex = 12,AgeValue = ["62","63","64","65","66","67"], AgeName = 27 },
-            new Age { AgeIndex = 13,AgeValue = ["6A","6B","6C","6D","6E","6F"], AgeName = 28 },
-            new Age { AgeIndex = 14,AgeValue = ["72","73","74","75","76","77"], AgeName = 29 },
-            new Age { AgeIndex = 15,AgeValue = ["7A","7B","7C","7D","7E","7F"], AgeName = 30 },
-            new Age { AgeIndex = 16,AgeValue = ["82","83","84","85","86","87"], AgeName = 31 },
-            new Age { AgeIndex = 17,AgeValue = ["8A","8B","8C","8D","8E","8F"], AgeName = 32 },
-            new Age { AgeIndex = 18,AgeValue = ["92","93","94","95","95","97"], AgeName = 33 },
-            new Age { AgeIndex = 19,AgeValue = ["9A","9B","9C","9D","9E","9F"], AgeName = 34 },
-            new Age { AgeIndex = 20,AgeValue = ["A2","A3","A4","A5","A6","A7"], AgeName = 35 },
-            new Age { AgeIndex = 21,AgeValue = ["AA","AB","AC","AD","AE","AF"], AgeName = 36 },
-            new Age { AgeIndex = 22,AgeValue = ["B2","B3","B4","B5","B6","B7"], AgeName = 37 },
-            new Age { AgeIndex = 23,AgeValue = ["BA","BB","BC","BD","BE","BF"], AgeName = 38 },
-            new Age { AgeIndex = 24,AgeValue = ["C2","C3","C4","C4","C5","C6"], AgeName = 39 },
-            new Age { AgeIndex = 25,AgeValue = ["CA","CB","CC","CD","CE","CF"], AgeName = 40 },
-            new Age { AgeIndex = 26,AgeValue = ["D2","D3","D4","D4","D5","D6"], AgeName = 41 },
-            new Age { AgeIndex = 27,AgeValue = ["DA","DB","DC","DD","DE","DF"], AgeName = 42 },
-            new Age { AgeIndex = 28,AgeValue = ["E2","E3","E4","E5","E6","E7"], AgeName = 43 },
-            new Age { AgeIndex = 29,AgeValue = ["EA","EB","EC","ED","EE","EF"], AgeName = 44 },
-            new Age { AgeIndex = 30,AgeValue = ["F2","F3","F4","F5","F6","F7"], AgeName = 45 },
-            new Age { AgeIndex = 31,AgeValue = ["FA","FB","FC","FD","FE","FF"], AgeName = 46 }
-        };
-
         List<Player> players = new List<Player>();
 
         List<PlayerAssignment> playerAssignment = new List<PlayerAssignment>();
@@ -139,8 +83,9 @@ namespace PESPlayerEditorTest
         {
             "URW", // Urawa Reds
             "YFM", // Yokohama F・Marinos
+            "BSK", // Bucheon SK
             "ASM", // AS Monaco
-            "DEF", // Default Team
+            "DEF", // Default
         };
 
         private class TeamField
@@ -148,6 +93,27 @@ namespace PESPlayerEditorTest
             public long StartOffset;
             public byte[] Bytes = Array.Empty<byte>();
             public int TotalLength; // bytes útiles + relleno (0x00) hasta el siguiente campo
+        }
+
+        /// <summary>
+        /// Decodifica los bytes de un campo de nombre de equipo. Los nombres con
+        /// caracteres acentuados (ej. "Coruña") se guardan en UTF-8 (p.ej. "ñ" = C3 B1),
+        /// mientras que algunos nombres japoneses usan Shift-JIS. Se intenta primero
+        /// UTF-8 en modo estricto (lanza excepción si los bytes no son UTF-8 válido) y,
+        /// si falla, se recurre a Shift-JIS como respaldo para no romper esos registros.
+        /// </summary>
+        private static readonly Encoding StrictUtf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+
+        private static string DecodeTeamFieldBytes(byte[] bytes, Encoding shiftJisFallback)
+        {
+            try
+            {
+                return StrictUtf8.GetString(bytes);
+            }
+            catch (DecoderFallbackException)
+            {
+                return shiftJisFallback.GetString(bytes);
+            }
         }
 
         private TeamField? ReadNullTerminatedField(FileStream fs)
@@ -219,8 +185,8 @@ namespace PESPlayerEditorTest
                     TeamCollection.Add(new Team
                     {
                         TeamId = teamIndex++,
-                        TeamName = shiftJis.GetString(nameField.Bytes).Trim(),
-                        TeamNameRomaji = shiftJis.GetString(romajiField.Bytes).Trim(),
+                        TeamName = DecodeTeamFieldBytes(nameField.Bytes, shiftJis).Trim(),
+                        TeamNameRomaji = DecodeTeamFieldBytes(romajiField.Bytes, shiftJis).Trim(),
                         TeamCode = code,
                         NameOffset = nameField.StartOffset,
                         NameFieldLength = nameField.TotalLength,
@@ -238,7 +204,6 @@ namespace PESPlayerEditorTest
                 }
             }
         }
-
         public void PopulateTeamsComboBox()
         {
             try
@@ -295,17 +260,22 @@ namespace PESPlayerEditorTest
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Encoding shiftJis = Encoding.GetEncoding("shift_jis");
 
+            // Los nombres con caracteres acentuados (ej. "Coruña") se guardan en UTF-8 en el
+            // archivo original, por lo que al reescribirlos se debe usar la misma codificación
+            // para no generar bytes inválidos que luego se muestren como mojibake.
+            Encoding utf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
             bool isProtected = ProtectedTeamCodes.Contains(selectedTeam.TeamCode ?? string.Empty);
 
             using (FileStream fs = new FileStream(FilePath6, FileMode.Open, FileAccess.Write))
             {
-                WriteTeamField(fs, shiftJis, teamNameTextBox.Text ?? string.Empty, selectedTeam.NameOffset, selectedTeam.NameFieldLength,
-                    updatedBytes => selectedTeam.TeamName = shiftJis.GetString(updatedBytes).TrimEnd('\0'));
+                WriteTeamField(fs, utf8, teamNameTextBox.Text ?? string.Empty, selectedTeam.NameOffset, selectedTeam.NameFieldLength,
+                    updatedBytes => selectedTeam.TeamName = DecodeTeamFieldBytes(updatedBytes, shiftJis).TrimEnd('\0'));
 
                 if (!isProtected)
                 {
-                    WriteTeamField(fs, shiftJis, teamRomajiTextBox.Text ?? string.Empty, selectedTeam.RomajiOffset, selectedTeam.RomajiFieldLength,
-                        updatedBytes => selectedTeam.TeamNameRomaji = shiftJis.GetString(updatedBytes).TrimEnd('\0'));
+                    WriteTeamField(fs, utf8, teamRomajiTextBox.Text ?? string.Empty, selectedTeam.RomajiOffset, selectedTeam.RomajiFieldLength,
+                        updatedBytes => selectedTeam.TeamNameRomaji = DecodeTeamFieldBytes(updatedBytes, shiftJis).TrimEnd('\0'));
 
                     WriteTeamField(fs, Encoding.ASCII, teamCodeTextBox.Text ?? string.Empty, selectedTeam.CodeOffset, selectedTeam.CodeFieldLength,
                         updatedBytes => selectedTeam.TeamCode = Encoding.ASCII.GetString(updatedBytes).TrimEnd('\0'));
@@ -318,7 +288,6 @@ namespace PESPlayerEditorTest
                 ? "Nombre del equipo actualizado. El romaji y la abreviación están bloqueados para este equipo."
                 : "Datos del equipo actualizados.");
         }
-
         private void WriteTeamField(FileStream fs, Encoding encoding, string newValue, long offset, int fieldLength, Action<byte[]> onWritten)
         {
             byte[] valueBytes = encoding.GetBytes(newValue);
@@ -726,8 +695,27 @@ namespace PESPlayerEditorTest
                     shirtNameTextBox.Text = selectedPlayer.ShirtName;
                     commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
                     countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
+
+                    PlayerAssignment? assignment = PeopleA.FirstOrDefault(a => a.Player == selectedPlayer);
+                    UpdatePlayerDetailPanels(selectedPlayer, assignment);
                 }
             }
+        }
+
+        private void UpdatePlayerDetailPanels(Player selectedPlayer, PlayerAssignment? assignment)
+        {
+            //nrTextBox.Text = assignment?.Number.ToString() ?? string.Empty;
+
+            //Team? team = assignment != null
+            //    ? TeamCollection.FirstOrDefault(t => t.TeamId == assignment.Team)
+            //    : null;
+            //clubTextBox.Text = team?.TeamName ?? string.Empty;
+
+            //playerIdTextBlock.Text = selectedPlayer.PlayerIndex.ToString();
+            //faceTypeTextBlock.Text = selectedPlayer.FaceType.ToString();
+            //faceIdTextBlock.Text = selectedPlayer.FaceId.ToString();
+            //ageTextBlock.Text = selectedPlayer.Age.ToString();
+            //injuryTextBlock.Text = selectedPlayer.Injury.ToString();
         }
 
         private void SavePlayerData(string filePath)
@@ -908,7 +896,7 @@ namespace PESPlayerEditorTest
             {
                 return;
             }
-            PlayerWindow playerWindow = new PlayerWindow(selectedPlayer, this);
+            PlayerWindow playerWindow = new PlayerWindow(selectedPlayer, this, selectedPlayerAssignment);
             playerWindow.ShowDialog();
         }
 
@@ -957,6 +945,8 @@ namespace PESPlayerEditorTest
                     shirtNameTextBox.Text = selectedPlayer.ShirtName;
                     commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
                     countryComboBox.SelectedIndex = selectedPlayer.Country - 121;
+
+                    UpdatePlayerDetailPanels(selectedPlayer, selectedPlayerAssignment);
                 }
 
             }

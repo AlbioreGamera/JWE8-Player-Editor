@@ -19,7 +19,7 @@ namespace PESPlayerEditorTest
     {
         public Player SelectedPlayer { get; set; }
 
-        public PlayerAssignment SelectedPlayerAssignment { get; set; }
+        public PlayerAssignment? SelectedPlayerAssignment { get; set; }
         public static List<Position> Positions { get; } = new List<Position>
             {
                 new Position { PositionId = 0, PositionName = "Goal Keeper" },
@@ -66,11 +66,12 @@ namespace PESPlayerEditorTest
 
         private MainWindow mainWindow;
 
-        public PlayerWindow(Player selectedPlayer, MainWindow mainWindow)
+        public PlayerWindow(Player selectedPlayer, MainWindow mainWindow, PlayerAssignment? selectedPlayerAssignment = null)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
             SelectedPlayer = selectedPlayer;
+            SelectedPlayerAssignment = selectedPlayerAssignment;
             DataContext = this;
 
             positionComboBox.ItemsSource = Positions;
