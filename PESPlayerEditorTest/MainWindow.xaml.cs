@@ -878,6 +878,7 @@ namespace PESPlayerEditorTest
 
         }
 
+
         private void OpenPlayer(object sender, MouseButtonEventArgs e)
         {
             if (sender is ListBox personListBox && personListBox.SelectedItem != null)
@@ -1492,6 +1493,45 @@ namespace PESPlayerEditorTest
                     WritePlayerToFile(filePath, player);
                 }
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            FilterPersonListBox(SearchPlayerTextBox.Text);
+        }
+        private void SearchPlayerTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (SearchPlayerTextBox.Text == "Search Player...")
+            {
+                SearchPlayerTextBox.Text = string.Empty;
+            }
+        }
+
+        private void SearchPlayerTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FilterPersonListBox(SearchPlayerTextBox.Text);
+        }
+
+        private void FilterPersonListBox(string searchText)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(People);
+
+            if (string.IsNullOrWhiteSpace(searchText) || searchText == "Search Player...")
+            {
+                view.Filter = null;
+                return;
+            }
+
+            view.Filter = obj =>
+            {
+                if (obj is not Player player)
+                {
+                    return false;
+                }
+
+                return !string.IsNullOrEmpty(player.Name)
+                    && player.Name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0;
+            };
         }
     }
 }

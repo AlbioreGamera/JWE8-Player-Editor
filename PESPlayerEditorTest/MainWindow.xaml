@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PESPlayerEditorTest"
+        xmlns:logic="clr-namespace:JWE8Editor.Logic"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Icon="{StaticResource AppIcon}"
@@ -14,6 +15,7 @@
         <CollectionViewSource x:Key="FilteredPeopleA" Source="{Binding PeopleA}" />
         <local:PositionToImagePathConverter x:Key="PositionToImagePathConverter"/>
         <local:CountryToImagePathConverter x:Key="CountryToImagePathConverter"/>
+        <logic:JerseyNumberConverter x:Key="JerseyNumberConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -81,16 +83,20 @@
                                     <RowDefinition Height="25"/>
                                     <RowDefinition Height="25"/>
                                     <RowDefinition Height="25"/>
+                                    <RowDefinition Height="25"/>
                                 </Grid.RowDefinitions>
 
                                 <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
                                 <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" TextChanged="nameTextBox_TextChanged" IsEnabled="False"/>
 
-                                <Label Grid.Row="1" Content="Team" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox x:Name="currentTeamTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                <Label Grid.Row="1" Content="Shirt Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="shirtNameTextBox" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" TextChanged="nameTextBox_TextChanged" IsEnabled="False"/>
 
-                                <Label Grid.Row="2" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                                <ComboBox x:Name="commentaryComboBox" Grid.Row="2" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" SelectedItem="{Binding SelectedPlayer.Commentary}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item" ScrollViewer.CanContentScroll="True">
+                                <Label Grid.Row="2" Content="Team" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="currentTeamTextBox" Grid.Row="2" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+
+                                <Label Grid.Row="3" Content="Callname" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item" ScrollViewer.CanContentScroll="True">
                                     <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <VirtualizingStackPanel />
@@ -98,28 +104,26 @@
                                     </ComboBox.ItemsPanel>
                                 </ComboBox>
 
-                                <Label Grid.Row="3" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <ComboBox x:Name="countryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CountryName" SelectedValuePath="CountryId" SelectedItem="{Binding SelectedPlayer.Country}" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CountryName" SelectedValuePath="CountryId" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="ageTextBox" Grid.Row="5" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
                                 
-                                <Label Grid.Row="4" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox x:Name="ageTextBox" Grid.Row="4" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                <Label Grid.Row="6" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="heightTextBox" Grid.Row="6" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
-                                <Label Grid.Row="5" Content="Height (cm)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox x:Name="heightTextBox" Grid.Row="5" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                <Label Grid.Row="7" Content="Weight (kg)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="weightTextBox" Grid.Row="7" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
+                                
+                                <Label Grid.Row="8" Content="Main Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="positionTextBox" Grid.Row="8" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="120" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
 
-                                <Label Grid.Row="6" Content="Weight (kg)" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox x:Name="weightTextBox" Grid.Row="6" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
-
-                                <Label Grid.Row="7" Content="Main Position" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox x:Name="positionTextBox" Grid.Row="7" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="120" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
-
-                                <Label Grid.Row="8" Content="Jersey #" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                                <TextBox x:Name="jerseyTextBox" Grid.Row="8" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
-
+                                <Label Grid.Row="9" Content="Jersey #" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                                <TextBox x:Name="jerseyTextBox" Grid.Row="9" Grid.Column="3" TextWrapping="Wrap" Text="" Height="22" Width="60" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
                             </Grid>
                         </GroupBox>
                         <ComboBox x:Name="team1ComboBox" HorizontalAlignment="Left" Margin="127,10,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team1ComboBox_SelectionChanged" Height="25" IsEnabled="False" Grid.Column="2"/>
-                        <DataGrid x:Name="team1DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" Margin="127,40,474,53" SelectionChanged="team1DataGrid_SelectionChanged" MouseDoubleClick="Team1DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
+                        <DataGrid x:Name="team1DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" Margin="127,40,474,28" SelectionChanged="team1DataGrid_SelectionChanged" MouseDoubleClick="Team1DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
@@ -139,11 +143,11 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="124" Header="Player" Binding="{Binding Player.Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number, Converter={StaticResource JerseyNumberConverter}}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <ComboBox x:Name="team2ComboBox" HorizontalAlignment="Left" Margin="351,10,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team2ComboBox_SelectionChanged" Height="25" IsEnabled="False" Grid.Column="2"/>
-                        <DataGrid x:Name="team2DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" SelectionChanged="team2DataGrid_SelectionChanged" Margin="351,40,250,53" MouseDoubleClick="Team2DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
+                        <DataGrid x:Name="team2DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" SelectionChanged="team2DataGrid_SelectionChanged" Margin="351,40,250,28" MouseDoubleClick="Team2DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
@@ -163,10 +167,11 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Width="124" Header="Player" Binding="{Binding Player.Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="30" Header="N°" Binding="{Binding Number, Converter={StaticResource JerseyNumberConverter}}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                    </Grid>
+                        <TextBox x:Name="SearchPlayerTextBox" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="10,670,0,0" TextWrapping="Wrap" Text="Search Player..." VerticalAlignment="Top" Width="131" Height="20" GotFocus="SearchPlayerTextBox_GotFocus" TextChanged="SearchPlayerTextBox_TextChanged"/>
+                        <Button x:Name="SearchPlayer" Grid.Column="2" Content="Search" HorizontalAlignment="Left" Margin="64,670,0,0" VerticalAlignment="Top" Width="53" Click="Button_Click"/></Grid>
                 </TabItem>
                 <TabItem Header="Teams">
                     <Grid Background="#FF212121">

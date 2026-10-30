@@ -40,16 +40,17 @@
             <TabItem Header="Player">
                 <Grid  Background="#FF212121" Width="1300" Height="740" VerticalAlignment="Center" Margin="4,0,0,0" HorizontalAlignment="Left">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="683*"/>
-                        <RowDefinition Height="13*"/>
+                        <RowDefinition Height="391*"/>
+                        <RowDefinition Height="336*"/>
+                        <RowDefinition Height="14*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="19*"/>
                         <ColumnDefinition Width="241*"/>
                     </Grid.ColumnDefinitions>
                     <Separator HorizontalAlignment="Left" Margin="114,333,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <GroupBox x:Name="Player_Information" Header="General" Margin="14,15,1074,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="386" Grid.ColumnSpan="2">
-                        <Grid Height="383">
+                    <GroupBox x:Name="Player_Information" Header="General" Margin="14,15,1074,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="365" Grid.ColumnSpan="2">
+                        <Grid Height="331">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="58.516"/>
                                 <ColumnDefinition Width="8.444"/>
@@ -57,8 +58,6 @@
                                 <ColumnDefinition Width="265*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="25"/>
-                                <RowDefinition Height="25"/>
                                 <RowDefinition Height="25"/>
                                 <RowDefinition Height="25"/>
                                 <RowDefinition Height="25"/>
@@ -81,8 +80,11 @@
                             <Label Grid.Row="1" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
                             <TextBox x:Name="nameTextBox" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Grid.Row="1" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
 
-                            <Label Grid.Row="2" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                            <ComboBox x:Name="commentaryComboBox" Grid.Row="2" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item" ScrollViewer.CanContentScroll="True">
+                            <Label Grid.Row="2" Content="Shirt Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <TextBox x:Name="shirtNameTextBox" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Grid.Row="2" Height="21" Width="120" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+
+                            <Label Grid.Row="3" Content="Commentary" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <ComboBox x:Name="commentaryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CommentariesLoader.Commentaries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CommentaryName" SelectedValuePath="CommentaryIndex" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Item" ScrollViewer.CanContentScroll="True">
                                 <ComboBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -90,9 +92,9 @@
                                 </ComboBox.ItemsPanel>
                             </ComboBox>
 
-                            <Label Grid.Row="3" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                            <ComboBox x:Name="countryComboBox" Grid.Row="3" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CountryName" SelectedValuePath="CountryId" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" IsEnabled="False"/>
-                            
+                            <Label Grid.Row="4" Content="Country" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
+                            <ComboBox x:Name="countryComboBox" Grid.Row="4" Grid.Column="2" RenderTransformOrigin="1.113,-0.593" Height="21" Width="120" Grid.ColumnSpan="2" ItemsSource="{Binding CountriesLoader.Countries, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" DisplayMemberPath="CountryName" SelectedValuePath="CountryId" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
+
                             <Label Grid.Row="5" Content="Age" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
                             <ComboBox x:Name="ageComboBox" Grid.Row="5" Grid.Column="3" RenderTransformOrigin="1.113,-0.593" Height="21" ItemsSource="{Binding Ages}" SelectedItem="{Binding SelectedPlayer.Age, Mode=TwoWay}" ScrollViewer.CanContentScroll="False"
                     Width="58" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"/>
@@ -105,28 +107,21 @@
                             <Label Grid.Row="8" Content="Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
                             <ComboBox x:Name="footComboBox" Grid.Row="8" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ItemsSource="{Binding FeetValues}" SelectedItem="{Binding SelectedPlayer.DominantFoot, Mode=TwoWay}"/>
 
-                            <Label Grid.Row="9" Content="Side" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                            <CheckBox x:Name="sideCheckBox" Grid.Row="9" Grid.Column="2" Height="21" Width="16" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding SelectedPlayer.Side, Mode=TwoWay}"/>
-                            <Label Grid.Row="9" Grid.Column="3" Content="Center" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
-                            <CheckBox x:Name="centerCheckBox" Grid.Row="9" Grid.Column="3" Height="21" Width="16" Margin="48,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding SelectedPlayer.Center, Mode=TwoWay}"/>
+                            <Label Grid.Row="9" Content="Consistency" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <TextBox x:Name="consistencyTextBox" Grid.Row="9" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Consistency, Mode=TwoWay}"/>
 
-                            <Label Grid.Row="11" Content="Consistency" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                            <TextBox x:Name="consistencyTextBox" Grid.Row="11" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Consistency, Mode=TwoWay}"/>
+                            <Label Grid.Row="10" Content="Condition" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <TextBox x:Name="conditionTextBox" Grid.Row="10" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Condition, Mode=TwoWay}"/>
+                            <Label Grid.Row="11" Content="Weak Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <TextBox x:Name="WeakFootAccTextBox" Grid.Row="11" Grid.Column="2" Height="21" Margin="5,0,61,0" Grid.ColumnSpan="2" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.WeakFootAccuracy, Mode=TwoWay}"/>
+                            <TextBox x:Name="WeakFootUseTextBox" Grid.Row="11" Grid.Column="3" VerticalAlignment="Center" Height="21" Margin="66,0,6,0" Width="58" Text="{Binding SelectedPlayer.WeakFootFrequency, Mode=TwoWay}"/>
 
-                            <Label Grid.Row="12" Content="Condition" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                            <TextBox x:Name="conditionTextBox" Grid.Row="12" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.Condition, Mode=TwoWay}"/>
-
-                            <Label Grid.Row="10" Content="Weak Foot" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                            <TextBox x:Name="WeakFootAccTextBox" Grid.Row="10" Grid.Column="2" Height="21" Margin="5,0,61,0" Grid.ColumnSpan="2" Width="58" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Text="{Binding SelectedPlayer.WeakFootAccuracy, Mode=TwoWay}"/>
-                            <TextBox x:Name="WeakFootUseTextBox" Grid.Row="10" Grid.Column="3" VerticalAlignment="Center" Height="21" Margin="66,0,6,0" Width="58" Text="{Binding SelectedPlayer.WeakFootFrequency, Mode=TwoWay}"/>
-
-                            <Label Grid.Row="13" Content="Injury Res." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
-                            <ComboBox x:Name="injuryComboBox" Grid.Row="13" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ItemsSource="{Binding InjuryValues}" SelectedItem="{Binding SelectedPlayer.Injury, Mode=TwoWay}"/>
-
+                            <Label Grid.Row="12" Content="Injury Res." HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC" Grid.ColumnSpan="3"/>
+                            <ComboBox x:Name="injuryComboBox" Grid.Row="12" Grid.Column="2" Height="21" Width="58" Margin="5,0,60,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ItemsSource="{Binding InjuryValues}" SelectedItem="{Binding SelectedPlayer.Injury, Mode=TwoWay}"/>
 
                         </Grid>
                     </GroupBox>
-                    <GroupBox x:Name="Position" Header="Position" Margin="14,406,1074,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="289" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                    <GroupBox x:Name="Position" Header="Position" Margin="14,10,1074,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="326" Grid.ColumnSpan="2" Grid.Row="1">
                         <Grid Height="257">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="22"/>
@@ -308,7 +303,7 @@
                             <TextBox x:Name="statTeamWorkTextBox" Style="{StaticResource StatTextBoxStyle}" Grid.Row="25" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="4" Margin="0,0,31,0" Height="20" Text="{Binding SelectedPlayer.TeamWorkAbility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox x:Name="Position_Copy" Header="Skills" Margin="341,15,637,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="524" Grid.Column="1">
+                    <GroupBox x:Name="Position_Copy" Header="Skills" Margin="341,15,637,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="524" Grid.Column="1" Grid.RowSpan="2">
                         <Grid Height="482">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="22"/>
