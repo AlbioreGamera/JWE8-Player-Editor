@@ -14,7 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-
+using System.Windows.Media;
 
 namespace PESPlayerEditorTest
 {
@@ -869,8 +869,106 @@ namespace PESPlayerEditorTest
         private void FilterPeopleAByTeamId(ComboBox teamCombobox, DataGrid dataGrid)
         {
             int selectedTeamId = teamCombobox.SelectedIndex + 1;
-            var filteredPeopleA = PeopleA.Where(player => player.Team == selectedTeamId).ToList();
+            var filteredPeopleA = PeopleA.Where(player => player.Team == selectedTeamId)
+                .OrderBy(player => player.PlayerIndex)
+                .ToList();
             dataGrid.ItemsSource = filteredPeopleA;
+        }
+
+        private Point dragStartPoint;
+
+        /// <summary>
+        /// Intercambia el jugador (Player) y su número de camiseta (Number) entre dos
+        /// slots. Los campos Team/PlayerIndex de cada PlayerAssignment no se modifican,
+        /// ya que representan la posición física fija dentro del archivo binario
+        /// (cada slot tiene su propio byte reservado para el número de camiseta).
+        /// </summary>
+        private void SwapPlayerAssignments(PlayerAssignment first, PlayerAssignment second)
+        {
+            (first.Player, second.Player) = (second.Player, first.Player);
+            (first.Number, second.Number) = (second.Number, first.Number);
+        }
+
+        private static DataGridRow? FindParentRow(DependencyObject? source)
+        {
+            while (source != null && source is not DataGridRow)
+            {
+                source = VisualTreeHelper.GetParent(source);
+            }
+            return source as DataGridRow;
+        }
+
+        private void PlayerAssignmentGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            dragStartPoint = e.GetPosition(null);
+        }
+
+        private void PlayerAssignmentGrid_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed || sender is not DataGrid dataGrid)
+            {
+                return;
+            }
+
+            Point currentPosition = e.GetPosition(null);
+            Vector diff = dragStartPoint - currentPosition;
+
+            if (Math.Abs(diff.X) < SystemParameters.MinimumHorizontalDragDistance &&
+                Math.Abs(diff.Y) < SystemParameters.MinimumVerticalDragDistance)
+            {
+                return;
+            }
+
+            DataGridRow? row = FindParentRow(e.OriginalSource as DependencyObject);
+            if (row == null || row.Item is not PlayerAssignment assignment)
+            {
+                return;
+            }
+
+            var dragData = new DataObject(typeof(PlayerAssignment), assignment);
+            DragDrop.DoDragDrop(dataGrid, dragData, DragDropEffects.Move);
+        }
+
+        private void PlayerAssignmentGrid_Drop(object sender, DragEventArgs e)
+        {
+            if (sender is not DataGrid targetDataGrid || !e.Data.GetDataPresent(typeof(PlayerAssignment)))
+            {
+                return;
+            }
+
+            if (e.Data.GetData(typeof(PlayerAssignment)) is not PlayerAssignment sourceAssignment)
+            {
+                return;
+            }
+
+            DataGridRow? targetRow = FindParentRow(e.OriginalSource as DependencyObject);
+            if (targetRow == null || targetRow.Item is not PlayerAssignment targetAssignment)
+            {
+                return;
+            }
+
+            if (ReferenceEquals(sourceAssignment, targetAssignment))
+            {
+                return;
+            }
+
+            bool sameTeam = sourceAssignment.Team == targetAssignment.Team;
+
+            // Si el equipo de origen está cargado en ambas listas (team1 y team2 muestran el
+            // mismo equipo), no se permite transferir jugadores entre slots de distinto
+            // "Team" aunque se suelten en el otro DataGrid: solo se permite reordenar dentro
+            // del mismo equipo en ese caso.
+            bool bothListsShowSameTeam = team1ComboBox.SelectedIndex == team2ComboBox.SelectedIndex;
+
+            if (!sameTeam && bothListsShowSameTeam)
+            {
+                return;
+            }
+
+            SwapPlayerAssignments(sourceAssignment, targetAssignment);
+
+            team1DataGrid.Items.Refresh();
+            team2DataGrid.Items.Refresh();
         }
 
         private void nameTextBox_TextChanged(object sender, TextChangedEventArgs e)

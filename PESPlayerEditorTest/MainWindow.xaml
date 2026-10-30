@@ -124,7 +124,8 @@
                         </GroupBox>
                         <ComboBox x:Name="team1ComboBox" HorizontalAlignment="Left" Margin="127,10,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team1ComboBox_SelectionChanged" Height="25" IsEnabled="False" Grid.Column="2"/>
                         <DataGrid x:Name="team1DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" Margin="127,40,474,28" SelectionChanged="team1DataGrid_SelectionChanged" MouseDoubleClick="Team1DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2">
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2"
+                      AllowDrop="True" PreviewMouseLeftButtonDown="PlayerAssignmentGrid_PreviewMouseLeftButtonDown" PreviewMouseMove="PlayerAssignmentGrid_PreviewMouseMove" Drop="PlayerAssignmentGrid_Drop">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="30" Header="Or" Binding="{Binding PlayerIndex}" Visibility="Collapsed" IsReadOnly="True"/>
@@ -148,7 +149,8 @@
                         </DataGrid>
                         <ComboBox x:Name="team2ComboBox" HorizontalAlignment="Left" Margin="351,10,0,0" VerticalAlignment="Top" Width="217" SelectionChanged="team2ComboBox_SelectionChanged" Height="25" IsEnabled="False" Grid.Column="2"/>
                         <DataGrid x:Name="team2DataGrid" ItemsSource="{Binding PeopleA}" AutoGenerateColumns="False" Width="217" SelectionChanged="team2DataGrid_SelectionChanged" Margin="351,40,250,28" MouseDoubleClick="Team2DataGrid_MouseDoubleClick" CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" CanUserAddRows="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2">
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" ScrollViewer.CanContentScroll="False" CanUserResizeRows="False" CanUserResizeColumns="False" IsEnabled="False" RowHeight="19" Grid.Column="2"
+                      AllowDrop="True" PreviewMouseLeftButtonDown="PlayerAssignmentGrid_PreviewMouseLeftButtonDown" PreviewMouseMove="PlayerAssignmentGrid_PreviewMouseMove" Drop="PlayerAssignmentGrid_Drop">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Team" Binding="{Binding Team}" Visibility="Collapsed" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="30" Header="Or" Binding="{Binding PlayerIndex}" Visibility="Collapsed" IsReadOnly="True"/>
