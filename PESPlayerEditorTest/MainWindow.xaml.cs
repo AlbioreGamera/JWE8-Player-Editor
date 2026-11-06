@@ -235,13 +235,15 @@ namespace PESPlayerEditorTest
                 bool isProtected = ProtectedTeamCodes.Contains(selectedTeam.TeamCode ?? string.Empty);
 
                 teamNameTextBox.Text = selectedTeam.TeamName;
-                teamNameTextBox.MaxLength = selectedTeam.NameFieldLength;
+                // Se reserva 1 byte como separador/terminador para evitar que el nombre quede
+                // pegado al siguiente registro en el juego.
+                teamNameTextBox.MaxLength = Math.Max(0, selectedTeam.NameFieldLength - 1);
 
                 teamRomajiTextBox.Text = selectedTeam.TeamNameRomaji;
-                teamRomajiTextBox.MaxLength = selectedTeam.RomajiFieldLength;
+                teamRomajiTextBox.MaxLength = Math.Max(0, selectedTeam.RomajiFieldLength - 1);
 
                 teamCodeTextBox.Text = selectedTeam.TeamCode;
-                teamCodeTextBox.MaxLength = selectedTeam.CodeFieldLength;
+                teamCodeTextBox.MaxLength = Math.Max(0, selectedTeam.CodeFieldLength - 1);
                 teamCodeTextBox.IsEnabled = !isProtected;
             }
         }
@@ -294,10 +296,38 @@ namespace PESPlayerEditorTest
         {
             byte[] valueBytes = encoding.GetBytes(newValue);
 
-            if (valueBytes.Length > fieldLength)
+            // Se reserva al menos 1 byte (0x00) como separador/terminador al final del campo.
+            // Si se llenan todos los bytes disponibles sin dejar un 0x00 de por medio, el juego
+            // no reconoce el final del string y lo muestra pegado al siguiente nombre
+            // (ej. "Shanghai ShenhuaShanghai Shenhua...").
+            int maxContentLength = Math.Max(0, fieldLength - 1);
+
+            if (valueBytes.Length > maxContentLength)
             {
-                MessageBox.Show($"El valor excede el espacio disponible en el archivo ({fieldLength} bytes) y será truncado.");
-                Array.Resize(ref valueBytes, fieldLength);
+                MessageBox.Show($"The value exceeds the available space ({maxContentLength} bytes) and will be truncated.");
+
+                // Se trunca por caracteres (no por bytes crudos) para no partir un carácter
+                // multibyte a medias, y se reemplaza el último carácter que sí entra por un
+                // punto para indicar visualmente que el texto fue truncado.
+                string truncated = newValue;
+                while (truncated.Length > 0 && encoding.GetByteCount(truncated) > maxContentLength)
+                {
+                    truncated = truncated.Substring(0, truncated.Length - 1);
+                }
+
+                if (truncated.Length > 0)
+                {
+                    truncated = truncated.Substring(0, truncated.Length - 1) + ".";
+
+                    // El punto podría ocupar más bytes que el carácter reemplazado en
+                    // codificaciones de ancho variable; si aún excede, se sigue recortando.
+                    while (truncated.Length > 0 && encoding.GetByteCount(truncated) > maxContentLength)
+                    {
+                        truncated = truncated.Substring(0, truncated.Length - 1);
+                    }
+                }
+
+                valueBytes = encoding.GetBytes(truncated);
             }
 
             // El resto del campo se rellena con 0x00 (el array ya nace en ceros)
@@ -662,10 +692,15 @@ namespace PESPlayerEditorTest
 
                 while (fsDataset.Read(buffer, 0, buffer.Length) == buffer.Length && fsDataset.Position <= endPosition)
                 {
+                    // El nombre termina en el primer byte 0x00; el resto del registro puede
+                    // contener basura residual de ediciones previas que no se debe mostrar.
+                    int nullIndex = Array.IndexOf(buffer, (byte)0x00);
+                    int nameLength = nullIndex >= 0 ? nullIndex : buffer.Length;
+
                     Stadium stadium = new Stadium
                     {
                         StadiumIndex = stadiumIndex++,
-                        StadiumName = Encoding.UTF8.GetString(buffer, 0, 61).Trim(), // Assuming the name takes the first 61 bytes
+                        StadiumName = Encoding.UTF8.GetString(buffer, 0, nameLength).Trim(),
                         Seats = 0,
                         Zone = 0,
                         Year = 0

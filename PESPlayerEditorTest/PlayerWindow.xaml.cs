@@ -117,6 +117,53 @@ namespace PESPlayerEditorTest
 
         private static readonly Regex DigitsOnlyRegex = new Regex("^[0-9]+$");
 
+        // Name se almacena como wchar_t[16] (UTF-16): admite letras acentuadas/ñ, espacios, punto, apóstrofe y guion.
+        private static readonly Regex NameAllowedCharsRegex = new Regex(@"^[a-zA-Z0-9À-ÿ'.\- ]+$");
+
+        // ShirtName se almacena como char[16] (un solo byte por carácter, sin soporte Unicode):
+        // solo ASCII imprimible básico.
+        private static readonly Regex ShirtNameAllowedCharsRegex = new Regex(@"^[a-zA-Z0-9'.\- ]+$");
+
+        private void NameTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !NameAllowedCharsRegex.IsMatch(e.Text);
+        }
+
+        private void NameTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (!e.DataObject.GetDataPresent(typeof(string)))
+            {
+                e.CancelCommand();
+                return;
+            }
+
+            string pastedText = (string)e.DataObject.GetData(typeof(string));
+            if (!NameAllowedCharsRegex.IsMatch(pastedText))
+            {
+                e.CancelCommand();
+            }
+        }
+
+        private void ShirtNameTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !ShirtNameAllowedCharsRegex.IsMatch(e.Text);
+        }
+
+        private void ShirtNameTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (!e.DataObject.GetDataPresent(typeof(string)))
+            {
+                e.CancelCommand();
+                return;
+            }
+
+            string pastedText = (string)e.DataObject.GetData(typeof(string));
+            if (!ShirtNameAllowedCharsRegex.IsMatch(pastedText))
+            {
+                e.CancelCommand();
+            }
+        }
+
         private void StatTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !DigitsOnlyRegex.IsMatch(e.Text);
