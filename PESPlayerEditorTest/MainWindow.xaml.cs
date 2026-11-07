@@ -45,7 +45,7 @@ namespace PESPlayerEditorTest
         public ObservableCollection<PlayerAssignment> PeopleA { get; set; } = new ObservableCollection<PlayerAssignment>();
         public ObservableCollection<Callname> CallnameCollection { get; set; } = new ObservableCollection<Callname>();
         public ObservableCollection<Stadium> StadiumCollection { get; set; } = new ObservableCollection<Stadium>();
-        public ObservableCollection<League> LeagueCollection { get; set; } = new ObservableCollection<League>();
+        public ObservableCollection<Nationality> NationalityCollection { get; set; } = new ObservableCollection<Nationality>();
         public ObservableCollection<Team> TeamCollection { get; set; } = new ObservableCollection<Team>();
 
         public JWE8Editor.Logic.LoadCommentaries CommentariesLoader { get; } = new JWE8Editor.Logic.LoadCommentaries();
@@ -58,19 +58,13 @@ namespace PESPlayerEditorTest
         public string? FilePath5 { get; internal set; }
         public string? FilePath6 { get; internal set; }
 
-        // TODO: confirmar offsets reales con editor hexadecimal
-        private const long LeagueBlockStart = 0x00000000; // <-- reemplazar con offset real
-        private const long LeagueBlockEnd = 0x00000000;    // <-- reemplazar con offset real
-        private const int LeagueRecordSize = 82;           // 21 (nombre+pad) * 2 + 40 padding aprox, confirmar
-        private const int LeagueNameFieldSize = 21;        // bytes por copia del nombre
+        private const long NationalityBlockStart = 0x00205d70;
+        private const long NationalityBlockEnd = 0x002071bf;
 
         // Offsets confirmados a partir de SLPM_657.40
         private const long TeamBlockStart = 0x00204480;
         private const long TeamBlockEnd = 0x00205d6f; // último byte (inclusive) de todo el listado, incluyendo el grupo "Reserve"
 
-        // Estos equipos traen un cuarto campo extra (nombre duplicado/extendido) que el juego
-        // ignora y que debe descartarse al parsear. Identificados por su abreviación, que es
-        // el dato más estable del registro.
         private static readonly HashSet<string> TeamsWithExtraField = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "URW", // Urawa Reds
@@ -80,8 +74,6 @@ namespace PESPlayerEditorTest
             "DEF", // Default
         };
 
-        // Estos equipos no deben tener su romaji ni abreviación editados porque la lógica del
-        // editor depende de ellos (detección de campo extra, filtros especiales, etc.).
         private static readonly HashSet<string> ProtectedTeamCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "URW", // Urawa Reds
@@ -89,6 +81,12 @@ namespace PESPlayerEditorTest
             "BSK", // Bucheon SK
             "ASM", // AS Monaco
             "DEF", // Default
+        };
+
+        private static readonly HashSet<string> NationalitiesWithExtraField = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "CUR", // Curacao
+            "PYF", // French Polynesia
         };
 
         private class TeamField
@@ -154,6 +152,41 @@ namespace PESPlayerEditorTest
             };
         }
 
+        private TeamField? ReadNullTerminatedFieldWithControlBytes(FileStream fs)
+        {
+            long start = fs.Position;
+            List<byte> bytes = new List<byte>();
+            int b;
+            while ((b = fs.ReadByte()) != -1 && b != 0x00)
+            {
+                bytes.Add((byte)b);
+            }
+
+            int paddingCount = 0;
+            while (b == 0x00 || (b >= 0x00 && b < 0x20))
+            {
+                paddingCount++;
+                b = fs.ReadByte();
+            }
+
+            if (b != -1)
+            {
+                fs.Position -= 1;
+            }
+
+            if (bytes.Count == 0 && paddingCount == 0)
+            {
+                return null; // EOF
+            }
+
+            return new TeamField
+            {
+                StartOffset = start,
+                Bytes = bytes.ToArray(),
+                TotalLength = bytes.Count + paddingCount
+            };
+        }
+
         public void ParseTeams(string filePath)
         {
             TeamCollection.Clear();
@@ -207,6 +240,99 @@ namespace PESPlayerEditorTest
                 }
             }
         }
+        public void ParseNationalities(string filePath)
+        {
+            NationalityCollection.Clear();
+
+            using (FileStream fsNationalities = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+
+                fsNationalities.Seek(NationalityBlockStart, SeekOrigin.Begin);
+
+                int nationalityIndex = 1;
+
+                while (fsNationalities.Position <= NationalityBlockEnd)
+                {
+                    TeamField? nameField = ReadNullTerminatedFieldWithControlBytes(fsNationalities);
+                    if (nameField == null)
+                    {
+                        break;
+                    }
+
+                    TeamField? nameAltField = ReadNullTerminatedFieldWithControlBytes(fsNationalities);
+                    if (nameAltField == null)
+                    {
+                        break;
+                    }
+
+                    // Algunos registros (ej. "Mali") no tienen campo de código: el nombre
+                    // duplicado va seguido directamente del nombre del siguiente país, sin
+                    // bytes de código de por medio. Se valida que lo leído como "código"
+                    // realmente luzca como tal (2-4 letras ASCII en mayúscula); si no, se
+                    // asume que el registro no tiene código y se retrocede el stream para
+                    // que esos bytes se interpreten como el nombre del siguiente registro.
+                    long positionBeforeCode = fsNationalities.Position;
+                    TeamField? codeField = ReadNullTerminatedFieldWithControlBytes(fsNationalities);
+
+                    string code = string.Empty;
+                    long codeOffset = 0;
+                    int codeFieldLength = 0;
+
+                    if (codeField != null && LooksLikeNationalityCode(codeField.Bytes))
+                    {
+                        code = Encoding.ASCII.GetString(codeField.Bytes).Trim();
+                        codeOffset = codeField.StartOffset;
+                        codeFieldLength = codeField.TotalLength;
+                    }
+                    else if (codeField != null)
+                    {
+                        fsNationalities.Position = positionBeforeCode;
+                    }
+
+                    if (!string.IsNullOrEmpty(code) && NationalitiesWithExtraField.Contains(code))
+                    {
+                        ReadNullTerminatedFieldWithControlBytes(fsNationalities);
+                    }
+
+                    NationalityCollection.Add(new Nationality
+                    {
+                        NationalityIndex = nationalityIndex++,
+                        NationalityName = DecodeTeamFieldBytes(nameField.Bytes, shiftJis).Trim(),
+                        NationalityNameAlt = DecodeTeamFieldBytes(nameAltField.Bytes, shiftJis).Trim(),
+                        NationalityCode = code,
+                        NameOffset = nameField.StartOffset,
+                        NameFieldLength = nameField.TotalLength,
+                        NameAltOffset = nameAltField.StartOffset,
+                        NameAltFieldLength = nameAltField.TotalLength,
+                        CodeOffset = codeOffset,
+                        CodeFieldLength = codeFieldLength
+                    });
+                }
+            }
+        }
+
+        private static bool LooksLikeNationalityCode(byte[] bytes)
+        {
+            string trimmed = Encoding.ASCII.GetString(bytes).Trim();
+
+            if (trimmed.Length < 2 || trimmed.Length > 4)
+            {
+                return false;
+            }
+
+            foreach (char c in trimmed)
+            {
+                if (c < 'A' || c > 'Z')
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public void PopulateTeamsComboBox()
         {
             try
@@ -352,7 +478,6 @@ namespace PESPlayerEditorTest
             MessageBoxResult result = MessageBox.Show("Are you sure you want to close the application?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                // Close the application
                 Application.Current.Shutdown();
             }
         }
@@ -1269,81 +1394,6 @@ namespace PESPlayerEditorTest
             }
         }
 
-        public List<League> ParseLeagues(string datasetFilePath)
-        {
-            var leagues = new List<League>();
-
-            using (FileStream fsDataset = new FileStream(datasetFilePath, FileMode.Open, FileAccess.Read))
-            {
-                fsDataset.Seek(LeagueBlockStart, SeekOrigin.Begin);
-                byte[] buffer = new byte[LeagueRecordSize];
-                int leagueIndex = 1;
-
-                while (fsDataset.Read(buffer, 0, buffer.Length) == buffer.Length && fsDataset.Position <= LeagueBlockEnd)
-                {
-                    // El nombre está duplicado al inicio del registro; tomamos la primera copia
-                    string name = Encoding.UTF8.GetString(buffer, 0, LeagueNameFieldSize).TrimEnd('\0').Trim();
-
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-                        leagues.Add(new League
-                        {
-                            LeagueIndex = leagueIndex++,
-                            LeagueName = name,
-                            CountryCode = 0 // la tabla de códigos está en otro bloque; mapear por separado si es necesario
-                        });
-
-                        LeagueCollection.Add(leagues[^1]);
-                    }
-                }
-            }
-
-            return leagues;
-        }
-
-        public void WriteLeagueName(string datasetFilePath, int leagueIndex, string newName)
-        {
-            long offset = LeagueBlockStart + ((leagueIndex - 1) * LeagueRecordSize);
-            const int maxNameBytes = LeagueNameFieldSize - 1; // reservar terminador nulo
-
-            byte[] nameBytes = Encoding.UTF8.GetBytes(newName);
-
-            if (nameBytes.Length > maxNameBytes)
-            {
-                MessageBox.Show($"El nombre excede el límite de {maxNameBytes} bytes y será truncado.");
-                Array.Resize(ref nameBytes, maxNameBytes);
-            }
-
-            byte[] nameField = new byte[LeagueNameFieldSize];
-            Array.Copy(nameBytes, nameField, nameBytes.Length);
-
-            using (FileStream fs = new FileStream(datasetFilePath, FileMode.Open, FileAccess.ReadWrite))
-            {
-                // Se escribe en ambas copias del nombre (patrón observado: nombre duplicado)
-                fs.Seek(offset, SeekOrigin.Begin);
-                fs.Write(nameField, 0, nameField.Length);
-                fs.Write(nameField, 0, nameField.Length);
-            }
-        }
-
-        private void LeagueListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (leagueListBox.SelectedItem is League selectedLeague)
-            {
-                leagueNameTextBox.Text = selectedLeague.LeagueName;
-            }
-        }
-
-        private void ApplyLeague_Click(object sender, RoutedEventArgs e)
-        {
-            if (leagueListBox.SelectedItem is League selectedLeague)
-            {
-                selectedLeague.LeagueName = leagueNameTextBox.Text;
-                WriteLeagueName(FilePath4, selectedLeague.LeagueIndex, leagueNameTextBox.Text);
-                leagueListBox.Items.Refresh();
-            }
-        }
-
         public void WritePlayerRecord(byte[] buffer, Player player)
         {
             static void Pack(byte[] buf, int offset, ref uint block, int bitOffset, int bitCount, uint fieldValue)
@@ -1665,6 +1715,63 @@ namespace PESPlayerEditorTest
                 return !string.IsNullOrEmpty(player.Name)
                     && player.Name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0;
             };
+        }
+
+        public void NationalityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (nationalityListBox.SelectedItem is Nationality selectedNationality)
+            {
+                nationalityNameTextBox.Text = selectedNationality.NationalityName;
+                // Se reserva 1 byte como separador/terminador para evitar que el nombre quede
+                // pegado al siguiente registro en el juego.
+                nationalityNameTextBox.MaxLength = Math.Max(0, selectedNationality.NameFieldLength - 1);
+
+                nationalityNameAltTextBox.Text = selectedNationality.NationalityNameAlt;
+                nationalityNameAltTextBox.MaxLength = Math.Max(0, selectedNationality.NameAltFieldLength - 1);
+
+                nationalityCodeTextBox.Text = selectedNationality.NationalityCode;
+                nationalityCodeTextBox.MaxLength = Math.Max(0, selectedNationality.CodeFieldLength - 1);
+
+                // Registros como "Mali" no tienen campo de código en el archivo original
+                // (CodeFieldLength = 0): se deshabilita el campo para evitar que el usuario
+                // intente escribir algo que no se puede guardar sin corromper el registro
+                // del siguiente país.
+                nationalityCodeTextBox.IsEnabled = selectedNationality.CodeFieldLength > 0;
+            }
+        }
+
+        private void ApplyNationality_Click(object sender, RoutedEventArgs e)
+        {
+            if (nationalityListBox.SelectedItem is not Nationality selectedNationality)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(FilePath6))
+            {
+                MessageBox.Show("No se cargó el archivo SLPM_657.40, no se puede guardar los datos de la nacionalidad.");
+                return;
+            }
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Encoding shiftJis = Encoding.GetEncoding("shift_jis");
+            Encoding utf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
+            using (FileStream fs = new FileStream(FilePath6, FileMode.Open, FileAccess.Write))
+            {
+                WriteTeamField(fs, utf8, nationalityNameTextBox.Text ?? string.Empty, selectedNationality.NameOffset, selectedNationality.NameFieldLength,
+                    updatedBytes => selectedNationality.NationalityName = DecodeTeamFieldBytes(updatedBytes, shiftJis).TrimEnd('\0'));
+
+                WriteTeamField(fs, utf8, nationalityNameTextBox.Text ?? string.Empty, selectedNationality.NameAltOffset, selectedNationality.NameAltFieldLength,
+                    updatedBytes => selectedNationality.NationalityNameAlt = DecodeTeamFieldBytes(updatedBytes, shiftJis).TrimEnd('\0'));
+
+                WriteTeamField(fs, Encoding.ASCII, nationalityCodeTextBox.Text ?? string.Empty, selectedNationality.CodeOffset, selectedNationality.CodeFieldLength,
+                    updatedBytes => selectedNationality.NationalityCode = Encoding.ASCII.GetString(updatedBytes).TrimEnd('\0'));
+            }
+
+            nationalityListBox.Items.Refresh();
+
+            MessageBox.Show("Datos de la nacionalidad actualizados.");
         }
     }
 }

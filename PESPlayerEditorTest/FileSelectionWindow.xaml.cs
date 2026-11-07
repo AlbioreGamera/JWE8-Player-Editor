@@ -264,6 +264,7 @@ namespace PESPlayerEditorTest
             else
             {
                 _mainWindow.ParseTeams(selectedFilePath_slpm);
+                _mainWindow.ParseNationalities(selectedFilePath_slpm);
             }
 
             _mainWindow.ParsePlayers(selectedFilePath_000);
