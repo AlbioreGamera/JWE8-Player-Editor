@@ -761,8 +761,7 @@
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,8,8">
-            <Button x:Name="applyButton" Content="Apply" Width="212" Height="35" Click="ApplyPlayerChanges"/>
+            <Button x:Name="applyButton" Content="Apply" Width="212" Height="35" Click="SavePlayer"/>
         </StackPanel>
-        <Button x:Name="cancelButton" Content="Cancel" Click="ClosePlayerWindow" Margin="367,14,230,13" Grid.Row="2"/>
-    </Grid>
+        <Button x:Name="cancelButton" Content="Cancel" Click="ClosePlayerWindow" Margin="367,14,230,13" Grid.Row="2"/>  </Grid>
 </Window>

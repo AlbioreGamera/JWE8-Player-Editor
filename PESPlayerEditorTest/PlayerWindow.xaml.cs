@@ -20,6 +20,13 @@ namespace PESPlayerEditorTest
         public Player SelectedPlayer { get; set; }
 
         public PlayerAssignment? SelectedPlayerAssignment { get; set; }
+
+        /// <summary>
+        /// Raised when the player's changes have been saved, so the caller can refresh
+        /// its own UI without PlayerWindow needing knowledge of MainWindow's controls.
+        /// </summary>
+        public event EventHandler<Player> PlayerSaved;
+
         public static List<Position> Positions { get; } = new List<Position>
             {
                 new Position { PositionId = 0, PositionName = "Goal Keeper" },
@@ -64,12 +71,12 @@ namespace PESPlayerEditorTest
         public static Array FreeKickTypeValues { get; } = Enum.GetValues(typeof(FreeKickType));
         public static Array PenaltyKickTypeValues { get; } = Enum.GetValues(typeof(PenaltyKickType));
 
-        private MainWindow mainWindow;
+        private readonly MainWindow mainWindow;
 
         public PlayerWindow(Player selectedPlayer, MainWindow mainWindow, PlayerAssignment? selectedPlayerAssignment = null)
         {
             InitializeComponent();
-            this.mainWindow = mainWindow;
+            this.mainWindow = mainWindow ?? throw new ArgumentNullException(nameof(mainWindow));
             SelectedPlayer = selectedPlayer;
             SelectedPlayerAssignment = selectedPlayerAssignment;
             DataContext = this;
@@ -88,25 +95,25 @@ namespace PESPlayerEditorTest
             commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
         }
 
-        private void ApplyPlayerChanges(object sender, RoutedEventArgs e)
+        private void SavePlayer(object sender, RoutedEventArgs e)
         {
-            // Update the selected player's data with the new values from the window
-            SelectedPlayer.PlayerIndex = int.Parse(playerIdTextBox.Text);
+            if (!int.TryParse(heightTextBox.Text, out int height) ||
+                !int.TryParse(weightTextBox.Text, out int weight))
+            {
+                MessageBox.Show("Height and Weight must be valid numbers.", "Invalid input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             SelectedPlayer.Name = nameTextBox.Text;
             SelectedPlayer.ShirtName = shirtNameTextBox.Text;
             SelectedPlayer.Commentary = commentaryComboBox.SelectedIndex;
             SelectedPlayer.Country = countryComboBox.SelectedIndex + 121;
-            SelectedPlayer.Height = int.Parse(heightTextBox.Text);
-            SelectedPlayer.Weight = int.Parse(weightTextBox.Text);
+            SelectedPlayer.Height = height;
+            SelectedPlayer.Weight = weight;
             SelectedPlayer.Position = positionComboBox.SelectedIndex;
-            mainWindow.nameTextBox.Text = SelectedPlayer.Name;
-            mainWindow.shirtNameTextBox.Text = SelectedPlayer.ShirtName;
-            mainWindow.commentaryComboBox.SelectedIndex = SelectedPlayer.Commentary;
-            mainWindow.countryComboBox.SelectedIndex = SelectedPlayer.Country - 121;
-            mainWindow.updatePeopleList();
-            mainWindow.team1DataGrid.Items.Refresh();
-            mainWindow.team2DataGrid.Items.Refresh();
-            mainWindow.personListBox.Items.Refresh();
+
+            PlayerSaved?.Invoke(this, SelectedPlayer);
+
             this.Close();
         }
 
@@ -164,31 +171,14 @@ namespace PESPlayerEditorTest
             }
         }
 
-        private void StatTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private static void ClampTextBoxValue(TextBox textBox, int min, int max)
         {
-            e.Handled = !DigitsOnlyRegex.IsMatch(e.Text);
-        }
-
-        private void StatTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (sender is not TextBox textBox)
-            {
-                return;
-            }
-
             if (!int.TryParse(textBox.Text, out int value))
             {
                 value = 0;
             }
 
-            if (value < 0)  
-            {
-                value = 0;
-            }
-            else if (value > 99)
-            {
-                value = 99;
-            }
+            value = Math.Clamp(value, min, max);
 
             string clamped = value.ToString();
             if (textBox.Text != clamped)
@@ -197,36 +187,41 @@ namespace PESPlayerEditorTest
             }
         }
 
-        private void StatTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        private static void AdjustTextBoxValue(TextBox textBox, Key key, int min, int max)
         {
-            if (sender is not TextBox textBox)
-            {
-                return;
-            }
-
-            if (e.Key != Key.Up && e.Key != Key.Down)
-            {
-                return;
-            }
-
             if (!int.TryParse(textBox.Text, out int value))
             {
                 value = 0;
             }
 
-            value += e.Key == Key.Up ? 1 : -1;
-
-            if (value < 0)
-            {
-                value = 0;
-            }
-            else if (value > 99)
-            {
-                value = 99;
-            }
+            value += key == Key.Up ? 1 : -1;
+            value = Math.Clamp(value, min, max);
 
             textBox.Text = value.ToString();
             textBox.CaretIndex = textBox.Text.Length;
+        }
+
+        private void StatTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !DigitsOnlyRegex.IsMatch(e.Text);
+        }
+
+        private void StatTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                ClampTextBoxValue(textBox, 0, 99);
+            }
+        }
+
+        private void StatTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is not TextBox textBox || (e.Key != Key.Up && e.Key != Key.Down))
+            {
+                return;
+            }
+
+            AdjustTextBoxValue(textBox, e.Key, 0, 99);
             e.Handled = true;
         }
 
@@ -237,72 +232,23 @@ namespace PESPlayerEditorTest
 
         private void FaceIdTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (sender is not TextBox textBox)
+            if (sender is TextBox textBox)
             {
-                return;
-            }
-
-            if (!int.TryParse(textBox.Text, out int value))
-            {
-                value = 0;
-            }
-
-            int maxFaceId = LoadFacePlayers.GetMaxFaceId(SelectedPlayer.SkinColour);
-
-            if (value < 0)
-            {
-                value = 0;
-            }
-            else if (value > maxFaceId)
-            {
-                value = maxFaceId;
-            }
-
-            string clamped = value.ToString();
-            if (textBox.Text != clamped)
-            {
-                textBox.Text = clamped;
+                int maxFaceId = LoadFacePlayers.GetMaxFaceId(SelectedPlayer.SkinColour);
+                ClampTextBoxValue(textBox, 0, maxFaceId);
             }
         }
 
         private void FaceIdTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (sender is not TextBox textBox)
+            if (sender is not TextBox textBox || (e.Key != Key.Up && e.Key != Key.Down))
             {
                 return;
             }
-
-            if (e.Key != Key.Up && e.Key != Key.Down)
-            {
-                return;
-            }
-
-            if (!int.TryParse(textBox.Text, out int value))
-            {
-                value = 0;
-            }
-
-            value += e.Key == Key.Up ? 1 : -1;
 
             int maxFaceId = LoadFacePlayers.GetMaxFaceId(SelectedPlayer.SkinColour);
-
-            if (value < 0)
-            {
-                value = 0;
-            }
-            else if (value > maxFaceId)
-            {
-                value = maxFaceId;
-            }
-
-            textBox.Text = value.ToString();
-            textBox.CaretIndex = textBox.Text.Length;
+            AdjustTextBoxValue(textBox, e.Key, 0, maxFaceId);
             e.Handled = true;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

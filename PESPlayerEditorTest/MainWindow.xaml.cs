@@ -1144,7 +1144,18 @@ namespace PESPlayerEditorTest
 
                 Player selectedPlayer = (Player)personListBox.SelectedItem;
                 PlayerWindow playerWindow = new PlayerWindow(selectedPlayer, this);
-                playerWindow.Show();
+                playerWindow.PlayerSaved += (s, savedPlayer) =>
+                {
+                    nameTextBox.Text = savedPlayer.Name;
+                    shirtNameTextBox.Text = savedPlayer.ShirtName;
+                    commentaryComboBox.SelectedIndex = savedPlayer.Commentary;
+                    countryComboBox.SelectedIndex = savedPlayer.Country - 121;
+                    updatePeopleList();
+                    team1DataGrid.Items.Refresh();
+                    team2DataGrid.Items.Refresh();
+                    personListBox.Items.Refresh();
+                };
+                playerWindow.ShowDialog();
             }
         }
 
