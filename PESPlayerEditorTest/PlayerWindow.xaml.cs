@@ -225,6 +225,36 @@ namespace PESPlayerEditorTest
             e.Handled = true;
         }
 
+        private void StatArrowButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not FrameworkElement button || button.Parent is not StackPanel panel)
+            {
+                return;
+            }
+
+            TextBox textBox = panel.Children.OfType<TextBox>().FirstOrDefault();
+            if (textBox == null)
+            {
+                return;
+            }
+
+            int delta = int.TryParse(button.Tag?.ToString(), out int parsedDelta) ? parsedDelta : 1;
+            AdjustStatTextBoxValue(textBox, delta, 0, 99);
+        }
+
+        private static void AdjustStatTextBoxValue(TextBox textBox, int delta, int min, int max)
+        {
+            if (!int.TryParse(textBox.Text, out int value))
+            {
+                value = 0;
+            }
+
+            value = Math.Clamp(value + delta, min, max);
+
+            textBox.Text = value.ToString();
+            textBox.CaretIndex = textBox.Text.Length;
+        }
+
         private void FaceIdTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !DigitsOnlyRegex.IsMatch(e.Text);
