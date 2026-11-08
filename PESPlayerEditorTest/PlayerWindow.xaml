@@ -7,6 +7,7 @@
         xmlns:logic="clr-namespace:JWE8Editor.Logic"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        SizeToContent="Height"
         Title="{Binding SelectedPlayerAssignment.Player.Name}" Height="800" Width="1150" ResizeMode="NoResize">
     <Window.Resources>
         <logic:StatValueToBackgroundConverter x:Key="StatValueToBackgroundConverter"/>
@@ -894,9 +895,9 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
                 <Button x:Name="applyButton" Content="💾 Accept" Click="SavePlayer" Grid.Row="5"/>
