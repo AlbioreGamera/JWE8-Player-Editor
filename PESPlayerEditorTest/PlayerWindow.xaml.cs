@@ -280,5 +280,47 @@ namespace PESPlayerEditorTest
             AdjustTextBoxValue(textBox, e.Key, 0, maxFaceId);
             e.Handled = true;
         }
+
+        // Allows negative numbers (and the leading '-') for appearance/body
+        // measurement fields that support ranges such as -7..+7.
+        private static readonly Regex SignedDigitsRegex = new Regex("^-?[0-9]*$");
+
+        private void SignedStatTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            int caret = textBox.CaretIndex;
+            string proposed = textBox.Text.Substring(0, caret) + e.Text + textBox.Text.Substring(caret + textBox.SelectionLength);
+            e.Handled = !SignedDigitsRegex.IsMatch(proposed);
+        }
+
+        /// <summary>
+        /// Generic click handler for appearance/body measurement arrow buttons.
+        /// The button's Tag must be formatted as "delta:min:max", e.g. "-1:-7:7".
+        /// </summary>
+        private void AppearanceArrowButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not FrameworkElement button || button.Parent is not StackPanel panel)
+            {
+                return;
+            }
+
+            TextBox textBox = panel.Children.OfType<TextBox>().FirstOrDefault();
+            if (textBox == null)
+            {
+                return;
+            }
+
+            string[] parts = button.Tag?.ToString()?.Split(':') ?? Array.Empty<string>();
+            int delta = parts.Length > 0 && int.TryParse(parts[0], out int d) ? d : 1;
+            int min = parts.Length > 1 && int.TryParse(parts[1], out int mn) ? mn : 0;
+            int max = parts.Length > 2 && int.TryParse(parts[2], out int mx) ? mx : 99;
+
+            AdjustStatTextBoxValue(textBox, delta, min, max);
+        }
     }
 }
