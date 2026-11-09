@@ -51,4 +51,46 @@ namespace JWE8Editor.Logic
             throw new NotSupportedException();
         }
     }
+
+    /// <summary>
+    /// Convierte un valor de rango 1-8 (Consistency, Condition, Weak Foot Accuracy/Frequency)
+    /// en un color de fondo:
+    /// - 7: naranjo
+    /// - 8: rojo
+    /// - cualquier otro valor: sin color (transparente)
+    /// </summary>
+    public class EightScaleValueToBackgroundConverter : IValueConverter
+    {
+        private static readonly SolidColorBrush Orange = new SolidColorBrush(Color.FromRgb(255, 152, 0));
+        private static readonly SolidColorBrush Red = new SolidColorBrush(Color.FromRgb(244, 67, 54));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int statValue = 0;
+            if (value is int intValue)
+            {
+                statValue = intValue;
+            }
+            else if (value != null && int.TryParse(value.ToString(), out int parsed))
+            {
+                statValue = parsed;
+            }
+
+            if (statValue >= 8)
+            {
+                return Red;
+            }
+            if (statValue == 7)
+            {
+                return Orange;
+            }
+
+            return Brushes.White;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }
