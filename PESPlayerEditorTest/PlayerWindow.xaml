@@ -260,7 +260,8 @@
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
-                        <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
@@ -486,14 +487,14 @@
                         <Label Grid.Row="3" Content="Head Height" FontSize="10" Foreground="#FFECECEC"/>
                         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                            <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HeadHeight, Mode=TwoWay}"/>
+                            <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HeadHeight, Mode=TwoWay}"/>
                             <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                         </StackPanel>
 
                         <Label Grid.Row="4" Content="Head Width" FontSize="10" Foreground="#FFECECEC"/>
                         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                            <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HeadWidth, Mode=TwoWay}"/>
+                            <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HeadWidth, Mode=TwoWay}"/>
                             <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                         </StackPanel>
 
@@ -519,7 +520,7 @@
                     <Label Content="Eyes Colour 1" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,2">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesColor1, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesColor1, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="1" Content="Eyes Colour 2" FontSize="10" Foreground="#FFECECEC"/>
@@ -527,37 +528,37 @@
                     <Label Grid.Row="2" Content="Eyes Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,2">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1" Click="EyesTypeArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="EyesTypeTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesType, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="EyesTypeTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesType, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1" Click="EyesTypeArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Eyes Position" FontSize="10" Foreground="#FFECECEC" Margin="0,24,0,-24"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,25,0,-22">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesPosition, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesPosition, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Eyes Angle" FontSize="10" Foreground="#FFECECEC" Margin="0,48,0,-48"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,49,0,-46">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesAngle, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesAngle, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Eyes Size" FontSize="10" Foreground="#FFECECEC" Margin="0,72,0,-72"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,73,0,-70">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesSize, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.EyesSize, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Brows Height" FontSize="10" Foreground="#FFECECEC" Margin="0,96,0,-96"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,97,0,-94">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.BrowsHeight, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" LostFocus="AppearanceTextBox_LostFocus" Margin="2,0,2,0" Text="{Binding SelectedPlayer.BrowsHeight, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Brows Type/Angle" FontSize="10" Foreground="#FFECECEC" Margin="0,120,0,-120"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,121,0,-118">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:0:63" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.BrowsTypeAngle, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.BrowsTypeAngle, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:0:63" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
@@ -576,19 +577,19 @@
                     <Label Content="Nose Height" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,2">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseHeight, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseHeight, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="1" Content="Nose Width" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,2">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseWidth, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseWidth, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Nose Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,2">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:8" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseType, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseType, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:8" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
@@ -613,49 +614,49 @@
                     <Label Grid.Row="0" Content="Jaw Width" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawWidth, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawWidth, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="1" Content="Jaw Chin" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawChin, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawChin, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Jaw Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:8" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawType, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawType, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:8" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="3" Content="Mouth Size" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthSize, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthSize, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="4" Content="Mouth Lips Thick." FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-1:2" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthThicknessOfLips, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthThicknessOfLips, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-1:2" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="5" Content="Mouth Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:4" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthType, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthType, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:4" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="6" Content="Mouth Position" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthPosition, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthPosition, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="7" Content="Cheeks Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:8" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.CheeksType, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.CheeksType, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:8" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
@@ -679,25 +680,25 @@
                     <Label Content="Hair Colour Pattern" FontSize="10" Foreground="#FFECECEC" Grid.Row="1" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:0:63" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColourPattern, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColourPattern, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:0:63" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Hair Colour R" FontSize="10" Foreground="#FFECECEC" Grid.Row="2" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-4:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorR, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorR, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="4:0:252" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Hair Colour G" FontSize="10" Foreground="#FFECECEC" Grid.Row="3" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-4:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorG, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorG, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="4:0:252" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Hair Colour B" FontSize="10" Foreground="#FFECECEC" Grid.Row="4" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-4:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorB, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorB, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="4:0:252" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
@@ -723,63 +724,63 @@
                     <Label Grid.Row="0" Content="Neck Length" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NeckLength, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NeckLength, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="1" Content="Chest Measurement" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ChestMeasurement, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ChestMeasurement, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="2" Content="Arm Circumference" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ArmCircumference, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ArmCircumference, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="3" Content="Waist Circumference" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.WaisteCircumference, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.WaisteCircumference, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="4" Content="Leg Circumference" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.LegCircumference, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.LegCircumference, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="5" Content="Calf Circumference" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.CalfCircumference, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.CalfCircumference, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="6" Content="Leg Length" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.LegLength, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.LegLength, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="7" Content="Shoulder Height" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ShoulderHeight, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ShoulderHeight, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
 
                     <Label Grid.Row="8" Content="Shoulder Width" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-7:7" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ShoulderWidth, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.ShoulderWidth, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-7:7" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
@@ -797,13 +798,13 @@
                     <Label Content="Facial Hair Type" FontSize="10" Foreground="#FFECECEC" Grid.Row="0"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,3,0,0">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:128" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.FacialHairType, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.FacialHairType, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:128" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Facial Hair Colour" FontSize="10" Foreground="#FFECECEC" Grid.Row="1"/>
                     <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,3,0,0">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:64" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.FacialHairColour, Mode=TwoWay}"/>
+                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.FacialHairColour, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:64" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
