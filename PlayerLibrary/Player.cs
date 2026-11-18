@@ -120,16 +120,17 @@ namespace PlayerLibrary
 
         // --- 0x60 ---
         public int FacialHairColour { get; set; }
-        public int SunGlassesType { get; set; }
-        public int SunGlassesColour { get; set; }
-        public int MaskType { get; set; }
-        public int MaskColour { get; set; }
+        public AccessoryType SunGlassesType { get; set; }
+        public BootsColor SunGlassesColour { get; set; }
+        public AccessoryType MaskType { get; set; }
+        public BootsColor MaskColour { get; set; }
         public YesNo CapType { get; set; }
         public CapColour CapColour { get; set; }
         public WristbandType WristbandType { get; set; }
         public BootsType BootsType { get; set; }
         public BootsColor BootsBaseColor { get; set; }
         public BootsColor BootsLineColor1 { get; set; }
+
 
         // --- 0x64 ---
         public int FaceId { get; set; }

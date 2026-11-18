@@ -14,8 +14,9 @@
         <logic:EightScaleValueToBackgroundConverter x:Key="EightScaleValueToBackgroundConverter"/>
         <logic:FaceTypeToIsEnabledConverter x:Key="FaceTypeToIsEnabledConverter"/>
         <logic:BootsTypeToIsEnabledConverter x:Key="BootsTypeToIsEnabledConverter"/>
+        <logic:RgbToColorConverter x:Key="RgbToColorConverter"/>
         <local:FaceIdToPlayerNameConverter x:Key="FaceIdToPlayerNameConverter"/>
-        
+
         <Style x:Key="StatTextBoxStyle" TargetType="TextBox">
             <Setter Property="MaxLength" Value="2"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -376,6 +377,8 @@
                         <RowDefinition Height="21"/>
                         <RowDefinition Height="21"/>
                         <RowDefinition Height="21"/>
+                <RowDefinition Height="21"/>
+                <RowDefinition Height="21"/>
                         <RowDefinition Height="21"/>
                         <RowDefinition Height="21"/>
                         <RowDefinition Height="21"/>
@@ -419,7 +422,7 @@
                     <Label Grid.Row="10" Grid.Column="2" Content="PK Kicker" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Margin="1,0,0,0" Tag="skill11CheckBox" Style="{StaticResource CheckBoxLabelStyle}"/>
 
                     <CheckBox x:Name="skill12CheckBox"  VerticalAlignment="Center" Grid.Row="11" Height="16" Margin="2,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.OneOnOneScoring, Mode=TwoWay}" Grid.Column="1"/>
-                    <Label Grid.Row="11" Grid.Column="2" Content="1vs1 Finisher" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,0,0,0" Tag="skill12CheckBox" Style="{StaticResource CheckBoxLabelStyle}"/>
+                    <Label Grid.Row="11" Grid.Column="2" Content="1vs1 Finisher" FontSize="10" Foreground="#FFECECEC" Height="24" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="1,0,0,0" Tag="skill12CheckBox" Style="{StaticResource CheckBoxLabelStyle}"/>
 
                     <CheckBox x:Name="skill13CheckBox"  VerticalAlignment="Center" Grid.Row="12" Height="16" Margin="2,0,3,0" Width="16" IsChecked="{Binding SelectedPlayer.LongThrow, Mode=TwoWay}" Grid.Column="1"/>
                     <Label Grid.Row="12" Grid.Column="2" Content="Long Throw" HorizontalAlignment="Left" FontSize="10" Foreground="#FFECECEC" Height="24" VerticalAlignment="Center" Margin="1,0,0,0" Tag="skill13CheckBox" Style="{StaticResource CheckBoxLabelStyle}"/>
@@ -479,7 +482,7 @@
                                 LostFocus="FaceIdTextBox_LostFocus"/>
                             <Button Content="Relink" FontSize="10" Height="18" Width="90" Margin="0,2,0,0" Click="RelinkFaceButton_Click"/></StackPanel>
                         <Label Grid.Row="1" Content="Face Type" FontSize="10" Foreground="#FFECECEC"/>
-                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FaceTypeValues}" SelectedItem="{Binding SelectedPlayer.FaceType, Mode=TwoWay}" Height="21" Margin="0,2,20,1"/>
+                        <ComboBox x:Name="faceTypeComboBox" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FaceTypeValues}" SelectedItem="{Binding SelectedPlayer.FaceType, Mode=TwoWay}" Height="21" Margin="0,2,20,1"/>
 
                         <Label Grid.Row="2" Content="Skin Colour" FontSize="10" Foreground="#FFECECEC"/>
                         <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SkinColourValues}" SelectedItem="{Binding SelectedPlayer.SkinColour, Mode=TwoWay}" Height="21" Margin="0,2,20,1"/>
@@ -557,9 +560,9 @@
                     </StackPanel>
                     <Label Grid.Row="2" Content="Brows Type/Angle" FontSize="10" Foreground="#FFECECEC" Margin="0,120,0,-120"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,121,0,-118">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:0:63" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" IsEnabled="False" Tag="-1:0:63" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.BrowsTypeAngle, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:0:63" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" IsEnabled="False" Tag="1:0:63" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                 </Grid>
             </GroupBox>
@@ -576,15 +579,15 @@
                     </Grid.RowDefinitions>
                     <Label Content="Nose Height" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,2">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseHeight, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="1" Content="Nose Width" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,2">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.NoseWidth, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Nose Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,2">
@@ -613,15 +616,15 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Content="Jaw Width" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawWidth, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="1" Content="Jaw Chin" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.JawChin, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="2" Content="Jaw Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -631,9 +634,9 @@
                     </StackPanel>
                     <Label Grid.Row="3" Content="Mouth Size" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthSize, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="4" Content="Mouth Lips Thick." FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -649,9 +652,9 @@
                     </StackPanel>
                     <Label Grid.Row="6" Content="Mouth Position" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-4:3" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:-3:3" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.MouthPosition, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-4:3" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:-3:3" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Grid.Row="7" Content="Cheeks Type" FontSize="10" Foreground="#FFECECEC"/>
                     <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -673,10 +676,11 @@
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
                         <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
                     </Grid.RowDefinitions>
 
                     <Label Content="Hair Id" FontSize="10" Foreground="#FFECECEC" Grid.Row="0" Grid.ColumnSpan="2"/>
-                    <TextBox Text="{Binding SelectedPlayer.HairId, Mode=TwoWay}" Height="21" Width="80" HorizontalAlignment="Left" Margin="0,0,0,3" Grid.Column="1"/>
+                    <TextBox Text="{Binding SelectedPlayer.HairId, Mode=TwoWay}" IsEnabled="False" Height="21" Width="80" HorizontalAlignment="Left" Margin="0,0,0,3" Grid.Column="1"/>
                     <Label Content="Hair Colour Pattern" FontSize="10" Foreground="#FFECECEC" Grid.Row="1" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:0:63" Click="AppearanceArrowButton_Click" Content="◀"/>
@@ -685,22 +689,32 @@
                     </StackPanel>
                     <Label Content="Hair Colour R" FontSize="10" Foreground="#FFECECEC" Grid.Row="2" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-4:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorR, Mode=TwoWay}"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-3:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <TextBox x:Name="hairColorRTextBox" Style="{StaticResource StatTextBoxStyle}" Background="White" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorR, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="4:0:252" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Hair Colour G" FontSize="10" Foreground="#FFECECEC" Grid.Row="3" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-4:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorG, Mode=TwoWay}"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-3:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <TextBox x:Name="hairColorGTextBox" Style="{StaticResource StatTextBoxStyle}" Background="White" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorG, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="4:0:252" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Hair Colour B" FontSize="10" Foreground="#FFECECEC" Grid.Row="4" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-4:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
-                        <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorB, Mode=TwoWay}"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-3:0:252" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <TextBox x:Name="hairColorBTextBox" Style="{StaticResource StatTextBoxStyle}" Background="White" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.HairColorB, Mode=TwoWay}"/>
                         <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="4:0:252" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
+                    <Label Content="Resulting Colour" FontSize="10" Foreground="#FFECECEC" Grid.Row="5" Grid.ColumnSpan="2"/>
+                    <Border Grid.Row="5" Grid.Column="1" Width="80" Height="18" HorizontalAlignment="Left" BorderBrush="#FF0A0A0A" BorderThickness="1">
+                        <Border.Background>
+                            <MultiBinding Converter="{StaticResource RgbToColorConverter}">
+                                <Binding ElementName="hairColorRTextBox" Path="Text"/>
+                                <Binding ElementName="hairColorGTextBox" Path="Text"/>
+                                <Binding ElementName="hairColorBTextBox" Path="Text"/>
+                            </MultiBinding>
+                        </Border.Background>
+                    </Border>
                 </Grid>
             </GroupBox>
             <GroupBox x:Name="BodyMeasurements" Header="Body Measurements" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" Grid.Column="4" Grid.RowSpan="1" Grid.Row="1">
@@ -797,9 +811,9 @@
                     </Grid.RowDefinitions>
                     <Label Content="Facial Hair Type" FontSize="10" Foreground="#FFECECEC" Grid.Row="0"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,3,0,0">
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:1:128" Click="AppearanceArrowButton_Click" Content="◀"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="-1:0:116" Click="AppearanceArrowButton_Click" Content="◀"/>
                         <TextBox Style="{StaticResource StatTextBoxStyle}" IsReadOnly="True" PreviewTextInput="SignedStatTextBox_PreviewTextInput" Margin="2,0,2,0" Text="{Binding SelectedPlayer.FacialHairType, Mode=TwoWay}"/>
-                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:1:128" Click="AppearanceArrowButton_Click" Content="▶"/>
+                        <RepeatButton Style="{StaticResource StatArrowButtonStyle}" Tag="1:0:116" Click="AppearanceArrowButton_Click" Content="▶"/>
                     </StackPanel>
                     <Label Content="Facial Hair Colour" FontSize="10" Foreground="#FFECECEC" Grid.Row="1"/>
                     <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,3,0,0">
@@ -841,16 +855,16 @@
                         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SleevesValues}" SelectedItem="{Binding SelectedPlayer.Sleeves, Mode=TwoWay}" Height="21"/>
 
                         <Label Grid.Row="1" Content="Sun Glasses Type" FontSize="10" Foreground="#FFECECEC"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesType, Mode=TwoWay}" Height="21"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AccessoryTypeValues}" SelectedItem="{Binding SelectedPlayer.SunGlassesType, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
 
                         <Label Grid.Row="2" Content="Sun Glasses Colour" FontSize="10" Foreground="#FFECECEC"/>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedPlayer.SunGlassesColour, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
+                        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.SunGlassesColour, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
 
                         <Label Grid.Row="3" Content="Mask Type" FontSize="10" Foreground="#FFECECEC"/>
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedPlayer.MaskType, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding AccessoryTypeValues}" SelectedItem="{Binding SelectedPlayer.MaskType, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
 
                         <Label Grid.Row="4" Content="Mask Colour" FontSize="10" Foreground="#FFECECEC"/>
-                        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding SelectedPlayer.MaskColour, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
+                        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding BootsColorValues}" SelectedItem="{Binding SelectedPlayer.MaskColour, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>
 
                         <Label Grid.Row="5" Content="Cap Type" FontSize="10" Foreground="#FFECECEC"/>
                         <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding YesNoValues}" SelectedItem="{Binding SelectedPlayer.CapType, Mode=TwoWay}" Height="21" Grid.ColumnSpan="3" Margin="0,2,0,1"/>

@@ -187,10 +187,10 @@ namespace JWE8Editor.Logic
             // --- 0x60 ---
             uint block60 = 0;
             Pack(ref block60, 0, 6, PlayerFieldValidator.ClampPlus1(player.FacialHairColour, 6));
-            Pack(ref block60, 6, 2, PlayerFieldValidator.ClampRawRange(player.SunGlassesType, 2));
-            Pack(ref block60, 8, 3, PlayerFieldValidator.ClampPlus1(player.SunGlassesColour, 3));
-            Pack(ref block60, 11, 2, PlayerFieldValidator.ClampRawRange(player.MaskType, 2));
-            Pack(ref block60, 13, 3, PlayerFieldValidator.ClampPlus1(player.MaskColour, 3));
+            Pack(ref block60, 6, 2, PlayerFieldValidator.ClampEnum(player.SunGlassesType, 2));
+            Pack(ref block60, 8, 3, PlayerFieldValidator.ClampEnum(player.SunGlassesColour, 3));
+            Pack(ref block60, 11, 2, PlayerFieldValidator.ClampEnum(player.MaskType, 2));
+            Pack(ref block60, 13, 3, PlayerFieldValidator.ClampEnum(player.MaskColour, 3));
             Pack(ref block60, 16, 1, PlayerFieldValidator.ClampEnum(player.CapType, 1));
             Pack(ref block60, 17, 3, PlayerFieldValidator.ClampEnum(player.CapColour, 3));
             Pack(ref block60, 20, 2, PlayerFieldValidator.ClampEnum(player.WristbandType, 2));

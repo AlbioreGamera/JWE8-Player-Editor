@@ -62,6 +62,7 @@ namespace PESPlayerEditorTest
         public static Array EyesColor2Values { get; } = Enum.GetValues(typeof(EyesColor2));
         public static Array SleevesValues { get; } = Enum.GetValues(typeof(SleevesLength));
         public static Array YesNoValues { get; } = Enum.GetValues(typeof(YesNo));
+        public static Array AccessoryTypeValues { get; } = Enum.GetValues(typeof(AccessoryType));
         public static Array CapColourValues { get; } = Enum.GetValues(typeof(CapColour));
         public static Array WristbandTypeValues { get; } = Enum.GetValues(typeof(WristbandType));
         public static Array BootsTypeValues { get; } = Enum.GetValues(typeof(BootsType));
@@ -396,13 +397,22 @@ namespace PESPlayerEditorTest
             {
                 SelectedPlayer.FaceId = relinkWindow.SelectedFaceId.Value;
 
+                // Relinkear una cara siempre implica usar una cara preestablecida
+                // (PRESET), ya que FaceRelinkWindow solo ofrece caras de ese
+                // catálogo. Se fuerza el FaceType para evitar que quede un FaceId
+                // de PRESET combinado con un FaceType BUILD/ORIGINAL inconsistente.
+                SelectedPlayer.FaceType = FaceType.PRESET;
+
                 // Player no implementa INotifyPropertyChanged, por lo que el TextBox
-                // enlazado a SelectedPlayer.FaceId no se refresca automáticamente al
-                // cambiar el valor desde código. Se fuerza la actualización manual
-                // del binding para reflejar el nuevo FaceId en el formulario.
+                // y el ComboBox enlazados a SelectedPlayer.FaceId/FaceType no se
+                // refrescan automáticamente al cambiar el valor desde código. Se
+                // fuerza la actualización manual de los bindings para reflejar los
+                // nuevos valores en el formulario.
                 faceIdTextBox.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
+                faceTypeComboBox.GetBindingExpression(ComboBox.SelectedItemProperty)?.UpdateTarget();
             }
         }
+
 
         // Permite dígitos y un signo '-' opcional al inicio, para campos de
         // apariencia/medidas corporales con rangos negativos (p. ej. -7..+7).

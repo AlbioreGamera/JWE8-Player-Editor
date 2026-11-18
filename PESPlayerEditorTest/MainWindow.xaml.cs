@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -637,10 +638,10 @@ namespace PESPlayerEditorTest
 
                 // 0x60
                 FacialHairColour = (int)Bits(block60, 0, 6) + 1,
-                SunGlassesType = (int)Bits(block60, 6, 2),
-                SunGlassesColour = (int)Bits(block60, 8, 3) + 1,
-                MaskType = (int)Bits(block60, 11, 2),
-                MaskColour = (int)Bits(block60, 13, 3) + 1,
+                SunGlassesType = (AccessoryType)Bits(block60, 6, 2),
+                SunGlassesColour = (BootsColor)Bits(block60, 8, 3),
+                MaskType = (AccessoryType)Bits(block60, 11, 2),
+                MaskColour = (BootsColor)Bits(block60, 13, 3),
                 CapType = (YesNo)Bits(block60, 16, 1),
                 CapColour = (CapColour)Bits(block60, 17, 3),
                 WristbandType = (WristbandType)Bits(block60, 20, 2),
@@ -652,9 +653,9 @@ namespace PESPlayerEditorTest
                 FaceId = (int)Bits(block64, 0, 9) + 1,
                 BootsStudsColour = (BootsColor)Bits(block64, 9, 3),
                 Tape = (YesNo)Bits(block64, 12, 1),
-                HairColorR = (int)Bits(block64, 13, 6) * 4,
-                HairColorG = (int)Bits(block64, 19, 6) * 4,
-                HairColorB = (int)Bits(block64, 25, 6) * 4,
+                HairColorR = (63 - (int)Bits(block64, 13, 6)) * 4,
+                HairColorG = (63 - (int)Bits(block64, 19, 6)) * 4,
+                HairColorB = (63 - (int)Bits(block64, 25, 6)) * 4,
                 Gloves = (GlovesOption)Bits(block64, 31, 1),
 
                 // 0x68
@@ -863,9 +864,21 @@ namespace PESPlayerEditorTest
             }
         }
 
+        private static readonly SolidColorBrush DefaultSkinBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0xDD, 0xC4));
+        private static readonly SolidColorBrush YellowSkinBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0xCB, 0x93));
+        private static readonly SolidColorBrush SpecialSkinBrush = new SolidColorBrush(Color.FromRgb(0xE0, 0x7B, 0x42));
+        private static readonly SolidColorBrush DarkSkinBrush = new SolidColorBrush(Color.FromRgb(0x41, 0x27, 0x1C));
+
+        private PlayerAssignment? currentDetailAssignment;
+
         private void UpdatePlayerDetailPanels(Player selectedPlayer, PlayerAssignment? assignment)
         {
-            jerseyTextBox.Text = assignment?.Number.ToString() ?? string.Empty;
+            currentDetailAssignment = assignment;
+
+            jerseyTextBox.Text = assignment != null && assignment.Number < 256
+                ? assignment.Number.ToString()
+                : string.Empty;
+            jerseyTextBox.IsEnabled = assignment != null;
 
             Team? team = assignment != null
                 ? TeamCollection.FirstOrDefault(t => t.TeamId == assignment.Team)
@@ -877,6 +890,81 @@ namespace PESPlayerEditorTest
             weightTextBox.Text = selectedPlayer.Weight.ToString();
             positionTextBox.Text = PlayerWindow.Positions
                 .FirstOrDefault(p => p.PositionId == selectedPlayer.Position)?.PositionName ?? string.Empty;
+
+            UpdateFacePreview(selectedPlayer);
+        }
+
+        /// <summary>
+        /// Actualiza la tarjeta de vista previa de la cara (Face Type + Slot),
+        /// coloreando el fondo según el SkinColour del jugador para imitar la
+        /// paleta de prefijos de código de cara (W=por defecto, Y=amarillo,
+        /// R=especial, K=negro). Usa los mismos nombres que el ComboBox de
+        /// FaceType del editor (Build/Original/Preset) y solo muestra el número
+        /// de slot (FaceId) cuando el tipo es Preset; en caso contrario se
+        /// muestra "-" ya que BUILD/ORIGINAL no usan un slot de cara preestablecida.
+        /// </summary>
+        private void UpdateFacePreview(Player selectedPlayer)
+        {
+            facePreviewBorder.Background = selectedPlayer.SkinColour switch
+            {
+                SkinColour.SKIN_COLOUR_1 => DefaultSkinBrush, // W
+                SkinColour.SKIN_COLOUR_2 => YellowSkinBrush,  // Y
+                SkinColour.SKIN_COLOUR_3 => SpecialSkinBrush, // R
+                SkinColour.SKIN_COLOUR_4 => DarkSkinBrush,    // K
+                _ => DefaultSkinBrush,
+            };
+
+            string faceTypeName = selectedPlayer.FaceType switch
+            {
+                FaceType.BUILD => "Build",
+                FaceType.ORIGINAL => "Original",
+                FaceType.PRESET => "Preset",
+                _ => selectedPlayer.FaceType.ToString(),
+            };
+            faceTypeDisplayTextBlock.Text = "Face: " + faceTypeName;
+
+            faceSlotsDisplayTextBlock.Text = "Slot: " + (selectedPlayer.FaceType == FaceType.PRESET
+                ? selectedPlayer.FaceId.ToString()
+                : "-");
+        }
+
+        // Solo dígitos para el número de camiseta (1-based, según JerseyNumberConverter).
+        private static readonly Regex JerseyDigitsOnlyRegex = new Regex("^[0-9]*$");
+
+        private void JerseyTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !JerseyDigitsOnlyRegex.IsMatch(e.Text);
+        }
+
+        /// <summary>
+        /// Al perder el foco, valida y aplica el nuevo número de camiseta al
+        /// PlayerAssignment actualmente mostrado en el panel de detalle, y
+        /// refresca los DataGrid de equipos para reflejar el cambio.
+        /// </summary>
+        private void JerseyTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (currentDetailAssignment == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(jerseyTextBox.Text))
+            {
+                return;
+            }
+
+            if (!int.TryParse(jerseyTextBox.Text, out int number) || number < 1 || number > 99)
+            {
+                jerseyTextBox.Text = currentDetailAssignment.Number < 256
+                    ? currentDetailAssignment.Number.ToString()
+                    : string.Empty;
+                return;
+            }
+
+            currentDetailAssignment.Number = number;
+
+            team1DataGrid.Items.Refresh();
+            team2DataGrid.Items.Refresh();
         }
 
         private void SavePlayerData(string filePath)
@@ -1386,7 +1474,7 @@ namespace PESPlayerEditorTest
 
             byte[] nameBytes = Encoding.UTF8.GetBytes(newName);
 
-            // Reservamos al menos 1 byte para el terminador nulo final del registro
+            // Reservamos al menos 1 byte para el terminator nulo final del registro
             const int maxNameBytes = StadiumRecordSize - 1;
 
             if (nameBytes.Length > maxNameBytes)
@@ -1554,10 +1642,10 @@ namespace PESPlayerEditorTest
             // --- 0x60 ---
             uint block60 = 0;
             Pack(buffer, 0x60, ref block60, 0, 6, PlayerFieldValidator.ClampPlus1(player.FacialHairColour, 6));
-            Pack(buffer, 0x60, ref block60, 6, 2, PlayerFieldValidator.ClampRawRange(player.SunGlassesType, 2));
-            Pack(buffer, 0x60, ref block60, 8, 3, PlayerFieldValidator.ClampPlus1(player.SunGlassesColour, 3));
-            Pack(buffer, 0x60, ref block60, 11, 2, PlayerFieldValidator.ClampRawRange(player.MaskType, 2));
-            Pack(buffer, 0x60, ref block60, 13, 3, PlayerFieldValidator.ClampPlus1(player.MaskColour, 3));
+            Pack(buffer, 0x60, ref block60, 6, 2, PlayerFieldValidator.ClampEnum(player.SunGlassesType, 2));
+            Pack(buffer, 0x60, ref block60, 8, 3, PlayerFieldValidator.ClampEnum(player.SunGlassesColour, 3));
+            Pack(buffer, 0x60, ref block60, 11, 2, PlayerFieldValidator.ClampEnum(player.MaskType, 2));
+            Pack(buffer, 0x60, ref block60, 13, 3, PlayerFieldValidator.ClampEnum(player.MaskColour, 3));
             Pack(buffer, 0x60, ref block60, 16, 1, PlayerFieldValidator.ClampEnum(player.CapType, 1));
             Pack(buffer, 0x60, ref block60, 17, 3, PlayerFieldValidator.ClampEnum(player.CapColour, 3));
             Pack(buffer, 0x60, ref block60, 20, 2, PlayerFieldValidator.ClampEnum(player.WristbandType, 2));
@@ -1571,9 +1659,9 @@ namespace PESPlayerEditorTest
             Pack(buffer, 0x64, ref block64, 0, 9, PlayerFieldValidator.ClampPlus1(player.FaceId, 9));
             Pack(buffer, 0x64, ref block64, 9, 3, PlayerFieldValidator.ClampEnum(player.BootsStudsColour, 3));
             Pack(buffer, 0x64, ref block64, 12, 1, PlayerFieldValidator.ClampEnum(player.Tape, 1));
-            Pack(buffer, 0x64, ref block64, 13, 6, PlayerFieldValidator.ClampMultiplyBy4(player.HairColorR, 6));
-            Pack(buffer, 0x64, ref block64, 19, 6, PlayerFieldValidator.ClampMultiplyBy4(player.HairColorG, 6));
-            Pack(buffer, 0x64, ref block64, 25, 6, PlayerFieldValidator.ClampMultiplyBy4(player.HairColorB, 6));
+            Pack(buffer, 0x64, ref block64, 13, 6, PlayerFieldValidator.ClampInvertedMultiplyBy4(player.HairColorR, 6));
+            Pack(buffer, 0x64, ref block64, 19, 6, PlayerFieldValidator.ClampInvertedMultiplyBy4(player.HairColorG, 6));
+            Pack(buffer, 0x64, ref block64, 25, 6, PlayerFieldValidator.ClampInvertedMultiplyBy4(player.HairColorB, 6));
             Pack(buffer, 0x64, ref block64, 31, 1, PlayerFieldValidator.ClampEnum(player.Gloves, 1));
             BitConverter.GetBytes(block64).CopyTo(buffer, 0x64);
 
@@ -1676,7 +1764,8 @@ namespace PESPlayerEditorTest
             File.Copy(filePath, backupPath, overwrite: true);
         }
 
-        private void SaveAllPlayersData(string filePath)
+        private void SaveAllPlayersData(string filePath
+)
         {
             BackupFileIfExists(filePath);
 

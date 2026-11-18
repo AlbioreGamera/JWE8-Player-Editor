@@ -91,6 +91,13 @@ namespace PlayerLibrary
         SLEEVES_ALWAYS_LONG,
     }
 
+    public enum AccessoryType : uint
+    {
+        OFF,
+        TYPE_1,
+        TYPE_2,
+    }
+
     public enum YesNo : uint
     {
         NO,

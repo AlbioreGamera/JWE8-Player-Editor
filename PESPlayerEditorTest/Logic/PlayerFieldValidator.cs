@@ -74,5 +74,20 @@ namespace JWE8Editor.Logic
         }
 
         public static uint ClampBool(bool value) => value ? 1u : 0u;
+
+        /// <summary>
+        /// Para campos como HairColorR/G/B, donde el valor mostrado está en pasos de 4
+        /// (0-252) pero el campo binario de 6 bits está invertido respecto al valor real
+        /// (raw = 63 - (displayedValue / 4)).
+        /// </summary>
+        public static uint ClampInvertedMultiplyBy4(int displayedValue, int bitCount)
+        {
+            int maxRaw = (1 << bitCount) - 1;
+            int maxDisplayed = maxRaw * 4;
+            if (displayedValue < 0) displayedValue = 0;
+            if (displayedValue > maxDisplayed) displayedValue = maxDisplayed;
+            int raw = displayedValue / 4;
+            return (uint)(maxRaw - raw);
+        }
     }
 }
