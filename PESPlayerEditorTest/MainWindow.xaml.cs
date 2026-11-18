@@ -1873,5 +1873,49 @@ namespace PESPlayerEditorTest
 
             MessageBox.Show("Datos de la nacionalidad actualizados.");
         }
+
+        private enum PlayerSortState
+        {
+            Default,
+            Ascending,
+            Descending
+        }
+
+        private PlayerSortState currentPlayerSortState = PlayerSortState.Default;
+
+        /// <summary>
+        /// Cicla entre 3 estados de orden visual para personListBox: Default (orden de
+        /// carga original) -> A-Z -> Z-A -> Default. El orden solo afecta la vista
+        /// (ICollectionView); no modifica el orden real de los jugadores en el archivo
+        /// binario ni la colección People subyacente.
+        /// </summary>
+        private void SortPlayersButton_Click(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(People);
+
+            view.SortDescriptions.Clear();
+
+            currentPlayerSortState = currentPlayerSortState switch
+            {
+                PlayerSortState.Default => PlayerSortState.Ascending,
+                PlayerSortState.Ascending => PlayerSortState.Descending,
+                _ => PlayerSortState.Default,
+            };
+
+            switch (currentPlayerSortState)
+            {
+                case PlayerSortState.Ascending:
+                    view.SortDescriptions.Add(new SortDescription(nameof(Player.Name), ListSortDirection.Ascending));
+                    SortPlayersButton.Content = "Sort: A-Z";
+                    break;
+                case PlayerSortState.Descending:
+                    view.SortDescriptions.Add(new SortDescription(nameof(Player.Name), ListSortDirection.Descending));
+                    SortPlayersButton.Content = "Sort: Z-A";
+                    break;
+                default:
+                    SortPlayersButton.Content = "Sort A-Z";
+                    break;
+            }
+        }
     }
 }

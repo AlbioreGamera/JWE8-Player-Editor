@@ -125,7 +125,7 @@
                                 <!-- Tarjeta de información de la cara (Face Type + Slots), con fondo
                                      coloreado según el SkinColour del jugador (W=por defecto, Y=amarillo,
                                      R=especial, K=negro), imitando el estilo de FaceRelinkWindow. -->
-                                <Border x:Name="facePreviewBorder" Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,0,0" Width="61" Height="38" CornerRadius="2" BorderBrush="#FF0A0A0A" BorderThickness="0.5">
+                                <Border x:Name="facePreviewBorder" Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,0,0" Width="88" Height="38" CornerRadius="2" BorderBrush="#FF0A0A0A" BorderThickness="0.5">
                                     <StackPanel VerticalAlignment="Center" Margin="4,0,0,0">
                                         <TextBlock x:Name="faceTypeDisplayTextBlock" FontSize="10" FontWeight="DemiBold" Foreground="#FF212121"/>
                                         <TextBlock x:Name="faceSlotsDisplayTextBlock" FontSize="10" FontWeight="DemiBold" Foreground="#FF212121"/>
@@ -184,7 +184,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <TextBox x:Name="SearchPlayerTextBox" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="10,670,0,0" TextWrapping="Wrap" Text="Search Player..." VerticalAlignment="Top" Width="131" Height="20" GotFocus="SearchPlayerTextBox_GotFocus" TextChanged="SearchPlayerTextBox_TextChanged"/>
-                        <Button x:Name="SearchPlayer" Grid.Column="2" Content="Search" HorizontalAlignment="Left" Margin="64,670,0,0" VerticalAlignment="Top" Width="53" Click="Button_Click"/>
+                        <Button x:Name="SortPlayersButton" Grid.Column="2" Content="Sort A-Z" HorizontalAlignment="Left" Margin="64,670,0,0" VerticalAlignment="Top" Width="53" Click="SortPlayersButton_Click"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Teams">
