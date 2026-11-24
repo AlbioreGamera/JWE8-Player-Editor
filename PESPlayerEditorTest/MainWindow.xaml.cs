@@ -59,6 +59,22 @@ namespace PESPlayerEditorTest
         public string? FilePath5 { get; internal set; }
         public string? FilePath6 { get; internal set; }
 
+        /// <summary>
+        /// Última ruta seleccionada del archivo Data (AFS raíz del disco del juego),
+        /// usada únicamente para restaurar el valor en FileSelectionWindow entre
+        /// sesiones. La extracción real de sus sub-archivos (_000/_002/_004) ocurre
+        /// internamente cada vez que se confirma la selección (botón OK).
+        /// </summary>
+        public string? DataAfsSourcePath { get; internal set; }
+
+        /// <summary>
+        /// Última ruta seleccionada de OVER.afs, usada únicamente para restaurar
+        /// el valor en FileSelectionWindow entre sesiones. La extracción real de
+        /// defaultdataset.ovl/edit.ovl ocurre internamente cada vez que se confirma
+        /// la selección (botón OK).
+        /// </summary>
+        public string? OverAfsSourcePath { get; internal set; }
+
         private const long NationalityBlockStart = 0x00205d70;
         private const long NationalityBlockEnd = 0x002071bf;
 

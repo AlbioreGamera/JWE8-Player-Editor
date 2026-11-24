@@ -1,0 +1,22 @@
+<Window x:Class="PESPlayerEditorTest.ProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterOwner"
+        Title="Procesando AFS..." Height="130" Width="420" ResizeMode="NoResize"
+        WindowStyle="ToolWindow" Background="#FF212121">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="StatusText" Grid.Row="0" Foreground="White" TextWrapping="Wrap"
+                   Text="Procesando archivo AFS, por favor espera..." Margin="0,0,0,10"/>
+
+        <ProgressBar x:Name="ProgressBarControl" Grid.Row="1" IsIndeterminate="True" Height="18"/>
+
+        <TextBlock x:Name="DetailText" Grid.Row="2" Foreground="#FFBBBBBB" FontSize="11"
+                   TextWrapping="Wrap" Margin="0,10,0,0" Text=""/>
+    </Grid>
+</Window>

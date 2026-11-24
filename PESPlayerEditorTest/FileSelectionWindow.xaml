@@ -6,40 +6,28 @@
         xmlns:local="clr-namespace:PESPlayerEditorTest"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="File Selection" Height="225" Width="363" ResizeMode="NoResize" >
+        Title="File Selection" Height="160" Width="363" ResizeMode="NoResize" >
     <Grid Background="#FF212121">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="140"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="0" Content="Open para_we8_bin_000" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile1_Click"/>
-        <TextBox x:Name="para_we8_bin_000" Grid.Column="1" Text="{Binding FilePath1, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
+        <Button Grid.Row="0" Content="Open Data (AFS)" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectDataAfs_Click" Width="128"/>
+        <TextBox x:Name="dataAfsPath" Grid.Column="1" Grid.Row="0" Text="{Binding DataAfsPath, Mode=TwoWay}" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="1" Content="Open para_we8_bin_002" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile2_Click"/>
-        <TextBox x:Name="para_we8_bin_002" Grid.Column="1" Grid.Row="1" Text="{Binding FilePath2, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
+        <Button Grid.Row="1" Content="Open OVER.afs" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectOverAfs_Click" Width="128"/>
+        <TextBox x:Name="overAfsPath" Grid.Column="1" Grid.Row="1" Text="{Binding OverAfsPath, Mode=TwoWay}" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="2" Content="Open para_we8_bin_004" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile3_Click"/>
-        <TextBox x:Name="para_we8_bin_004" Grid.Column="1" Grid.Row="2" Text="{Binding FilePath3, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
+        <Button Grid.Row="2" Content="Open SLPM_657.40" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectSlpm_Click" Width="128"/>
+        <TextBox x:Name="slpmPath" Grid.Column="1" Grid.Row="2" Text="{Binding SlpmPath, Mode=TwoWay}" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
 
-        <Button Grid.Row="3" Content="Open defaultdataset" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile4_Click" Width="128"/>
-        <TextBox x:Name="defaultdataset" Grid.Column="1" Grid.Row="3" Text="{Binding FilePath4, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
-
-        <Button Grid.Row="4" Content="Open edit.ovl" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile5_Click" Width="128"/>
-        <TextBox x:Name="edit_ovl" Grid.Column="1" Grid.Row="4" Text="{Binding FilePath5, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
-
-        <Button Grid.Row="5" Content="Open SLPM_657.40" HorizontalAlignment="Center" VerticalAlignment="Center" Click="SelectFile6_Click" Width="128"/>
-        <TextBox x:Name="slpm_657_40" Grid.Column="1" Grid.Row="5" Text="{Binding FilePath6, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Width="190"/>
-
-        <Button Grid.Row="6" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
+        <Button Grid.Row="3" Content="OK" HorizontalAlignment="Left" Click="Ok_Click" Height="20" VerticalAlignment="Center" Width="95" Grid.Column="1" Margin="105,0,0,0"/>
     </Grid>
 </Window>

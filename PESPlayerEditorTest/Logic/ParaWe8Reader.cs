@@ -8,39 +8,25 @@ namespace JWE8Editor.Logic
     public static class ParaWe8Reader
     {
         /// <summary>
-        /// Descomprime el stream zlib completo de para_we8.bin.
-        /// La cabecera de control (76 bytes aprox.) precede al stream zlib;
-        /// el offset de inicio del stream zlib (0x44 en la cabecera) ya fue
-        /// verificado como correcto: apunta al byte "78 DA".
+        /// Descomprime el primer stream zlib válido encontrado en para_we8.bin.
         /// </summary>
         public static byte[] Decompress(string paraWe8BinPath)
         {
             byte[] raw = File.ReadAllBytes(paraWe8BinPath);
 
-            // Localizar el inicio real del stream zlib buscando la firma 78 DA
-            // (más robusto que confiar ciegamente en el campo de cabecera 0x44,
-            // dado que ya detectamos inconsistencias en otros campos de esa cabecera)
-            int zlibStart = FindZlibHeader(raw);
-            if (zlibStart < 0)
-                throw new InvalidDataException("No se encontró la firma zlib (78 DA) en el archivo.");
+            var candidate = FindNextValidZlibStream(raw, 0);
+            if (candidate == null)
+                throw new InvalidDataException("No se encontró ningún stream zlib válido en el archivo.");
 
-            using var compStream = new MemoryStream(raw, zlibStart, raw.Length - zlibStart);
-            using var zlibStream = new ZLibStream(compStream, CompressionMode.Decompress);
-            using var outMs = new MemoryStream();
-            zlibStream.CopyTo(outMs);
-
-            return outMs.ToArray();
+            return candidate.Value.Decompressed;
         }
 
         /// <summary>
         /// Descomprime TODOS los streams zlib consecutivos encontrados en el archivo,
         /// devolviendo un buffer descomprimido por cada uno (en orden de aparición).
-        /// Esto reemplaza la hipótesis anterior ("un solo stream zlib que produce un
-        /// blob con los 5 sub-archivos concatenados"), que fue invalidada empíricamente:
-        /// el primer stream zlib descomprime exactamente a 398908 bytes, que coincide
-        /// EXACTAMENTE con el tamaño reportado de _000 por sí solo, lo que indica que
-        /// cada sub-archivo (_000.._004) tiene su propio stream zlib independiente,
-        /// concatenados uno tras otro en para_we8.bin.
+        /// Confirmado empíricamente contra DKZ Studio / Zlib Editor: para_we8.bin
+        /// contiene 5 sub-archivos independientes (unknow_000.._004), cada uno con
+        /// su propio stream zlib, concatenados uno tras otro.
         /// </summary>
         public static List<byte[]> DecompressAll(string paraWe8BinPath)
         {
@@ -48,56 +34,194 @@ namespace JWE8Editor.Logic
             var results = new List<byte[]>();
 
             int searchStart = 0;
-            while (true)
+            while (searchStart < raw.Length - 1)
             {
-                int zlibStart = FindZlibHeader(raw, searchStart);
-                if (zlibStart < 0)
-                    break; // no hay más streams zlib
+                var candidate = FindNextValidZlibStream(raw, searchStart);
+                if (candidate == null)
+                    break; // no hay más streams zlib válidos
 
-                using var compStream = new MemoryStream(raw, zlibStart, raw.Length - zlibStart);
-                using var zlibStream = new ZLibStream(compStream, CompressionMode.Decompress);
-                using var outMs = new MemoryStream();
-                zlibStream.CopyTo(outMs);
+                results.Add(candidate.Value.Decompressed);
 
-                results.Add(outMs.ToArray());
+                searchStart = candidate.Value.StartOffset + candidate.Value.ConsumedBytes;
 
-                // compStream.Position avanza hasta el byte siguiente al último byte
-                // consumido por el stream zlib (incluye el checksum Adler-32 final).
-                // Usamos eso para saber dónde empezar a buscar el próximo stream.
-                long consumed = compStream.Position;
-                if (consumed <= 0)
+                if (candidate.Value.ConsumedBytes <= 0)
                     break; // salvaguarda contra loop infinito
-
-                searchStart = zlibStart + (int)consumed;
-
-                if (searchStart >= raw.Length - 1)
-                    break;
             }
 
             return results;
         }
 
-        private static int FindZlibHeader(byte[] data) => FindZlibHeader(data, 0);
-
-        private static int FindZlibHeader(byte[] data, int startIndex)
+        /// <summary>
+        /// Resultado de localizar y descomprimir con éxito un stream zlib.
+        /// </summary>
+        private readonly struct ZlibStreamResult
         {
-            // Firmas válidas de cabecera zlib con compresión por defecto
-            byte[][] signatures = { new byte[] { 0x78, 0xDA }, new byte[] { 0x78, 0x9C }, new byte[] { 0x78, 0x01 } };
-            for (int i = startIndex; i < data.Length - 1; i++)
+            public readonly int StartOffset;
+            public readonly int ConsumedBytes;
+            public readonly byte[] Decompressed;
+
+            public ZlibStreamResult(int startOffset, int consumedBytes, byte[] decompressed)
             {
-                foreach (var sig in signatures)
+                StartOffset = startOffset;
+                ConsumedBytes = consumedBytes;
+                Decompressed = decompressed;
+            }
+        }
+
+        /// <summary>
+        /// Intenta descomprimir completamente un stream zlib a partir del buffer
+        /// <paramref name="data"/>, empezando en <paramref name="offset"/> y usando
+        /// como máximo <paramref name="availableLength"/> bytes de entrada.
+        /// Devuelve el resultado descomprimido si <paramref name="availableLength"/>
+        /// es suficiente para completar la descompresión SIN que sobren bytes sin
+        /// consumir del stream deflate (indicador de que el límite es exacto o,
+        /// al menos, no corta el stream a mitad). Si faltan bytes (stream truncado)
+        /// o los datos no son válidos, devuelve null.
+        /// </summary>
+        private static byte[]? TryDecompressWithLimit(byte[] data, int offset, int availableLength)
+        {
+            try
+            {
+                using var compStream = new MemoryStream(data, offset, availableLength, writable: false);
+                using var zlibStream = new ZLibStream(compStream, CompressionMode.Decompress, leaveOpen: true);
+                using var outMs = new MemoryStream();
+                zlibStream.CopyTo(outMs);
+                return outMs.ToArray();
+            }
+            catch (InvalidDataException)
+            {
+                // Datos insuficientes/truncados o corruptos con este límite.
+                return null;
+            }
+            catch (EndOfStreamException)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Dado un offset de inicio que ya contiene una cabecera zlib matemáticamente
+        /// válida, determina el número EXACTO de bytes comprimidos que ocupa ese
+        /// stream mediante búsqueda binaria: se prueba a descomprimir con distintas
+        /// longitudes de entrada hasta encontrar la longitud mínima que permite
+        /// completar la descompresión con éxito.
+        ///
+        /// Esto es necesario porque <see cref="ZLibStream"/> (y DeflateStream en
+        /// general) NO garantizan que <c>Stream.Position</c> del stream subyacente,
+        /// tras terminar de descomprimir, refleje el número real de bytes consumidos
+        /// por el stream deflate: suelen hacer lecturas en bloque ("read-ahead") para
+        /// su buffer interno, dejando la posición muy por delante del final real del
+        /// stream. Confiar en esa posición hace que, al buscar el siguiente stream
+        /// zlib concatenado, se salte de más y nunca se encuentre (síntoma observado:
+        /// solo se extraía el primer sub-archivo, _000).
+        ///
+        /// La búsqueda binaria es válida porque la propiedad es monótona: si una
+        /// longitud L de bytes de entrada permite completar la descompresión con
+        /// éxito, cualquier longitud mayor también lo permite (el exceso de bytes,
+        /// que pertenecen al siguiente stream, simplemente se ignoran una vez
+        /// alcanzado el final lógico del stream deflate actual).
+        /// </summary>
+        private static int? FindExactConsumedBytes(byte[] data, int offset, byte[] decompressedReference)
+        {
+            int maxLength = data.Length - offset;
+
+            int low = 1;
+            int high = maxLength;
+            int result = -1;
+
+            while (low <= high)
+            {
+                int mid = low + ((high - low) / 2);
+
+                byte[]? decompressed = TryDecompressWithLimit(data, offset, mid);
+
+                if (decompressed != null && BytesEqual(decompressed, decompressedReference))
                 {
-                    if (data[i] == sig[0] && data[i + 1] == sig[1])
-                        return i;
+                    // Esta longitud ya alcanza para completar el stream exacto;
+                    // probamos a reducir para encontrar el mínimo.
+                    result = mid;
+                    high = mid - 1;
+                }
+                else
+                {
+                    // Longitud insuficiente (stream truncado) o datos corruptos;
+                    // probamos con más bytes disponibles.
+                    low = mid + 1;
                 }
             }
-            return -1;
+
+            return result > 0 ? result : null;
+        }
+
+        private static bool BytesEqual(byte[] a, byte[] b)
+        {
+            if (a.Length != b.Length)
+                return false;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Busca, a partir de <paramref name="startIndex"/>, el siguiente offset que
+        /// contenga una cabecera zlib matemáticamente válida (no solo firmas fijas
+        /// como 78 DA) Y que además descomprima correctamente. Esto es necesario
+        /// porque streams zlib pequeños (ej. 40, 303 bytes comprimidos) pueden usar
+        /// combinaciones de cabecera distintas a las 3 firmas "comunes", y una
+        /// búsqueda ingenua de firmas fijas las pasa por alto.
+        ///
+        /// Validación de cabecera zlib (RFC 1950):
+        /// - CMF (byte 0): los 4 bits bajos (CM) deben ser 8 (método "deflate").
+        /// - (CMF * 256 + FLG) debe ser múltiplo de 31.
+        /// Como esta validación matemática puede dar algún falso positivo en datos
+        /// binarios arbitrarios, se confirma intentando descomprimir realmente;
+        /// si falla, se continúa buscando desde el siguiente byte.
+        ///
+        /// El número exacto de bytes comprimidos consumidos se calcula aparte, vía
+        /// <see cref="FindExactConsumedBytes"/>, en vez de confiar en la posición
+        /// del stream tras CopyTo (ver comentario de ese método para el porqué).
+        /// </summary>
+        private static ZlibStreamResult? FindNextValidZlibStream(byte[] data, int startIndex)
+        {
+            for (int i = startIndex; i < data.Length - 1; i++)
+            {
+                byte cmf = data[i];
+                byte flg = data[i + 1];
+
+                if ((cmf & 0x0F) != 8)
+                    continue; // CM debe ser 8 (deflate)
+
+                int cmfHigh = cmf >> 4;
+                if (cmfHigh > 7)
+                    continue; // CINFO válido: tamaño de ventana <= 32K (log2-8 <= 7)
+
+                if (((cmf * 256) + flg) % 31 != 0)
+                    continue; // checksum de cabecera zlib inválido
+
+                // Candidato matemáticamente válido: intentar descomprimir usando
+                // todos los bytes restantes del buffer como límite superior.
+                byte[]? decompressed = TryDecompressWithLimit(data, i, data.Length - i);
+                if (decompressed == null)
+                    continue; // falso positivo; seguir buscando desde el siguiente byte
+
+                int? consumed = FindExactConsumedBytes(data, i, decompressed);
+                if (consumed == null || consumed.Value <= 0)
+                    continue; // no se pudo determinar un límite exacto consistente
+
+                return new ZlibStreamResult(i, consumed.Value, decompressed);
+            }
+
+            return null;
         }
 
         /// <summary>
         /// Busca todas las ocurrencias de una secuencia de bytes (firma) dentro de un buffer.
-        /// Útil para validar empíricamente offsets reales de sub-archivos, en vez de
-        /// confiar ciegamente en los campos de la cabecera.
+        /// Útil para validar empíricamente offsets reales de sub-archivos.
         /// </summary>
         public static List<int> FindSignature(byte[] haystack, byte[] signature)
         {
@@ -124,46 +248,37 @@ namespace JWE8Editor.Logic
         }
 
         /// <summary>
-        /// Diagnóstico: devuelve el offset de inicio del stream zlib, cuántos bytes
-        /// comprimidos consumió, el tamaño total del archivo, y un volcado hexadecimal
-        /// de los primeros N bytes inmediatamente después del stream zlib.
-        /// Útil para confirmar si _001.._004 están almacenados sin comprimir justo
-        /// después del primer (y único) stream zlib encontrado.
+        /// Diagnóstico: devuelve, para cada stream zlib detectado, su offset de inicio,
+        /// bytes comprimidos consumidos y tamaño descomprimido resultante. Útil para
+        /// confirmar manualmente la correspondencia con unknow_000.._004 reportada
+        /// por herramientas como DKZ Studio / Zlib Editor.
         /// </summary>
         public static string GetRawFileInfo(string paraWe8BinPath, int dumpBytesAfter = 64)
         {
             byte[] raw = File.ReadAllBytes(paraWe8BinPath);
-
-            int zlibStart = FindZlibHeader(raw, 0);
-            if (zlibStart < 0)
-                return "No se encontró ningún stream zlib en el archivo.";
-
-            using var compStream = new MemoryStream(raw, zlibStart, raw.Length - zlibStart);
-            using (var zlibStream = new ZLibStream(compStream, CompressionMode.Decompress, leaveOpen: true))
-            using (var outMs = new MemoryStream())
-            {
-                zlibStream.CopyTo(outMs);
-            }
-
-            long consumed = compStream.Position;
-            int afterZlib = zlibStart + (int)consumed;
-
             var sb = new System.Text.StringBuilder();
             sb.AppendLine($"Tamaño total del archivo: {raw.Length} bytes");
-            sb.AppendLine($"Stream zlib inicia en offset: {zlibStart} (0x{zlibStart:X})");
-            sb.AppendLine($"Bytes comprimidos consumidos: {consumed}");
-            sb.AppendLine($"Fin del stream zlib (posible inicio de _001): offset {afterZlib} (0x{afterZlib:X})");
-            sb.AppendLine($"Bytes restantes después del stream zlib: {raw.Length - afterZlib}");
             sb.AppendLine();
-            sb.AppendLine($"Volcado hex de los {dumpBytesAfter} bytes siguientes al stream zlib:");
 
-            int count = Math.Min(dumpBytesAfter, raw.Length - afterZlib);
-            for (int i = 0; i < count; i++)
+            int searchStart = 0;
+            int index = 0;
+            while (searchStart < raw.Length - 1)
             {
-                sb.Append(raw[afterZlib + i].ToString("X2"));
-                sb.Append(' ');
-                if ((i + 1) % 16 == 0)
-                    sb.AppendLine();
+                var candidate = FindNextValidZlibStream(raw, searchStart);
+                if (candidate == null)
+                {
+                    sb.AppendLine("No se encontraron más streams zlib válidos.");
+                    break;
+                }
+
+                sb.AppendLine($"Stream #{index}: offset=0x{candidate.Value.StartOffset:X} ({candidate.Value.StartOffset}), " +
+                    $"comprimido={candidate.Value.ConsumedBytes} bytes, descomprimido={candidate.Value.Decompressed.Length} bytes");
+
+                searchStart = candidate.Value.StartOffset + candidate.Value.ConsumedBytes;
+                index++;
+
+                if (candidate.Value.ConsumedBytes <= 0)
+                    break;
             }
 
             return sb.ToString();
