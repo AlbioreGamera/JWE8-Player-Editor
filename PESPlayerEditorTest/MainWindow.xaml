@@ -16,6 +16,7 @@
         <local:PositionToImagePathConverter x:Key="PositionToImagePathConverter"/>
         <local:CountryToImagePathConverter x:Key="CountryToImagePathConverter"/>
         <logic:JerseyNumberConverter x:Key="JerseyNumberConverter"/>
+        <logic:TeamIdToEmblemPathConverter x:Key="TeamIdToEmblemPathConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -192,19 +193,21 @@
                         <ListBox x:Name="teamListBox" ItemsSource="{Binding TeamCollection}" SelectionChanged="TeamListBox_SelectionChanged" HorizontalAlignment="Left" Height="655" Margin="10,10,0,0" VerticalAlignment="Top" Width="279" IsEnabled="True">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding TeamName}" FontWeight="DemiBold"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding TeamId, Converter={StaticResource TeamIdToEmblemPathConverter}}" Width="24" Height="24" Margin="0,0,6,0" Stretch="Uniform" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding TeamName}" FontWeight="DemiBold" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        <GroupBox x:Name="Team_Information" Header="Team" Margin="299,10,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="140">
+                        <GroupBox x:Name="Team_Information" Header="Team" Margin="299,10,10,0" Foreground="#FF9A9A9A" ClipToBounds="True" BorderThickness="0.25,0.25,0.25,0.25" BorderBrush="#FF0A0A0A" Padding="1,5,1,5" VerticalAlignment="Top" Height="140" Width="500" HorizontalAlignment="Left">
                             <Grid Height="110" VerticalAlignment="Top">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="58.516"/>
                                     <ColumnDefinition Width="8.444"/>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="265*"/>
+                                    <ColumnDefinition Width="90"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="25"/>
@@ -212,6 +215,8 @@
                                     <RowDefinition Height="25"/>
                                     <RowDefinition Height="25"/>
                                 </Grid.RowDefinitions>
+
+                                <Image Source="{Binding SelectedItem.TeamId, ElementName=teamListBox, Converter={StaticResource TeamIdToEmblemPathConverter}}" Width="64" Height="48" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="4" Grid.RowSpan="3" Margin="10,0,0,0"/>
 
                                 <Label Grid.Row="0" Content="Name" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#FFECECEC"/>
                                 <TextBox x:Name="teamNameTextBox" Grid.Row="0" Grid.Column="2" TextWrapping="Wrap" Text="" Grid.ColumnSpan="2" Height="21" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" MaxLength="32"/>

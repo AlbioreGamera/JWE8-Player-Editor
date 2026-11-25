@@ -212,6 +212,7 @@ namespace PESPlayerEditorTest
             public string? ParaWe8Bin004Path;
             public string? DefaultDatasetPath;
             public string? EditOvlPath;
+
             public List<string> Warnings { get; } = new List<string>();
         }
 
@@ -249,6 +250,7 @@ namespace PESPlayerEditorTest
             public string? ParaWe8Bin000Path;
             public string? ParaWe8Bin002Path;
             public string? ParaWe8Bin004Path;
+
             public List<string> Warnings { get; } = new List<string>();
         }
 
@@ -258,10 +260,12 @@ namespace PESPlayerEditorTest
         /// avance a través de <paramref name="progress"/>.
         ///
         /// Solo se expanden los sub-contenedores estrictamente necesarios dentro
-        /// del AFS raíz del disco: BOOT.afs (contiene para_we8.bin), FLAG.afs y
+        /// del AFS raíz del disco: BOOT.afs (contiene para_we8.bin) y
         /// GAME.afs (contiene unnamed_47.afs). El resto de entradas del disco
-        /// (potencialmente cientos, con gráficos/audio pesado) se ignoran por
-        /// completo para evitar procesamiento innecesario.
+        /// (potencialmente cientos, con gráficos/audio pesado, incluyendo FLAG.afs)
+        /// se ignoran por completo para evitar procesamiento innecesario: los
+        /// emblemas de equipo ahora se cargan desde PNG pre-extraídos en una
+        /// carpeta local (ver TeamIdToEmblemPathConverter), no en tiempo de carga.
         /// </summary>
         private static AfsProcessResult ProcessAfs(string afsPath, IProgress<string> progress)
         {
@@ -276,8 +280,11 @@ namespace PESPlayerEditorTest
 
             // Solo expandir los contenedores de primer nivel que realmente
             // necesitamos, en vez de recorrer y analizar las cientos de entradas
-            // del disco completo.
-            string[] requiredContainers = { "BOOT.afs", "FLAG.afs", "GAME.afs" };
+            // del disco completo. FLAG.afs ya no se expande aquí: los emblemas se
+            // cargan desde PNG pre-extraídos localmente (ver
+            // TeamIdToEmblemPathConverter), evitando la lenta decodificación de
+            // los .flg en cada carga.
+            string[] requiredContainers = { "BOOT.afs", "GAME.afs" };
 
             foreach (string containerName in requiredContainers)
             {
@@ -303,7 +310,7 @@ namespace PESPlayerEditorTest
                 containerEntry.NestedArchive = AfsArchive.LoadFromBytes(data, nestedPath, containerEntry.VirtualPath);
 
                 // GAME.afs contiene a su vez unnamed_47.afs; se expande un nivel más
-                // únicamente dentro de este contenedor (no recursivo sobre todo el disco).
+                // exclusivamente dentro de este contenedor (no recursivo sobre todo el disco).
                 if (string.Equals(containerName, "GAME.afs", StringComparison.OrdinalIgnoreCase))
                 {
                     progress.Report("Buscando unnamed_47.afs dentro de GAME.afs...");

@@ -1,0 +1,5 @@
+  <ItemGroup>
+    <None Include="resources\team\**\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
