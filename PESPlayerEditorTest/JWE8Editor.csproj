@@ -147,54 +147,102 @@
     <None Remove="resources\position\8.png" />
     <None Remove="resources\position\9.png" />
     <None Remove="resources\team\0.bmp" />
+    <None Remove="resources\team\0.png" />
     <None Remove="resources\team\1.bmp" />
+    <None Remove="resources\team\1.png" />
     <None Remove="resources\team\10.bmp" />
+    <None Remove="resources\team\10.png" />
     <None Remove="resources\team\100.png" />
     <None Remove="resources\team\101.bmp" />
+    <None Remove="resources\team\101.png" />
     <None Remove="resources\team\102.bmp" />
+    <None Remove="resources\team\102.png" />
     <None Remove="resources\team\103.bmp" />
+    <None Remove="resources\team\103.png" />
     <None Remove="resources\team\104.bmp" />
+    <None Remove="resources\team\104.png" />
     <None Remove="resources\team\105.bmp" />
+    <None Remove="resources\team\105.png" />
     <None Remove="resources\team\106.bmp" />
+    <None Remove="resources\team\106.png" />
     <None Remove="resources\team\107.bmp" />
+    <None Remove="resources\team\107.png" />
     <None Remove="resources\team\108.bmp" />
+    <None Remove="resources\team\108.png" />
     <None Remove="resources\team\109.bmp" />
+    <None Remove="resources\team\109.png" />
     <None Remove="resources\team\11.bmp" />
+    <None Remove="resources\team\11.png" />
     <None Remove="resources\team\110.bmp" />
+    <None Remove="resources\team\110.png" />
     <None Remove="resources\team\111.bmp" />
+    <None Remove="resources\team\111.png" />
     <None Remove="resources\team\112.bmp" />
+    <None Remove="resources\team\112.png" />
     <None Remove="resources\team\12.bmp" />
+    <None Remove="resources\team\12.png" />
     <None Remove="resources\team\13.bmp" />
+    <None Remove="resources\team\13.png" />
     <None Remove="resources\team\14.bmp" />
+    <None Remove="resources\team\14.png" />
     <None Remove="resources\team\15.bmp" />
+    <None Remove="resources\team\15.png" />
     <None Remove="resources\team\16.bmp" />
+    <None Remove="resources\team\16.png" />
     <None Remove="resources\team\17.bmp" />
+    <None Remove="resources\team\17.png" />
     <None Remove="resources\team\18.bmp" />
+    <None Remove="resources\team\18.png" />
     <None Remove="resources\team\19.bmp" />
+    <None Remove="resources\team\19.png" />
     <None Remove="resources\team\2.bmp" />
+    <None Remove="resources\team\2.png" />
     <None Remove="resources\team\20.bmp" />
+    <None Remove="resources\team\20.png" />
     <None Remove="resources\team\21.bmp" />
+    <None Remove="resources\team\21.png" />
     <None Remove="resources\team\22.bmp" />
+    <None Remove="resources\team\22.png" />
     <None Remove="resources\team\23.bmp" />
+    <None Remove="resources\team\23.png" />
     <None Remove="resources\team\24.bmp" />
+    <None Remove="resources\team\24.png" />
     <None Remove="resources\team\25.bmp" />
+    <None Remove="resources\team\25.png" />
     <None Remove="resources\team\26.bmp" />
+    <None Remove="resources\team\26.png" />
     <None Remove="resources\team\27.bmp" />
+    <None Remove="resources\team\27.png" />
     <None Remove="resources\team\28.bmp" />
+    <None Remove="resources\team\28.png" />
     <None Remove="resources\team\29.bmp" />
+    <None Remove="resources\team\29.png" />
     <None Remove="resources\team\3.bmp" />
+    <None Remove="resources\team\3.png" />
     <None Remove="resources\team\30.bmp" />
+    <None Remove="resources\team\30.png" />
     <None Remove="resources\team\31.bmp" />
+    <None Remove="resources\team\31.png" />
     <None Remove="resources\team\32.bmp" />
+    <None Remove="resources\team\32.png" />
     <None Remove="resources\team\33.bmp" />
+    <None Remove="resources\team\33.png" />
     <None Remove="resources\team\34.bmp" />
+    <None Remove="resources\team\34.png" />
     <None Remove="resources\team\35.bmp" />
+    <None Remove="resources\team\35.png" />
     <None Remove="resources\team\36.bmp" />
+    <None Remove="resources\team\36.png" />
     <None Remove="resources\team\37.bmp" />
+    <None Remove="resources\team\37.png" />
     <None Remove="resources\team\38.bmp" />
+    <None Remove="resources\team\38.png" />
     <None Remove="resources\team\39.bmp" />
+    <None Remove="resources\team\39.png" />
     <None Remove="resources\team\4.bmp" />
+    <None Remove="resources\team\4.png" />
     <None Remove="resources\team\40.bmp" />
+    <None Remove="resources\team\40.png" />
     <None Remove="resources\team\41.png" />
     <None Remove="resources\team\42.png" />
     <None Remove="resources\team\43.png" />
@@ -205,6 +253,7 @@
     <None Remove="resources\team\48.png" />
     <None Remove="resources\team\49.png" />
     <None Remove="resources\team\5.bmp" />
+    <None Remove="resources\team\5.png" />
     <None Remove="resources\team\50.png" />
     <None Remove="resources\team\51.png" />
     <None Remove="resources\team\52.png" />
@@ -216,6 +265,7 @@
     <None Remove="resources\team\58.png" />
     <None Remove="resources\team\59.png" />
     <None Remove="resources\team\6.bmp" />
+    <None Remove="resources\team\6.png" />
     <None Remove="resources\team\60.png" />
     <None Remove="resources\team\61.png" />
     <None Remove="resources\team\62.png" />
@@ -227,6 +277,7 @@
     <None Remove="resources\team\68.png" />
     <None Remove="resources\team\69.png" />
     <None Remove="resources\team\7.bmp" />
+    <None Remove="resources\team\7.png" />
     <None Remove="resources\team\70.png" />
     <None Remove="resources\team\71.png" />
     <None Remove="resources\team\72.png" />
@@ -238,6 +289,7 @@
     <None Remove="resources\team\78.png" />
     <None Remove="resources\team\79.png" />
     <None Remove="resources\team\8.bmp" />
+    <None Remove="resources\team\8.png" />
     <None Remove="resources\team\80.png" />
     <None Remove="resources\team\81.png" />
     <None Remove="resources\team\82.png" />
@@ -249,6 +301,7 @@
     <None Remove="resources\team\88.png" />
     <None Remove="resources\team\89.png" />
     <None Remove="resources\team\9.bmp" />
+    <None Remove="resources\team\9.png" />
     <None Remove="resources\team\90.png" />
     <None Remove="resources\team\91.png" />
     <None Remove="resources\team\92.png" />
@@ -274,10 +327,19 @@
     <Content Include="resources\team\0.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\1.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\10.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\100.png">
@@ -286,136 +348,271 @@
     <Content Include="resources\team\101.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\101.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\102.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\102.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\103.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\103.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\104.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\104.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\105.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\105.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\106.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\106.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\107.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\107.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\108.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\108.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\109.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\109.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\11.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\11.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\110.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\110.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\111.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\111.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\112.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\112.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\12.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\12.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\13.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\13.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\14.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\14.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\15.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\15.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\16.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\17.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\17.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\18.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\18.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\19.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\19.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\2.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\20.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\20.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\21.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\21.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\22.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\22.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\23.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\23.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\24.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\24.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\25.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\25.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\26.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\26.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\27.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\27.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\28.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\28.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\29.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\3.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\30.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\30.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\31.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\31.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\32.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\32.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\33.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\33.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\34.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\34.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\35.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\35.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\36.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\36.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\37.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\37.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\38.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\38.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\39.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\39.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\4.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\40.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\40.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\41.png">
@@ -446,6 +643,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\5.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\50.png">
@@ -481,6 +681,9 @@
     <Content Include="resources\team\6.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\6.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\60.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -512,6 +715,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\7.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\70.png">
@@ -547,6 +753,9 @@
     <Content Include="resources\team\8.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\team\8.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\team\80.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -578,6 +787,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\9.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\team\9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\team\90.png">
