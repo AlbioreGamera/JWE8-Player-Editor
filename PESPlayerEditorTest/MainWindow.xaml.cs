@@ -75,6 +75,14 @@ namespace PESPlayerEditorTest
         /// </summary>
         public string? OverAfsSourcePath { get; internal set; }
 
+        /// <summary>
+        /// Archivo "unnamed_47.afs" ya cargado (extraído de GAME.afs), que
+        /// contiene los audios de callname de los jugadores (VP_P0_{código}.adx).
+        /// Se usa en PlayerWindow para reproducir el audio del callname
+        /// seleccionado. Null si aún no se ha procesado el AFS raíz.
+        /// </summary>
+        public JWE8Editor.Logic.AfsArchive? Unnamed47Archive { get; internal set; }
+
         private const long NationalityBlockStart = 0x00205d70;
         private const long NationalityBlockEnd = 0x002071bf;
 
@@ -364,6 +372,11 @@ namespace PESPlayerEditorTest
                 team2ComboBox.ItemsSource = teamNames;
                 team1ComboBox.SelectedIndex = 0;
                 team2ComboBox.SelectedIndex = 0;
+
+                if (TeamCollection.Count > 0)
+                {
+                    teamListBox.SelectedIndex = 0;
+                }
             }
             catch (Exception ex)
             {
@@ -1095,19 +1108,8 @@ namespace PESPlayerEditorTest
         private void saveChanges_Click(object sender, RoutedEventArgs e)
         {
             SaveAllPlayersData(FilePath1);
-            //SavePlayerAssignmentData(FilePath2);
-            //SaveNumberData(FilePath3);
             BackupFileIfExists(FilePath4);
             SaveCallnameData(FilePath4);
-            //People.Clear();
-            //PeopleA.Clear();
-            //ParsePlayers(FilePath1);
-            //ParsePlayerAssignment(FilePath2, FilePath3);
-            //ParseAssignment(FilePath2, FilePath3);
-            //updatePeopleList();
-            //team1DataGrid.Items.Refresh();
-            //team2DataGrid.Items.Refresh();
-            //personListBox.Items.Refresh();
 
             MessageBox.Show("Data saved successfully.", "Save Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -1381,12 +1383,10 @@ namespace PESPlayerEditorTest
             {
                 foreach (PlayerAssignment assignment in e.NewItems!)
                 {
-                    // Check if the assignment's player exists in People
                     Player? player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
                     if (player != null)
                     {
                         player = assignment.Player;
-                        // Update other properties of player if needed
                     }
                 }
             }
@@ -1394,12 +1394,10 @@ namespace PESPlayerEditorTest
             {
                 foreach (PlayerAssignment assignment in e.OldItems!)
                 {
-                    // Remove the player from People
                     Player? player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
                     if (player != null)
                     {
                         player = null;
-                        // Update other properties of player if needed
                     }
                 }
             }
@@ -1407,12 +1405,10 @@ namespace PESPlayerEditorTest
             {
                 foreach (PlayerAssignment assignment in e.NewItems!)
                 {
-                    // Update the player in People
                     Player? player = People.FirstOrDefault(p => p.PlayerIndex == assignment.PlayerIndex);
                     if (player != null)
                     {
                         player = assignment.Player;
-                        // Update other properties of player if needed
                     }
                 }
             }
@@ -1451,22 +1447,6 @@ namespace PESPlayerEditorTest
             Callname selectedPlayerAssignment = (Callname)callnameListBox.SelectedItem;
             selectedPlayerAssignment.CommentaryName = callnameTextBoxC.Text;
             callnameListBox.Items.Refresh();
-        }
-
-        private void TestParaWe8_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string path = @"D:\PES\PlayStation 2\Traducciones\Traducción JWE8\BOOT\BOOT_0\para_we8.bin";
-
-                string info = JWE8Editor.Logic.ParaWe8Reader.GetRawFileInfo(path, 128);
-
-                MessageBox.Show(info, "ParaWe8 Test Result");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}\n\n{ex.StackTrace}", "ParaWe8 Test Error");
-            }
         }
 
         private const int StadiumRecordSize = 0x3D; // 61 bytes

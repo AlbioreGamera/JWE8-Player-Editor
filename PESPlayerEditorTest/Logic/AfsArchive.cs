@@ -14,25 +14,8 @@ namespace JWE8Editor.Logic
         public string Name = string.Empty;
         public uint Offset;
         public uint Size;
-
-        /// <summary>
-        /// Ruta "virtual" completa dentro del contenedor AFS raíz, usando '\' como
-        /// separador (ej. "BOOT\BOOT_0\para_we8.bin"). Se rellena al recorrer
-        /// recursivamente archivos AFS anidados.
-        /// </summary>
         public string VirtualPath = string.Empty;
-
-        /// <summary>
-        /// Si esta entrada es a su vez un archivo AFS, aquí se guarda el archivo
-        /// anidado ya parseado.
-        /// </summary>
         public AfsArchive? NestedArchive;
-
-        /// <summary>
-        /// Archivo AFS (físico) al que pertenece esta entrada. Necesario para poder
-        /// extraerla correctamente, ya que entradas de AFS anidados viven dentro de
-        /// un archivo temporal distinto del AFS raíz.
-        /// </summary>
         public AfsArchive OwnerArchive = null!;
 
         public override string ToString() => $"{VirtualPath} (offset=0x{Offset:X}, size={Size})";
@@ -40,8 +23,7 @@ namespace JWE8Editor.Logic
 
     /// <summary>
     /// Lector de archivos AFS (formato de contenedor usado en varios juegos de PS2,
-    /// incluyendo WE8/PES). Replica el comportamiento de herramientas como DKZ Studio
-    /// o Game Graphic Studio: permite listar y extraer archivos/carpetas contenidos,
+    /// incluyendo WE8/PES): permite listar y extraer archivos/carpetas contenidos,
     /// incluyendo AFS anidados dentro de otras entradas.
     /// </summary>
     public class AfsArchive
@@ -50,10 +32,6 @@ namespace JWE8Editor.Logic
 
         public List<AfsEntry> Entries { get; } = new List<AfsEntry>();
 
-        /// <summary>
-        /// Ruta en disco del archivo AFS físico que contiene esta instancia (puede ser
-        /// el AFS raíz, o el archivo temporal extraído de una entrada anidada).
-        /// </summary>
         public string SourcePath { get; private set; } = string.Empty;
 
         public static bool LooksLikeAfs(byte[] data)
@@ -70,9 +48,8 @@ namespace JWE8Editor.Logic
 
         /// <summary>
         /// Igual que <see cref="LooksLikeAfs(byte[])"/> pero lee solo los primeros
-        /// bytes del archivo directamente desde disco (vía <paramref name="entry"/>),
-        /// evitando cargar en memoria entradas potencialmente enormes (ej. gráficos
-        /// de varios MB) solo para descartar que sean un AFS anidado.
+        /// bytes del archivo directamente desde disco, evitando cargar en memoria
+        /// entradas potencialmente enormes solo para descartar que sean un AFS anidado.
         /// </summary>
         public static bool LooksLikeAfsHeaderOnly(AfsEntry entry)
         {
@@ -99,11 +76,6 @@ namespace JWE8Editor.Logic
             return totalRead == header.Length && LooksLikeAfs(header);
         }
 
-        /// <summary>
-        /// Parsea un archivo AFS desde disco. Si <paramref name="parentVirtualPath"/>
-        /// se especifica, se usa como prefijo para construir VirtualPath de cada
-        /// entrada (útil al parsear AFS anidados).
-        /// </summary>
         public static AfsArchive Load(string filePath, string parentVirtualPath = "")
         {
             byte[] raw = File.ReadAllBytes(filePath);
@@ -139,7 +111,6 @@ namespace JWE8Editor.Logic
             // (offset, size) hacia la tabla de metadatos (nombres + fecha + tamaño).
             int metaPointerOffset = tableStart + ((int)fileCount * 8);
             uint nameTableOffset = BitConverter.ToUInt32(raw, metaPointerOffset);
-            uint nameTableSize = BitConverter.ToUInt32(raw, metaPointerOffset + 4);
 
             bool hasNameTable = nameTableOffset > 0 && nameTableOffset < raw.Length;
 
@@ -182,11 +153,6 @@ namespace JWE8Editor.Logic
             return archive;
         }
 
-        /// <summary>
-        /// Extrae los bytes crudos de una entrada directamente desde el archivo físico
-        /// propietario (entry.OwnerArchive.SourcePath), sin necesidad de tener todo el
-        /// AFS cargado en memoria.
-        /// </summary>
         public static byte[] ExtractEntry(AfsEntry entry)
         {
             using var fs = new FileStream(entry.OwnerArchive.SourcePath, FileMode.Open, FileAccess.Read);
@@ -206,11 +172,8 @@ namespace JWE8Editor.Logic
         }
 
         /// <summary>
-        /// Busca una entrada de PRIMER NIVEL (no recursivo) cuyo nombre coincida
+        /// Busca una entrada de primer nivel (no recursivo) cuyo nombre coincida
         /// exactamente (ignorando mayúsculas) con <paramref name="exactName"/>.
-        /// Útil para localizar sub-contenedores concretos como "BOOT.afs",
-        /// "FLAG.afs" o "GAME.afs" dentro del AFS raíz del disco, sin tener que
-        /// expandir ni analizar el resto de entradas.
         /// </summary>
         public AfsEntry? FindFirstLevelEntryByName(string exactName)
         {
@@ -225,43 +188,8 @@ namespace JWE8Editor.Logic
         }
 
         /// <summary>
-        /// Recorre recursivamente las entradas, detectando si alguna es a su vez un
-        /// AFS anidado y parseándolo. Los archivos anidados se extraen a disco
-        /// temporal porque AfsArchive trabaja sobre SourcePath (lectura directa por
-        /// offset), no sobre buffers en memoria.
-        /// </summary>
-        /// <param name="tempDirectory">Carpeta temporal donde volcar los AFS anidados.</param>
-        /// <param name="progress">Callback opcional para reportar avance (ej. a una UI).</param>
-        public void ExpandNestedArchives(string tempDirectory, IProgress<string>? progress = null)
-        {
-            Directory.CreateDirectory(tempDirectory);
-
-            for (int i = 0; i < Entries.Count; i++)
-            {
-                var entry = Entries[i];
-
-                progress?.Report($"Analizando {entry.VirtualPath} ({i + 1}/{Entries.Count})");
-
-                // Solo se lee el encabezado (8 bytes) para descartar rápidamente
-                // entradas grandes (ej. gráficos de varios MB) que no son AFS.
-                if (!LooksLikeAfsHeaderOnly(entry))
-                {
-                    continue;
-                }
-
-                byte[] data = ExtractEntry(entry);
-                string nestedPath = Path.Combine(tempDirectory, $"nested_{entry.Index:D4}_{entry.Name}");
-                File.WriteAllBytes(nestedPath, data);
-
-                entry.NestedArchive = LoadFromBytes(data, nestedPath, entry.VirtualPath);
-                entry.NestedArchive.ExpandNestedArchives(tempDirectory, progress);
-            }
-        }
-
-        /// <summary>
         /// Busca recursivamente (incluyendo AFS anidados ya expandidos) una entrada
-        /// cuya VirtualPath termine con el sufijo indicado, ignorando mayúsculas y
-        /// usando tanto '\' como '/' como separador válido.
+        /// cuya VirtualPath termine con el sufijo indicado.
         /// </summary>
         public AfsEntry? FindByVirtualPathSuffix(string suffix)
         {
@@ -288,7 +216,7 @@ namespace JWE8Editor.Logic
         }
 
         /// <summary>
-        /// Igual que <see cref="FindByVirtualPathSuffix"/> pero devuelve TODAS las
+        /// Igual que <see cref="FindByVirtualPathSuffix"/> pero devuelve todas las
         /// coincidencias en vez de la primera.
         /// </summary>
         public List<AfsEntry> FindAllByNameSuffix(string suffix)
@@ -308,26 +236,6 @@ namespace JWE8Editor.Logic
                 }
 
                 entry.NestedArchive?.CollectAllByNameSuffix(suffix, results);
-            }
-        }
-
-        /// <summary>
-        /// Devuelve todas las entradas (incluyendo las de AFS anidados ya expandidos)
-        /// en una sola lista plana. Útil para diagnóstico/depuración.
-        /// </summary>
-        public List<AfsEntry> GetAllEntriesFlat()
-        {
-            var results = new List<AfsEntry>();
-            CollectAllFlat(results);
-            return results;
-        }
-
-        private void CollectAllFlat(List<AfsEntry> results)
-        {
-            foreach (var entry in Entries)
-            {
-                results.Add(entry);
-                entry.NestedArchive?.CollectAllFlat(results);
             }
         }
 

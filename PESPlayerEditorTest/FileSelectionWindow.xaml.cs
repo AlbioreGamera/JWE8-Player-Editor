@@ -212,6 +212,7 @@ namespace PESPlayerEditorTest
             public string? ParaWe8Bin004Path;
             public string? DefaultDatasetPath;
             public string? EditOvlPath;
+            public string? Unnamed47AfsPath;
 
             public List<string> Warnings { get; } = new List<string>();
         }
@@ -229,6 +230,7 @@ namespace PESPlayerEditorTest
             combined.ParaWe8Bin000Path = afsResult.ParaWe8Bin000Path;
             combined.ParaWe8Bin002Path = afsResult.ParaWe8Bin002Path;
             combined.ParaWe8Bin004Path = afsResult.ParaWe8Bin004Path;
+            combined.Unnamed47AfsPath = afsResult.Unnamed47AfsPath;
             combined.Warnings.AddRange(afsResult.Warnings);
 
             if (!string.IsNullOrEmpty(overAfsPath))
@@ -250,6 +252,7 @@ namespace PESPlayerEditorTest
             public string? ParaWe8Bin000Path;
             public string? ParaWe8Bin002Path;
             public string? ParaWe8Bin004Path;
+            public string? Unnamed47AfsPath;
 
             public List<string> Warnings { get; } = new List<string>();
         }
@@ -324,6 +327,7 @@ namespace PESPlayerEditorTest
                             string unnamed47Path = Path.Combine(tempDir, "unnamed_47.afs");
                             File.WriteAllBytes(unnamed47Path, unnamed47Data);
                             unnamed47Entry.NestedArchive = AfsArchive.LoadFromBytes(unnamed47Data, unnamed47Path, unnamed47Entry.VirtualPath);
+                            result.Unnamed47AfsPath = unnamed47Path;
                         }
                         else
                         {
@@ -625,6 +629,18 @@ namespace PESPlayerEditorTest
             {
                 _mainWindow.ParseTeams(selectedSlpmPath);
                 _mainWindow.ParseNationalities(selectedSlpmPath);
+            }
+
+            if (!string.IsNullOrEmpty(result.Unnamed47AfsPath) && File.Exists(result.Unnamed47AfsPath))
+            {
+                try
+                {
+                    _mainWindow.Unnamed47Archive = AfsArchive.Load(result.Unnamed47AfsPath);
+                }
+                catch (Exception ex)
+                {
+                    result.Warnings.Add($"No se pudo cargar unnamed_47.afs para reproducción de audio: {ex.Message}");
+                }
             }
 
             _mainWindow.ParsePlayers(result.ParaWe8Bin000Path);

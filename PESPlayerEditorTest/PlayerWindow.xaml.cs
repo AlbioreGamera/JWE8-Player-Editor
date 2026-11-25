@@ -2,7 +2,9 @@
 using PlayerLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,6 +77,13 @@ namespace PESPlayerEditorTest
 
         private readonly MainWindow mainWindow;
 
+        /// <summary>
+        /// Reproductor usado para el audio del callname seleccionado. Se guarda
+        /// como campo para poder liberarlo (evitar handles de archivo temporal
+        /// colgados) antes de reproducir uno nuevo o al cerrar la ventana.
+        /// </summary>
+        private SoundPlayer? callnameSoundPlayer;
+
         public PlayerWindow(Player selectedPlayer, MainWindow mainWindow, PlayerAssignment? selectedPlayerAssignment = null)
         {
             InitializeComponent();
@@ -95,6 +104,77 @@ namespace PESPlayerEditorTest
             positionComboBox.SelectedIndex = selectedPlayer.Position;
             //commentaryComboBox.IsEnabled = true;
             commentaryComboBox.SelectedIndex = selectedPlayer.Commentary;
+
+            UpdatePlayCallnameButtonState();
+
+            Closed += PlayerWindow_Closed;
+        }
+
+        /// <summary>
+        /// Habilita el botón de reproducción solo si hay un callname
+        /// seleccionado, su código es resoluble a un archivo .adx y
+        /// unnamed_47.afs ya fue cargado (AFS raíz procesado).
+        /// </summary>
+        private void UpdatePlayCallnameButtonState()
+        {
+            playCallnameButton.IsEnabled = mainWindow.Unnamed47Archive != null
+                && commentaryComboBox.SelectedItem is Commentary commentary
+                && !string.IsNullOrWhiteSpace(commentary.CommentaryCode);
+        }
+
+        private void CommentaryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdatePlayCallnameButtonState();
+        }
+
+        /// <summary>
+        /// Reproduce el audio .adx correspondiente al callname actualmente
+        /// seleccionado, localizándolo dentro de unnamed_47.afs por su código
+        /// (ej. "R12082" -&gt; "VP_P0_R12082.adx") y decodificándolo a WAV en
+        /// memoria para reproducirlo con SoundPlayer.
+        /// </summary>
+        private void PlayCallnameButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (mainWindow.Unnamed47Archive == null)
+            {
+                MessageBox.Show("No se ha cargado unnamed_47.afs. Selecciona primero el archivo Data (AFS) del disco.", "Audio no disponible", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (commentaryComboBox.SelectedItem is not Commentary commentary || string.IsNullOrWhiteSpace(commentary.CommentaryCode))
+            {
+                return;
+            }
+
+            try
+            {
+                byte[]? adxBytes = CallnameAudioLocator.ExtractAudio(mainWindow.Unnamed47Archive, commentary.CommentaryCode!);
+                if (adxBytes == null)
+                {
+                    MessageBox.Show($"No se encontró ningún audio para el callname '{commentary.CommentaryCode}'.", "Audio no encontrado", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                byte[] wavBytes = AdxDecoder.DecodeToWav(adxBytes);
+
+                callnameSoundPlayer?.Stop();
+                callnameSoundPlayer?.Dispose();
+
+                var stream = new MemoryStream(wavBytes);
+                callnameSoundPlayer = new SoundPlayer(stream);
+                callnameSoundPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al reproducir el audio del callname: {ex.Message}", "Error de reproducción", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void PlayerWindow_Closed(object? sender, EventArgs e)
+        {
+            callnameSoundPlayer?.Stop();
+            callnameSoundPlayer?.Dispose();
+            callnameSoundPlayer = null;
         }
 
         private void SavePlayer(object sender, RoutedEventArgs e)
@@ -406,7 +486,7 @@ namespace PESPlayerEditorTest
                 // Player no implementa INotifyPropertyChanged, por lo que el TextBox
                 // y el ComboBox enlazados a SelectedPlayer.FaceId/FaceType no se
                 // refrescan automáticamente al cambiar el valor desde código. Se
-                // fuerza la actualización manual de los bindings para reflejar los
+                // forza la actualización manual de los bindings para reflejar los
                 // nuevos valores en el formulario.
                 faceIdTextBox.GetBindingExpression(TextBox.TextProperty)?.UpdateTarget();
                 faceTypeComboBox.GetBindingExpression(ComboBox.SelectedItemProperty)?.UpdateTarget();

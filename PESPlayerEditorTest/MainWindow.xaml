@@ -53,16 +53,6 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
-                            <!--<ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Player}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListBox.ItemContainerStyle>-->
                         </ListBox>
                         <Separator HorizontalAlignment="Left" Margin="127,333,0,0" VerticalAlignment="Top" Grid.Column="2"/>
 
@@ -348,6 +338,5 @@
                 </TabItem>
             </TabControl>
         </Grid>
-        <!--<Button Content="Test ParaWe8" Click="TestParaWe8_Click" Width="120" Height="30" Margin="5"/>-->
     </Grid>
 </Window>
